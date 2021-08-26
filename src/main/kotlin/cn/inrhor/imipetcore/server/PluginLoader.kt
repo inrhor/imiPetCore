@@ -1,10 +1,13 @@
-package cn.inrhor.imipetcore.loader
+package cn.inrhor.imipetcore.server
 
 import cn.inrhor.imipetcore.ImipetCore
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 
+/**
+ * 运行操作
+ */
 object PluginLoader {
 
     private var reloading = false

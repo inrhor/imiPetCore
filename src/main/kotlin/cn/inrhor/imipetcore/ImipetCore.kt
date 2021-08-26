@@ -6,6 +6,9 @@ import taboolib.module.configuration.SecuredFile
 import taboolib.platform.BukkitIO
 import taboolib.platform.BukkitPlugin
 
+/**
+ * 入口
+ */
 object ImipetCore : Plugin() {
     @Config(migrate = true)
     lateinit var config: SecuredFile

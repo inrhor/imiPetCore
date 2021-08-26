@@ -1,6 +1,6 @@
 plugins {
     java
-    id("io.izzel.taboolib") version "1.12"
+    id("io.izzel.taboolib") version "1.20"
     id("org.jetbrains.kotlin.jvm") version "1.5.20"
 }
 
@@ -22,14 +22,18 @@ taboolib {
             name("inrhor")
             desc("Minecraft Model Pet System")
         }
+        dependencies {
+            name("ModelEngine")
+        }
         prefix("imiPetCore")
     }
     classifier = null
-    version = "6.0.0-pre39"
+    version = "6.0.0-pre59"
 }
 
 repositories {
     mavenCentral()
+    maven("https://mvn.lumine.io/repository/maven-public")
 }
 
 dependencies {
@@ -44,6 +48,8 @@ dependencies {
     compileOnly("ink.ptms.core:v11100:11100:all")
     compileOnly("ink.ptms.core:v11000:11000:all")
     compileOnly("ink.ptms.core:v10900:10900:all")
+    compileOnly("ink.ptms:Adyeshach:1.3.1@jar")
+    compileOnly("com.ticxo.modelengine:api:R2.1.7")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
 }

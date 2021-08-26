@@ -1,0 +1,4 @@
+# 禁用宠物跟随状态的世界
+disablePetWorld:
+  - secc_world
+  - uopworld

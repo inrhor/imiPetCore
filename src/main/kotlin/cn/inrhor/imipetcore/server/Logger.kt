@@ -1,8 +1,11 @@
-package cn.inrhor.imipetcore.loader
+package cn.inrhor.imipetcore.server
 
 import cn.inrhor.imipetcore.ImipetCore
-import taboolib.common.platform.console
+import taboolib.common.platform.function.console
 
+/**
+ * 信息输出
+ */
 object Logger {
 
     private fun logoSend() {
