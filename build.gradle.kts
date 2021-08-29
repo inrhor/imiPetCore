@@ -16,6 +16,7 @@ taboolib {
             "module-nms",
             "module-nms-util",
             "module-effect",
+            "module-navigation",
             "platform-bukkit")
     description {
         contributors {
@@ -28,7 +29,7 @@ taboolib {
         prefix("imiPetCore")
     }
     classifier = null
-    version = "6.0.0-pre59"
+    version = "6.0.0-34"
 }
 
 repositories {

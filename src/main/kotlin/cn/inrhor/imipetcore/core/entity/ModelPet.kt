@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.entity
+package cn.inrhor.imipetcore.core.entity
 
 import com.ticxo.modelengine.api.model.ActiveModel
 import com.ticxo.modelengine.api.model.BaseEntity
@@ -49,7 +49,7 @@ class ModelPet(val pet: PetData): BaseEntity<PetData> {
     }
 
     override fun remove() {
-        //
+        pet.removeModel()
     }
 
     override fun isCustomNameVisible(): Boolean {
@@ -88,7 +88,7 @@ class ModelPet(val pet: PetData): BaseEntity<PetData> {
         return "hello"
     }
 
-    override fun setCustomName(s: String?) {
+    override fun setCustomName(s: String) {
         //
     }
 
@@ -108,11 +108,11 @@ class ModelPet(val pet: PetData): BaseEntity<PetData> {
         return true
     }
 
-    override fun addPotionEffect(potion: PotionEffect?) {
+    override fun addPotionEffect(potion: PotionEffect) {
         //
     }
 
-    override fun removePotionEffect(potion: PotionEffectType?) {
+    override fun removePotionEffect(potion: PotionEffectType) {
         //
     }
 
@@ -120,19 +120,19 @@ class ModelPet(val pet: PetData): BaseEntity<PetData> {
         //
     }
 
-    override fun sendDespawnPacket(modeledEntity: ModeledEntity?) {
+    override fun sendDespawnPacket(modeledEntity: ModeledEntity) {
         //
     }
 
-    override fun sendSpawnPacket(modeledEntity: ModeledEntity?) {
+    override fun sendSpawnPacket(modeledEntity: ModeledEntity) {
         //
     }
 
-    override fun setMoveController(modeledEntity: ModeledEntity?) {
+    override fun setMoveController(modeledEntity: ModeledEntity) {
         //
     }
 
-    override fun setMountController(model: ModeledEntity?, player: Player?, controllerId: String?) {
+    override fun setMountController(model: ModeledEntity, player: Player, controllerId: String) {
         //
     }
 
