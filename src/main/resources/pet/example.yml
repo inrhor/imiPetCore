@@ -1,0 +1,19 @@
+pet:
+  id: test
+  default:
+    name:
+      - 小黑
+      - '%player_name%'
+    attribute:
+      health: 20.22
+      speed: 1.0
+      attack: 0.2
+      attack_speed: 2
+  entityType: PIG
+  model:
+    id: hour
+    action:
+      - id: attack
+        lerpin: 0
+        lerpout: 1
+        speed: 1.0

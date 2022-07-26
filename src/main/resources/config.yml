@@ -1,0 +1,4 @@
+# 数据存储
+data:
+  # 存储类型 YAML MYSQL
+  type: YAML
