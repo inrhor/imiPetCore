@@ -1,9 +1,9 @@
 package cn.inrhor.imipetcore.api.entity
 
-import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.getAction
 import cn.inrhor.imipetcore.api.data.StateData
 import cn.inrhor.imipetcore.api.entity.state.ActiveState
+import cn.inrhor.imipetcore.api.manager.PetManager.setMeta
 import cn.inrhor.imipetcore.common.ai.AttackAi
 import cn.inrhor.imipetcore.common.ai.WalkAi
 import cn.inrhor.imipetcore.common.database.data.PetData
@@ -12,7 +12,6 @@ import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.model.ModeledEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.metadata.FixedMetadataValue
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
 
@@ -55,7 +54,8 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
         petData.following = true
         if (entity != null) return
         entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
-        entity?.setMetadata("imipercore:entity", FixedMetadataValue(ImiPetCore.plugin, true))
+        entity?.setMeta("entity", petData.uuid)
+        entity?.setMeta("owner", owner.uniqueId)
         initAction()
         updateModel()
     }
@@ -66,8 +66,8 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
     fun initAction() {
         entity?.clearGoalAi()
         entity?.clearTargetAi()
-        entity?.addGoalAi(WalkAi(this@PetEntity), 3)
-        entity?.addGoalAi(AttackAi(this@PetEntity), 4)
+        entity?.addGoalAi(WalkAi(this@PetEntity), 10)
+        entity?.addGoalAi(AttackAi(this@PetEntity), 11)
     }
 
     /**

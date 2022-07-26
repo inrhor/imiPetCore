@@ -1,14 +1,23 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
+import cn.inrhor.imipetcore.api.event.AttributeChangePetEvent
 import cn.inrhor.imipetcore.api.event.FollowPetEvent
+import cn.inrhor.imipetcore.api.event.PetDeathEvent
 import cn.inrhor.imipetcore.api.event.ReceivePetEvent
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
+import cn.inrhor.imipetcore.api.manager.PetManager.delHp
+import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
+import org.bukkit.Bukkit
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.metadata.FixedMetadataValue
+import org.bukkit.metadata.MetadataValue
 import java.util.*
 
 /**
@@ -101,6 +110,42 @@ object PetManager {
         val petData = getPet(pUUID)
         database.updatePet(uniqueId, petData)
         FollowPetEvent(this, petData, following).call()
+    }
+
+    fun Entity.setMeta(meta: String, obj: Any) {
+        setMetadata("imipetcore:$meta", FixedMetadataValue(ImiPetCore.plugin, obj))
+    }
+
+    fun Entity.hasMeta(meta: String): Boolean {
+        return hasMetadata("imipetcore:$meta")
+    }
+
+    fun Entity.getMeta(meta: String): MetadataValue? {
+        return getMetadata("imipetcore:$meta")[0]
+    }
+
+    fun Entity.getOwner(): Player? {
+        return Bukkit.getPlayer(UUID.fromString(getMeta("owner")?.asString()))
+    }
+
+    fun UUID.delHp(owner: Player, double: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.currentHP -= double
+        if (attribute.currentHP <= 0) {
+            petData.petEntity?.entity?.remove()
+            PetDeathEvent(owner, petData).call()
+        }
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    fun UUID.addHp(owner: Player, double: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.currentHP += double
+        val max = attribute.maxHP
+        if (attribute.currentHP > max) attribute.currentHP = max
+        AttributeChangePetEvent(owner, petData).call()
     }
 
 }
