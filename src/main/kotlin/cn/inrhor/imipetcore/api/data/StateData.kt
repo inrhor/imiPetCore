@@ -18,15 +18,19 @@ class StateData(var state: String = "walk", val actionState: MutableMap<String, 
         addState("walk", WalkState())
     }
 
+    fun existState(name: String): Boolean {
+        return actionState.containsKey(name)
+    }
+
     /**
      * 新增行为状态
      */
     fun addState(name: String, activeState: ActiveState) {
-        if (this.actionState.containsKey(name)) {
+        if (existState(name)) {
             warning("$name 行为状态已存在")
             return
         }
-        this.actionState[name] = activeState
+        actionState[name] = activeState
     }
 
     /**
@@ -39,15 +43,8 @@ class StateData(var state: String = "walk", val actionState: MutableMap<String, 
     /**
      * 更新行为
      */
-    fun updateState(petEntity: PetEntity, name: String) {
-        state = name
-        callState(petEntity)
-    }
-
-    /**
-     * 更新行为
-     */
-    fun updateState(petEntity: PetEntity, name: String, target: Entity) {
+    fun updateState(petEntity: PetEntity, name: String, target: Entity?) {
+        if (!existState(name)) return
         state = name
         callState(petEntity, target)
     }
@@ -55,7 +52,7 @@ class StateData(var state: String = "walk", val actionState: MutableMap<String, 
     /**
      * 执行行为
      */
-    fun callState(petEntity: PetEntity, entity: Entity? = null) {
+    private fun callState(petEntity: PetEntity, entity: Entity? = null) {
         if (actionState.containsKey(state)) {
             actionState[state]?.run(petEntity, entity)
         }

@@ -3,11 +3,13 @@ package cn.inrhor.imipetcore.api.entity
 import cn.inrhor.imipetcore.api.data.DataContainer.getAction
 import cn.inrhor.imipetcore.api.data.StateData
 import cn.inrhor.imipetcore.api.entity.state.ActiveState
+import cn.inrhor.imipetcore.api.manager.OptionManager.getActionOption
 import cn.inrhor.imipetcore.api.manager.PetManager.setMeta
 import cn.inrhor.imipetcore.common.ai.AttackAi
+import cn.inrhor.imipetcore.common.ai.HookAi
 import cn.inrhor.imipetcore.common.ai.WalkAi
 import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.common.option.ActionOption
+import cn.inrhor.imipetcore.common.option.StateOption
 import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.model.ModeledEntity
 import org.bukkit.entity.LivingEntity
@@ -34,7 +36,7 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
     var modelEntity: ModeledEntity? = null
 
     init {
-        getActionOption().forEach {
+        getStateOption().forEach {
             val id = it.id
             val action = id.getAction()
             if (action != null) {
@@ -66,8 +68,24 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
     fun initAction() {
         entity?.clearGoalAi()
         entity?.clearTargetAi()
-        entity?.addGoalAi(WalkAi(this@PetEntity), 10)
-        entity?.addGoalAi(AttackAi(this@PetEntity), 11)
+        petData.petOption().action.forEach {
+            val id = it.id
+            val actionOption = id.getActionOption()
+            if (actionOption != null) {
+                val pri = it.priority
+                when (id) {
+                    "attack" -> {
+                        entity?.addGoalAi(AttackAi(this@PetEntity), pri)
+                    }
+                    "walk" -> {
+                        entity?.addGoalAi(WalkAi(this@PetEntity), pri)
+                    }
+                    else -> {
+                        entity?.addGoalAi(HookAi(actionOption, this@PetEntity), pri)
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -112,15 +130,15 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
     /**
      * @return 模型动作配置
      */
-    fun getActionOption(): List<ActionOption> {
-        return petData.petOption().model.action
+    fun getStateOption(): List<StateOption> {
+        return petData.petOption().model.state
     }
 
     /**
      * @return 模型动作配置
      */
-    fun getActionOption(action: String): ActionOption? {
-        getActionOption().forEach {
+    fun getStateOption(action: String): StateOption? {
+        getStateOption().forEach {
             if (it.id == action) return it
         }
         return null

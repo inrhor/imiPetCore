@@ -8,8 +8,6 @@ import cn.inrhor.imipetcore.api.event.FollowPetEvent
 import cn.inrhor.imipetcore.api.event.PetDeathEvent
 import cn.inrhor.imipetcore.api.event.ReceivePetEvent
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
-import cn.inrhor.imipetcore.api.manager.PetManager.delHp
-import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
@@ -116,30 +114,46 @@ object PetManager {
         setMetadata("imipetcore:$meta", FixedMetadataValue(ImiPetCore.plugin, obj))
     }
 
+    /**
+     * @return 有否标签 imipetcore:"meta"
+     */
     fun Entity.hasMeta(meta: String): Boolean {
         return hasMetadata("imipetcore:$meta")
     }
 
+    /**
+     * @return 标签数值
+     */
     fun Entity.getMeta(meta: String): MetadataValue? {
         return getMetadata("imipetcore:$meta")[0]
     }
 
+    /**
+     * @return 主人
+     */
     fun Entity.getOwner(): Player? {
         return Bukkit.getPlayer(UUID.fromString(getMeta("owner")?.asString()))
     }
 
-    fun UUID.delHp(owner: Player, double: Double) {
+    /**
+     * 扣除宠物当前血量
+     */
+    fun UUID.delCurrentHP(owner: Player, double: Double) {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.currentHP -= double
+        val entity = petData.petEntity?.entity ?: return
         if (attribute.currentHP <= 0) {
-            petData.petEntity?.entity?.remove()
+            entity.remove()
             PetDeathEvent(owner, petData).call()
         }
         AttributeChangePetEvent(owner, petData).call()
     }
 
-    fun UUID.addHp(owner: Player, double: Double) {
+    /**
+     * 增加宠物当前血量
+     */
+    fun UUID.addCurrentHP(owner: Player, double: Double) {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.currentHP += double

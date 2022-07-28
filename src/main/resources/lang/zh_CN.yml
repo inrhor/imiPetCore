@@ -1,1 +1,2 @@
-PET-EMPTY-FILE: "&c宠物配置文件夹不存在，现在新建示例配置"
+PET_EMPTY_FILE: "&c宠物配置文件夹不存在，现在新建示例配置"
+ACTION_EMPTY_FILE: "&c行为动作配置文件夹不存在，现在新建示例配置"

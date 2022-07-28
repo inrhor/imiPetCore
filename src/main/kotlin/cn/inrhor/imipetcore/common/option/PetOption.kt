@@ -5,7 +5,12 @@ import org.bukkit.entity.EntityType
 /**
  * 宠物配置
  */
-class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(), val entityType: EntityType = EntityType.PIG, val model: ModelOption = ModelOption())
+class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(), val entityType: EntityType = EntityType.PIG, val model: ModelOption = ModelOption(), val action: MutableList<ActionAiOption> = mutableListOf())
+
+/**
+ * 行为动作Ai
+ */
+class ActionAiOption(val id: String = "null", val priority: Int = 10)
 
 /**
  * option.default
@@ -23,6 +28,9 @@ class OptionAttribute(val health: Double = 20.0, val speed: Double = 1.0,
 /**
  * 宠物配置model
  */
-class ModelOption(val id: String = "", val action: MutableList<ActionOption> = mutableListOf())
+class ModelOption(val id: String = "", val state: MutableList<StateOption> = mutableListOf())
 
-class ActionOption(val id: String = "attack", val lerpin: Int = 0, val lerpout: Int = 1, val speed: Double = 1.0)
+/**
+ * 模型动画配置
+ */
+class StateOption(val id: String = "attack", val lerpin: Int = 0, val lerpout: Int = 1, val speed: Double = 1.0)

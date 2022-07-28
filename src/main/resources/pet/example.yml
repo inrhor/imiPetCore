@@ -10,9 +10,16 @@ pet:
       attack: 0.2
       attack_speed: 2
   entityType: PIG
+  action:
+    - id: attack
+      priority: 11
+    - id: walk
+      priority: 10
+    - id: lookowner
+      priority: 9
   model:
     id: hour
-    action:
+    state:
       - id: attack
         lerpin: 0
         lerpout: 1

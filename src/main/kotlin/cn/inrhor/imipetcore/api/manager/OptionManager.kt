@@ -1,6 +1,8 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.api.data.DataContainer.actionOptionMap
 import cn.inrhor.imipetcore.api.data.DataContainer.petOptionMap
+import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.PetOption
 
 object OptionManager {
@@ -16,5 +18,19 @@ object OptionManager {
      */
     fun PetOption.save() {
         petOptionMap[id] = this
+    }
+
+    /**
+     * @return HookAi
+     */
+    fun String.getActionOption(): ActionOption? {
+        return actionOptionMap[this]
+    }
+
+    /**
+     * 存储动物行为Ai配置
+     */
+    fun ActionOption.save() {
+        actionOptionMap[name] = this
     }
 }

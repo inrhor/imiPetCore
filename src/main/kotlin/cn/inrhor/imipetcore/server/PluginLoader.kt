@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.server
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.common.file.loadAction
 import cn.inrhor.imipetcore.common.file.loadPet
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
@@ -14,6 +15,7 @@ object PluginLoader {
     @Awake(LifeCycle.LOAD)
     fun load() {
         loadPet()
+        loadAction()
     }
 
     @Awake(LifeCycle.DISABLE)

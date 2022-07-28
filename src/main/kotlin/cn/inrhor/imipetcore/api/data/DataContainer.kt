@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.api.data
 
 import cn.inrhor.imipetcore.api.entity.state.ActiveState
 import cn.inrhor.imipetcore.common.database.data.PlayerData
+import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import org.bukkit.entity.Player
 import taboolib.common.io.getInstance
@@ -27,6 +28,8 @@ object DataContainer {
      * 行为容器
      */
     val actionMap = ConcurrentHashMap<String, Class<*>>()
+
+    val actionOptionMap = ConcurrentHashMap<String, ActionOption>()
 
     /**
      * @return 取实例化行为

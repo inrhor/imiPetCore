@@ -42,7 +42,7 @@ data class AttackAi(val petEntity: PetEntity, val action: String = "attack"): Si
             if (speed == delay) {
                 (target as LivingEntity).damage(attribute.attack, entity)
                 val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
-                val attackOption = petEntity.getActionOption(action)
+                val attackOption = petEntity.getStateOption(action)
                 if (attackOption != null) {
                     active?.addState(action, attackOption.lerpin, attackOption.lerpout, attackOption.speed)
                 }
