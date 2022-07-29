@@ -1,4 +1,4 @@
 action:
   lookowner:
-      should: "pet owner boxMax distance pet boxMax < 2.0 random2 20 is 6"
-      start: "pet look owner"
+      should: "distance boxMax pet owner to boxMax pet entity < 2.0 random2 20 is 6"
+      start: "tell 'okok'"

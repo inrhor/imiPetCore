@@ -43,7 +43,7 @@ class StateData(var state: String = "walk", val actionState: MutableMap<String, 
     /**
      * 更新行为
      */
-    fun updateState(petEntity: PetEntity, name: String, target: Entity?) {
+    fun updateState(petEntity: PetEntity, name: String, target: Entity? = null) {
         if (!existState(name)) return
         state = name
         callState(petEntity, target)

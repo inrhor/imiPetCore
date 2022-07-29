@@ -11,16 +11,20 @@ class HookAi(val actionOption: ActionOption, val petEntity: PetEntity): SimpleAi
 
     override fun shouldExecute(): Boolean {
         val owner = petEntity.owner
-        return KetherShell.eval(actionOption.should, sender = adaptPlayer(owner)).thenApply {
+        return KetherShell.eval("if all [ ${actionOption.should} ]", sender = adaptPlayer(owner)) {
+            rootFrame().variables()["@PetOwner"] = petEntity.owner
+            rootFrame().variables()["@PetEntity"] = petEntity.entity
+        }.thenApply {
             Coerce.toBoolean(it)
         }.getNow(true)
     }
 
     override fun startTask() {
         val owner = petEntity.owner
-        KetherShell.eval(actionOption.should, sender = adaptPlayer(owner)).thenApply {
-            Coerce.toBoolean(it)
-        }.getNow(true)
+        KetherShell.eval(actionOption.start, sender = adaptPlayer(owner)) {
+            rootFrame().variables()["@PetOwner"] = petEntity.owner
+            rootFrame().variables()["@PetEntity"] = petEntity.entity
+        }
     }
 
     override fun continueExecute(): Boolean {
