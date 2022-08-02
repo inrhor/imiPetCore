@@ -8,7 +8,7 @@ import java.util.*
  * 实现数据MySQL
  */
 class DatabaseSQL: Database() {
-    override fun deletePet(uuid: UUID, pUUID: UUID) {
+    override fun deletePet(uuid: UUID, name: String) {
 
     }
 

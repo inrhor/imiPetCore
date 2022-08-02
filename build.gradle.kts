@@ -17,8 +17,9 @@ taboolib {
     install("module-kether")
     install("module-metrics")
     install("platform-bukkit")
+    install("expansion-command-helper")
     classifier = null
-    version = "6.0.9-26"
+    version = "6.0.9-45"
 }
 
 repositories {

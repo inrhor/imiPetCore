@@ -21,7 +21,7 @@ abstract class Database {
     /**
      * 删除宠物数据
      */
-    abstract fun deletePet(uuid: UUID, pUUID: UUID)
+    abstract fun deletePet(uuid: UUID, name: String)
 
     /**
      * 拉取数据

@@ -26,16 +26,21 @@ object PetManager {
     /**
      * 添加新的宠物数据
      *
-     * @param pUUID 宠物UUID
+     * @param name 宠物名称，不可重复
      * @param id 宠物ID
      * @param following 跟随与否，默认为false
      */
-    fun Player.addPet(pUUID: UUID = UUID.randomUUID(), id: String, following: Boolean = false) {
-        val a = id.petOption().default.attribute
+    fun Player.addPet(name: String, id: String, following: Boolean = false) {
+        if (existPetName(name)) {
+            // lang
+            return
+        }
+        val def = id.petOption().default
+        val a = def.attribute
         val p = a.health
-        val petData = PetData(pUUID.toString(), id, following, AttributeData(p, p, a.speed, a.attack))
+        val petData = PetData(name, id, following, AttributeData(p, p, a.speed, a.attack))
         addPet(petData)
-        if (following) callPet(petData.uniqueId())
+        if (following) callPet(name)
     }
 
     /**
@@ -50,38 +55,48 @@ object PetManager {
     }
 
     /**
-     * 删除宠物
-     * @param pUUID 宠物UUID
+     * @return 存在重复名称宠物
      */
-    fun Player.deletePet(pUUID: UUID) {
+    fun Player.existPetName(name: String): Boolean {
+        getData().petDataList.forEach {
+            if (it.name == name) return true
+        }
+        return false
+    }
+
+    /**
+     * 删除宠物
+     * @param name 宠物唯一名称
+     */
+    fun Player.deletePet(name: String) {
         val list = getData().petDataList.iterator()
         while (list.hasNext()) {
-            if (list.next().uniqueId() == pUUID) {
+            val pet = list.next()
+            if (pet.name == name) {
+                pet.petEntity?.entity?.remove()
                 list.remove(); break
             }
         }
-        database.deletePet(uniqueId, pUUID)
+        database.deletePet(uniqueId, name)
     }
 
     /**
-     * @param pUUID 宠物UUID
-     *
      * @return 返回宠物数据
      */
-    fun Player.getPet(pUUID: UUID): PetData {
+    fun Player.getPet(name: String): PetData {
         getData().petDataList.forEach {
-            if (pUUID == it.uniqueId()) return it
+            if (name == it.name) return it
         }
-        error("null pet uuid")
+        error("null pet name")
     }
 
     /**
-     * @param pUUID 宠物UUID
+     * @param name 宠物唯一名称
      *
      * @return 宠物实体
      */
-    fun Player.petEntity(pUUID: UUID): PetEntity {
-        val petData = getPet(pUUID)
+    fun Player.petEntity(name: String): PetEntity {
+        val petData = getPet(name)
         if (petData.petEntity == null) petData.petEntity = PetEntity(this, petData)
         return petData.petEntity?: error("error init entity")
     }
@@ -99,13 +114,13 @@ object PetManager {
      *
      * @param following 跟随（默认true)
      */
-    fun Player.callPet(pUUID: UUID, following: Boolean = true) {
+    fun Player.callPet(name: String, following: Boolean = true) {
         if (following) {
-            petEntity(pUUID).spawn()
+            petEntity(name).spawn()
         }else {
-            petEntity(pUUID).back()
+            petEntity(name).back()
         }
-        val petData = getPet(pUUID)
+        val petData = getPet(name)
         database.updatePet(uniqueId, petData)
         FollowPetEvent(this, petData, following).call()
     }
@@ -138,7 +153,7 @@ object PetManager {
     /**
      * 扣除宠物当前血量
      */
-    fun UUID.delCurrentHP(owner: Player, double: Double) {
+    fun String.delCurrentHP(owner: Player, double: Double) {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.currentHP -= double
@@ -153,7 +168,7 @@ object PetManager {
     /**
      * 增加宠物当前血量
      */
-    fun UUID.addCurrentHP(owner: Player, double: Double) {
+    fun String.addCurrentHP(owner: Player, double: Double) {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.currentHP += double

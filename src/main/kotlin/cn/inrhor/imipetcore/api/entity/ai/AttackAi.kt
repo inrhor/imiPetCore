@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.ai
+package cn.inrhor.imipetcore.api.entity.ai
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import org.bukkit.entity.LivingEntity

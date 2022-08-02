@@ -26,7 +26,7 @@ class DatabaseLocal: Database() {
         val yaml = Configuration.loadFromFile(getLocal(uuid))
         yaml.getConfigurationSection("pet")?.getKeys(false)?.forEach {
             val petData = yaml.getObject<PetData>("pet.$it", false)
-            petData.uuid = it
+            petData.name = it
             uuid.playerData().petDataList.add(petData)
         }
     }
@@ -34,14 +34,14 @@ class DatabaseLocal: Database() {
     override fun updatePet(uuid: UUID, petData: PetData) {
         val file = getLocal(uuid)
         val yaml = Configuration.loadFromFile(file)
-        yaml.setObject("pet.${petData.uuid}", petData)
+        yaml.setObject("pet.${petData.name}", petData)
         yaml.saveToFile(file)
     }
 
-    override fun deletePet(uuid: UUID, pUUID: UUID) {
+    override fun deletePet(uuid: UUID, name: String) {
         val file = getLocal(uuid)
         val yaml = Configuration.loadFromFile(file)
-        yaml["pet.$pUUID"] = null
+        yaml["pet.$name"] = null
         yaml.saveToFile(file)
     }
 }

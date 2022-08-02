@@ -1,7 +1,11 @@
 package cn.inrhor.imipetcore.common.script.kether
 
+import cn.inrhor.imipetcore.api.manager.PetManager.callPet
+import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
+import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
+import taboolib.common.platform.function.info
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -47,6 +51,34 @@ class PetAction {
                 }
                 case("owner") {
                     ActionPetEntity(ActionPetEntity.WhoType.OWNER)
+                }
+                case("select") {
+                    val next = it.nextToken()
+                    actionNow {
+                        variables().set("@PetData", player().getPet(next))
+                    }
+                }
+                case("follow") {
+                    when (it.expects("set", "get")) {
+                        "set" -> {
+                            val a = it.next(ArgTypes.BOOLEAN)
+                            actionNow {
+                                info("aaaa $a") // info()
+                                player().callPet(selectPetData().name, a)
+                            }
+                        }
+                        "get" -> {
+                            actionNow {
+                                selectPetData().following
+                            }
+                        }
+                        else -> error("pet follow set/get")
+                    }
+                }
+                case("release") {
+                    actionNow {
+                        player().deletePet(selectPetData().name)
+                    }
                 }
             }
         }

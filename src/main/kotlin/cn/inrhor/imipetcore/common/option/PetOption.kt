@@ -15,7 +15,7 @@ class ActionAiOption(val id: String = "null", val priority: Int = 10)
 /**
  * option.default
  */
-class DefaultOption(val name: List<String> = listOf(), val attribute: OptionAttribute = OptionAttribute()
+class DefaultOption(val displayName: String = "", val attribute: OptionAttribute = OptionAttribute()
 )
 
 /**

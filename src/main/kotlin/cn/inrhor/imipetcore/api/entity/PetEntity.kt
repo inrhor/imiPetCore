@@ -5,9 +5,9 @@ import cn.inrhor.imipetcore.api.data.StateData
 import cn.inrhor.imipetcore.api.entity.state.ActiveState
 import cn.inrhor.imipetcore.api.manager.OptionManager.getActionOption
 import cn.inrhor.imipetcore.api.manager.PetManager.setMeta
-import cn.inrhor.imipetcore.common.ai.AttackAi
-import cn.inrhor.imipetcore.common.ai.HookAi
-import cn.inrhor.imipetcore.common.ai.WalkAi
+import cn.inrhor.imipetcore.api.entity.ai.AttackAi
+import cn.inrhor.imipetcore.api.entity.ai.HookAi
+import cn.inrhor.imipetcore.api.entity.ai.WalkAi
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.StateOption
 import com.ticxo.modelengine.api.ModelEngineAPI
@@ -53,6 +53,7 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
             owner.sendLang("PET-IS-DEAD")
             return
         }
+        if (entity != null) return
         petData.following = true
         if (entity != null) return
         entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
