@@ -4,8 +4,10 @@ import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.data.DataContainer.petOptionMap
 import cn.inrhor.imipetcore.api.manager.PetManager.addPet
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
+import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
 import taboolib.expansion.createHelper
 
@@ -19,6 +21,13 @@ object Command {
     @CommandBody
     val main = mainCommand {
         createHelper()
+    }
+
+    @CommandBody(permission = "imipetcore.use.open")
+    val open = subCommand {
+        execute<Player> { sender, _, _ ->
+            homePetUi.open(sender)
+        }
     }
 
     @CommandBody(permission = "imipetcore.admin.send")

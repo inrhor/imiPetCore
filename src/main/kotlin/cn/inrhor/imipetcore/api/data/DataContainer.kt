@@ -29,6 +29,9 @@ object DataContainer {
      */
     val actionMap = ConcurrentHashMap<String, Class<*>>()
 
+    /**
+     * 行为配置容器
+     */
     val actionOptionMap = ConcurrentHashMap<String, ActionOption>()
 
     /**

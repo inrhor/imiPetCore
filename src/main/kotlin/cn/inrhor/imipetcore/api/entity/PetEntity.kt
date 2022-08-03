@@ -57,7 +57,7 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
         petData.following = true
         if (entity != null) return
         entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
-        entity?.setMeta("entity", petData.uuid)
+        entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
         updateModel()

@@ -1,11 +1,16 @@
 package cn.inrhor.imipetcore.common.option
 
+import cn.inrhor.imipetcore.common.ui.ItemElement
 import org.bukkit.entity.EntityType
 
 /**
  * 宠物配置
  */
-class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(), val entityType: EntityType = EntityType.PIG, val model: ModelOption = ModelOption(), val action: MutableList<ActionAiOption> = mutableListOf())
+class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(),
+                val entityType: EntityType = EntityType.PIG,
+                val model: ModelOption = ModelOption(),
+                val action: MutableList<ActionAiOption> = mutableListOf(),
+                val item: ItemElement = ItemElement())
 
 /**
  * 行为动作Ai

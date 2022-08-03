@@ -8,10 +8,10 @@ import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Linked
 import taboolib.platform.util.buildItem
 
-class HomeUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: PetSlot = PetSlot(),
-             val previous: ButtonElement = ButtonElement(),
-             val close: ButtonElement = ButtonElement(),
-             val next: ButtonElement = ButtonElement()
+class HomePetUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: PetSlot = PetSlot(),
+                val previous: ButtonElement = ButtonElement(),
+                val close: ButtonElement = ButtonElement(),
+                val next: ButtonElement = ButtonElement()
 ) {
 
     fun open(player: Player, page: Int = 0) {
@@ -25,7 +25,7 @@ class HomeUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: Pet
                 element.petOption().item.itemStack
             }
             onClick { event, element ->
-                
+                event.clicker.sendMessage("test "+element.name)
             }
         }
     }

@@ -31,6 +31,6 @@ pet:
         lerpin: 0
         lerpout: 1
         speed: 1.0
-    item:
-      material: APPLY
-      model-data: 12
+  item:
+    material: APPLY
+    modelData: 12
