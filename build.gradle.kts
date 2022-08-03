@@ -18,6 +18,7 @@ taboolib {
     install("module-metrics")
     install("platform-bukkit")
     install("expansion-command-helper")
+    install("module-ui")
     classifier = null
     version = "6.0.9-45"
 }
