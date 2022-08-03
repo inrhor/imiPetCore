@@ -1,5 +1,7 @@
 package cn.inrhor.imipetcore.common.ui
 
+import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.common.database.data.PetData
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import taboolib.module.ui.openMenu
@@ -13,11 +15,17 @@ class HomeUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: Pet
 ) {
 
     fun open(player: Player, page: Int = 0) {
-        player.openMenu<Linked<PetElements>>(title.replace("{page}", "$page")) {
+        player.openMenu<Linked<PetData>>(title.replace("{page}", "$page")) {
             rows(rows)
             slots(pet.slot)
             elements {
-
+                player.getData().petDataList
+            }
+            onGenerate() { _, element, _, _ ->
+                element.petOption().item.itemStack
+            }
+            onClick { event, element ->
+                
             }
         }
     }
@@ -28,8 +36,8 @@ class PetSlot(val slot: List<Int> = listOf())
 
 class ButtonElement(val slot: Int = 0, val item: ItemElement = ItemElement())
 
-class ItemElement(val material: Material = Material.APPLE, val name: String = "", val modelData: Int = 0) {
-    val item = buildItem(this@ItemElement.material) {
+class ItemElement(val material: Material = Material.APPLE, val name: String = "", val lore: List<String> = listOf(),val modelData: Int = 0) {
+    val itemStack = buildItem(this@ItemElement.material) {
         name = this@ItemElement.name
         customModelData = modelData
     }
