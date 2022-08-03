@@ -32,5 +32,9 @@ pet:
         lerpout: 1
         speed: 1.0
   item:
-    material: APPLY
+    material: APPLE
+    name: "&f                                    "
+    lore:
+      - "     &f名称：&8{{pet name}}"
+      - ""
     modelData: 12

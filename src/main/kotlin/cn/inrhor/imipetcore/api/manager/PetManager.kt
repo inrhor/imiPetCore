@@ -125,6 +125,13 @@ object PetManager {
         FollowPetEvent(this, petData, following).call()
     }
 
+    /**
+     * 重命名宠物名称
+     */
+    fun Player.renamePet(petData: PetData, newName: String) {
+        petData.name = newName
+    }
+
     fun Entity.setMeta(meta: String, obj: Any) {
         setMetadata("imipetcore:$meta", FixedMetadataValue(ImiPetCore.plugin, obj))
     }

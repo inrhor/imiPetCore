@@ -3,6 +3,7 @@ package cn.inrhor.imipetcore.common.script.kether
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
+import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
 import taboolib.common.platform.function.info
@@ -43,7 +44,7 @@ class PetAction {
     }
 
     companion object {
-        @KetherParser(["pet"])
+        @KetherParser(["pet"], shared = true)
         fun parserPet() = scriptParser {
             it.switch {
                 case("entity") {
@@ -59,20 +60,33 @@ class PetAction {
                     }
                 }
                 case("follow") {
-                    when (it.expects("set", "get")) {
-                        "set" -> {
-                            val a = it.next(ArgTypes.BOOLEAN)
-                            actionNow {
-                                info("aaaa $a") // info()
-                                player().callPet(selectPetData().name, a)
-                            }
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.next(ArgTypes.BOOLEAN)
+                        actionNow {
+                            info("aaaa $a") // info()
+                            player().callPet(selectPetData().name, a)
                         }
-                        "get" -> {
-                            actionNow {
-                                selectPetData().following
-                            }
+                    }catch (ex: Throwable) {
+                        actionNow {
+                            selectPetData().following
                         }
-                        else -> error("pet follow set/get")
+                    }
+                }
+                case("name") {
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.nextToken()
+                        actionNow {
+                            player().renamePet(selectPetData(), a)
+                        }
+                    }catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().name
+                        }
                     }
                 }
                 case("release") {

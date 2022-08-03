@@ -1,4 +1,4 @@
-title: 宠物 | 主页面 [{page}]
+title: 宠物 | 主页面 [{{page}}]
 rows: 6
 pet:
   slot: [
@@ -7,17 +7,17 @@ pet:
           28, 29, 30, 31, 32, 33, 34
   ]
 previous:
-  solt: 48
+  slot: 48
   item:
     material: SLIME_BALL
     name: "&a&l上一页"
 close:
-  solt: 49
+  slot: 49
   item:
     material: BARRIER
     name: "&c&l关闭"
 next:
-  solt: 50
+  slot: 50
   item:
     material: SLIME_BALL
     name: "&a&l下一页"
