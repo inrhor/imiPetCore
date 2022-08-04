@@ -1,23 +1,19 @@
-title: 宠物 | 主页面 [{{page}}]
+title: 宠物 | [{{pet name}}]
 rows: 6
-pet:
-  slot: [
-          10, 11, 12, 13, 14, 15, 16
-          19, 20, 21, 22, 23, 24, 25
-          28, 29, 30, 31, 32, 33, 34
-  ]
-previous:
-  slot: 48
-  item:
-    material: SLIME_BALL
-    name: "&a&l上一页"
-close:
-  slot: 49
-  item:
-    material: BARRIER
-    name: "&c&l关闭"
-next:
-  slot: 50
-  item:
-    material: SLIME_BALL
-    name: "&a&l下一页"
+slot: [
+    10, 11, 12, 13, 14, 15, 16
+    19, 20, 21, 22, 23, 24, 25
+    28, 29, 30, 31, 32, 33, 34
+]
+button:
+  - item:
+      material: LEAD
+      name: "&f                                    "
+      lore:
+        - "     &f跟随状态：&8{{pet follow}}"
+        - ""
+        - "     &7&o点击切换"
+        - ""
+    script: |
+      pet follow set pet follow =? false
+      ui open managerpet

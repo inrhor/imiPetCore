@@ -5,6 +5,7 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.save
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
+import cn.inrhor.imipetcore.common.ui.UiData.managerPetUi
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.getObject
 
@@ -40,4 +41,6 @@ fun loadAction() {
 fun loadUi() {
     val homeUiFile = ImiPetCore.resource.releaseResourceFile("ui/homePet.yml", false)
     homePetUi = Configuration.loadFromFile(homeUiFile).getObject("", false)
+    val managerPetUiFile = ImiPetCore.resource.releaseResourceFile("ui/managerpet.yml", false)
+    managerPetUi = Configuration.loadFromFile(managerPetUiFile).getObject("", false)
 }

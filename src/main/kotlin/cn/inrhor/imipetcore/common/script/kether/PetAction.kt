@@ -6,7 +6,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
-import taboolib.common.platform.function.info
+import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -63,12 +63,14 @@ class PetAction {
                     try {
                         it.mark()
                         it.expect("set")
-                        val a = it.next(ArgTypes.BOOLEAN)
+                        val a = it.next(ArgTypes.ACTION)
                         actionNow {
-                            info("aaaa $a") // info()
-                            player().callPet(selectPetData().name, a)
+                            newFrame(a).run<Any>().thenAccept { e ->
+                                player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                            }
                         }
                     }catch (ex: Throwable) {
+                        it.reset()
                         actionNow {
                             selectPetData().following
                         }

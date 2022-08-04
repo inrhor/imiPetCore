@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore
+package cn.inrhor.imipetcore.util
 
 import taboolib.common.util.VariableReader
 

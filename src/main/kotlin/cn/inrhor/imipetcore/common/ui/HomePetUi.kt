@@ -2,18 +2,14 @@ package cn.inrhor.imipetcore.common.ui
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.variableReader
+import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
+import cn.inrhor.imipetcore.common.script.kether.evalString
+import cn.inrhor.imipetcore.common.ui.UiData.managerPetUi
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import taboolib.common.platform.function.adaptPlayer
-import taboolib.common5.Coerce
-import taboolib.module.chat.colored
-import taboolib.module.kether.KetherShell
-import taboolib.module.kether.printKetherErrorMessage
 import taboolib.module.ui.openMenu
 import taboolib.module.ui.type.Linked
-import taboolib.platform.compat.replacePlaceholder
 import taboolib.platform.util.buildItem
 
 class HomePetUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: PetSlot = PetSlot(),
@@ -33,7 +29,6 @@ class HomePetUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: 
                 try {
                     element.petOption().item.itemStackPet(p, element)
                 }catch (ex: Throwable) {
-                    ex.printKetherErrorMessage()
                     ItemStack(Material.STONE)
                 }
             }
@@ -47,7 +42,7 @@ class HomePetUi(val title: String = "Home Pet Gui", val rows: Int = 6, val pet: 
                 player.closeInventory()
             }
             onClick { event, element ->
-                //
+                managerPetUi.open(event.clicker, element)
             }
         }
     }
@@ -61,28 +56,18 @@ class ButtonElement(val slot: Int = 0, val item: ItemElement = ItemElement())
 class ItemElement(val material: Material = Material.APPLE, val name: String = "", val lore: List<String> = listOf(),val modelData: Int = 0) {
     fun itemStack(player: Player): ItemStack = buildItem(this@ItemElement.material) {
         val a = this@ItemElement
-        name = a.name.replacePlaceholder(player).colored()
+        name = player.evalString(a.name)
         a.lore.forEach {
-            lore.add(it.replacePlaceholder(player).colored())
+            lore.add(player.evalString(it))
         }
         customModelData = modelData
     }
 
     fun itemStackPet(player: Player, petData: PetData): ItemStack = buildItem(this@ItemElement.material) {
         val a = this@ItemElement
-        name = a.name.replacePlaceholder(player).colored()
+        name = player.evalStrPetData(a.name, petData)
         a.lore.forEach { c ->
-            var text = c
-            c.variableReader().forEach { e ->
-                text = c.replace("{{$e}}",
-                    KetherShell.eval(e, sender = adaptPlayer(player)) {
-                        rootFrame().variables()["@PetData"] = petData
-                    }.thenApply {
-                        Coerce.toString(it)
-                    }.getNow(c)
-                ).replacePlaceholder(player).colored()
-            }
-            lore.add(text)
+            lore.add(player.evalStrPetData(c, petData))
         }
         customModelData = modelData
     }
