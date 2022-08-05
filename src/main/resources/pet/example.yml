@@ -10,12 +10,13 @@ pet:
       attack: 0.3
       attack_speed: 2
     exp: 30
+    # 等级上限
     level: 66
   trigger:
     - type: LEAVE_UP
       script: |
         pet exp set "$ 30*(pet_level*pet_level*pet_level+5*pet_level)-10"
-        pet attack set pet_attack+0.3*pet_level
+        pet attribute attack set pet_attack+0.3*pet_level
   entityType: PIG
   action:
     - id: attack

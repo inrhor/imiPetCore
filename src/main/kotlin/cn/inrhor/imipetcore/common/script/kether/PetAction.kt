@@ -4,6 +4,13 @@ import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
+import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
+import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
+import cn.inrhor.imipetcore.api.manager.PetManager.setLevel
+import cn.inrhor.imipetcore.api.manager.PetManager.setMaxExp
+import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
+import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
+import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
 import taboolib.common5.Coerce
@@ -94,6 +101,131 @@ class PetAction {
                 case("release") {
                     actionNow {
                         player().deletePet(selectPetData().name)
+                    }
+                }
+                case("attribute") {
+                    when (it.nextToken()) {
+                        "attack" -> {
+                            try {
+                                it.mark()
+                                it.expect("set")
+                                val a = it.nextDouble()
+                                actionNow {
+                                    selectPetData().name.setPetAttack(player(), a)
+                                }
+                            }catch (ex: Throwable) {
+                                it.reset()
+                                actionNow {
+                                    selectPetData().attribute.attack
+                                }
+                            }
+                        }
+                        "speed" -> {
+                            try {
+                                it.mark()
+                                it.expect("set")
+                                val a = it.nextDouble()
+                                actionNow {
+                                    selectPetData().name.setPetAttack(player(), a)
+                                }
+                            }catch (ex: Throwable) {
+                                it.reset()
+                                actionNow {
+                                    selectPetData().attribute.speed
+                                }
+                            }
+                        }
+                        "attack_speed" -> {
+                            try {
+                                it.mark()
+                                it.expect("set")
+                                val a = it.nextInt()
+                                actionNow {
+                                    selectPetData().name.setPetAttackSpeed(player(), a)
+                                }
+                            } catch (ex: Throwable) {
+                                it.reset()
+                                actionNow {
+                                    selectPetData().attribute.attack_speed
+                                }
+                            }
+                        }
+                        "current_hp" -> {
+                            try {
+                                it.mark()
+                                it.expect("set")
+                                val a = it.nextDouble()
+                                actionNow {
+                                    selectPetData().name.setCurrentHP(player(), a)
+                                }
+                            } catch (ex: Throwable) {
+                                it.reset()
+                                actionNow {
+                                    selectPetData().attribute.currentHP
+                                }
+                            }
+                        }
+                        "max_hp" -> {
+                            try {
+                                it.mark()
+                                it.expect("set")
+                                val a = it.nextDouble()
+                                actionNow {
+                                    selectPetData().name.setMaxHP(player(), a)
+                                }
+                            } catch (ex: Throwable) {
+                                it.reset()
+                                actionNow {
+                                    selectPetData().attribute.currentHP
+                                }
+                            }
+                        }
+                        else -> error("pet attribute ?")
+                    }
+                }
+                case("current_exp") {
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.nextInt()
+                        actionNow {
+                            selectPetData().name.setCurrentExp(player(), a)
+                        }
+                    } catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().currentExp
+                        }
+                    }
+                }
+                case("max_exp") {
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.nextInt()
+                        actionNow {
+                            selectPetData().name.setMaxExp(player(), a)
+                        }
+                    } catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().maxExp
+                        }
+                    }
+                }
+                case("level") {
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.nextInt()
+                        actionNow {
+                            selectPetData().name.setLevel(player(), a)
+                        }
+                    } catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().level
+                        }
                     }
                 }
             }

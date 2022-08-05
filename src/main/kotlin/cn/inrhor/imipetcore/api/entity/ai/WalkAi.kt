@@ -13,7 +13,7 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
     }
 
     override fun startTask() {
-        petEntity.entity?.navigationMove(petEntity.owner, petEntity.petData.petOption().default.attribute.speed)
+        petEntity.entity?.navigationMove(petEntity.owner, petEntity.petData.attribute.speed)
     }
 
     override fun continueExecute(): Boolean {

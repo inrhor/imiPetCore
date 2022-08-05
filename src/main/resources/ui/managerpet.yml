@@ -1,4 +1,4 @@
-title: 宠物 | [{{pet name}}]
+title: 宠物 | {{pet name}} [{{page}}]
 rows: 6
 slot: [
     10, 11, 12, 13, 14, 15, 16
@@ -17,3 +17,52 @@ button:
     script: |
       pet follow set pet follow =? false
       ui open managerpet
+  - item:
+      material: GOLDEN_APPLE
+      name: "&f                                    "
+      lore:
+        - "     &f血量：&8{{pet attribute current_hp}}&f/&8{{pet attribute max_hp}}"
+        - ""
+        - "     &7&o点击打开宠物医疗页面"
+        - ""
+      script: |
+        ui open managerpet
+  - item:
+      material: EXPERIENCE_BOTTLE
+      name: "&f                                    "
+      lore:
+        - "     &fLv.&8{{pet level}}"
+        - "     &f经验进度：&8{{pet current_exp}}&f/&8{{pet max_exp}}"
+        - ""
+        - "     &7&o点击刷新"
+        - ""
+      script: |
+        ui open managerpet
+  - item:
+      material: BOW
+      name: "&f                                    "
+      lore:
+        - "     &c属性"
+        - "     &f速度：&8{{pet attribute speed}}"
+        - "     &f攻击：&8{{pet attribute attack}}"
+        - "     &f攻击速度：&8{{pet attribute attack_speed}}"
+        - ""
+        - "     &7&o点击刷新"
+        - ""
+      script: |
+        ui open managerpet
+previous:
+  slot: 48
+  item:
+    material: SLIME_BALL
+    name: "&a&l上一页"
+close:
+  slot: 49
+  item:
+    material: BARRIER
+    name: "&c&l关闭"
+next:
+  slot: 50
+  item:
+    material: SLIME_BALL
+    name: "&a&l下一页"

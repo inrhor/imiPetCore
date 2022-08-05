@@ -8,6 +8,7 @@ import cn.inrhor.imipetcore.api.event.FollowPetEvent
 import cn.inrhor.imipetcore.api.event.PetDeathEvent
 import cn.inrhor.imipetcore.api.event.ReceivePetEvent
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
+import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
@@ -38,7 +39,8 @@ object PetManager {
         val def = id.petOption().default
         val a = def.attribute
         val p = a.health
-        val petData = PetData(name, id, following, AttributeData(p, p, a.speed, a.attack))
+        val petData = PetData(name, id, following,
+            AttributeData(p, p, a.speed, a.attack, a.attack_speed), 0, def.exp)
         addPet(petData)
         if (following) callPet(name)
     }
@@ -181,6 +183,83 @@ object PetManager {
         attribute.currentHP += double
         val max = attribute.maxHP
         if (attribute.currentHP > max) attribute.currentHP = max
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物当前血量
+     */
+    fun String.setCurrentHP(owner: Player, value: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.currentHP = value
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物最大血量
+     */
+    fun String.setMaxHP(owner: Player, value: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.maxHP = value
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物攻击属性
+     */
+    fun String.setPetAttack(owner: Player, attack: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.attack = attack
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物行走速度
+     */
+    fun String.setPetSpeed(owner: Player, speed: Double) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.speed = speed
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物攻击速度
+     */
+    fun String.setPetAttackSpeed(owner: Player, attack_speed: Int) {
+        val petData = owner.getPet(this)
+        val attribute = petData.attribute
+        attribute.attack_speed = attack_speed
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物当前经验
+     */
+    fun String.setCurrentExp(owner: Player, value: Int) {
+        val petData = owner.getPet(this)
+        petData.currentExp = value
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物最大经验
+     */
+    fun String.setMaxExp(owner: Player, value: Int) {
+        val petData = owner.getPet(this)
+        petData.maxExp = value
+        AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 设置宠物当前等级
+     */
+    fun String.setLevel(owner: Player, value: Int) {
+        val petData = owner.getPet(this)
+        petData.level = value
         AttributeChangePetEvent(owner, petData).call()
     }
 

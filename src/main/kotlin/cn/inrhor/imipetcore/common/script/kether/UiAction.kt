@@ -13,19 +13,25 @@ class UiAction {
         @KetherParser(["ui"], shared = true)
         fun parser() = scriptParser {
             it.switch {
+                case("page") {
+                    actionNow {
+                        getUiPage()
+                    }
+                }
                 case("close") {
                     actionNow {
                         player().closeInventory()
                     }
                 }
                 case("open") {
-                    val a = it.nextToken().lowercase()
-                    when (a) {
+                    when (it.nextToken().lowercase()) {
                         "homepet" -> {
                             val page = try {
+                                it.mark()
                                 it.expect("page")
                                 it.nextInt()
                             }catch (ex: Throwable) {
+                                it.reset()
                                 0
                             }
                             actionNow {
@@ -33,8 +39,16 @@ class UiAction {
                             }
                         }
                         "managerpet" -> {
+                            val page = try {
+                                it.mark()
+                                it.expect("page")
+                                it.nextInt()
+                            }catch (ex: Throwable) {
+                                it.reset()
+                                0
+                            }
                             actionNow {
-                                managerPetUi.open(player(), selectPetData())
+                                managerPetUi.open(player(), selectPetData(), page)
                             }
                         }
                         else -> error("ui open ?")

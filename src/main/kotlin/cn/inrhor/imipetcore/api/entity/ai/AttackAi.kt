@@ -7,7 +7,7 @@ import taboolib.module.ai.navigationMove
 
 data class AttackAi(val petEntity: PetEntity, val action: String = "attack"): SimpleAi() {
 
-    private val speed = petEntity.petData.petOption().default.attribute.attack_speed*20
+    private val speed = petEntity.petData.attribute.attack_speed*20
 
     /**
      * 检测
@@ -33,7 +33,7 @@ data class AttackAi(val petEntity: PetEntity, val action: String = "attack"): Si
      */
     override fun startTask() {
         val entity = petEntity.entity?: return
-        val attribute = petEntity.petData.petOption().default.attribute
+        val attribute = petEntity.petData.attribute
         val attack = petEntity.getActionData(action)?: return
         val target = attack.entity
         val delay = attack.delay

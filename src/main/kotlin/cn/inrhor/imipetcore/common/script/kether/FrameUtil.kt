@@ -16,3 +16,6 @@ fun ScriptFrame.selectPetData() = variables().get<PetData>("@PetData")
     .orElse(null)?: error("unknown @PetData")
 
 fun ScriptFrame.player() = script().sender?.castSafely<Player>()?: error("unknown player")
+
+fun ScriptFrame.getUiPage() = variables().get<Int?>("@UiPage")
+    .orElse(null)?: 0

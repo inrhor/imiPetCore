@@ -11,7 +11,7 @@ class AttackState: ActiveState() {
     override val action = "attack"
 
     override fun run(petEntity: PetEntity, target: Entity?) {
-        delay = petEntity.petData.petOption().default.attribute.attack_speed*20
+        delay = petEntity.petData.attribute.attack_speed*20
         entity = target
     }
 

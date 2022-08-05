@@ -20,7 +20,8 @@ class ActionAiOption(val id: String = "null", val priority: Int = 10)
 /**
  * option.default
  */
-class DefaultOption(val displayName: String = "", val attribute: OptionAttribute = OptionAttribute()
+class DefaultOption(val displayName: String = "", val attribute: OptionAttribute = OptionAttribute(),
+                    val exp: Int = 100, val level: Int = 100
 )
 
 /**
