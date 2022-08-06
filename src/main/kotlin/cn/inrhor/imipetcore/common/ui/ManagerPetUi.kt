@@ -9,6 +9,7 @@ import taboolib.module.ui.type.Linked
 
 class ManagerPetUi(val title: String = "Pet Gui", val rows: Int = 6, val slot: List<Int> = listOf(),
                    val button: MutableList<ButtonUi> = mutableListOf(),
+                   val custom: MutableList<CustomButton> = mutableListOf(),
                    val previous: ButtonElement = ButtonElement(),
                    val close: ButtonElement = ButtonElement(),
                    val next: ButtonElement = ButtonElement()) {
@@ -22,6 +23,11 @@ class ManagerPetUi(val title: String = "Pet Gui", val rows: Int = 6, val slot: L
             }
             onGenerate { player, element, _, _ ->
                 element.item.itemStackPet(player, petData)
+            }
+            custom.forEach {
+                set(it.slot, it.item.itemStackPet(player, petData)) {
+                    clicker.eval(it.script)
+                }
             }
             setPreviousPage(previous.slot) { _, _ ->
                 previous.item.itemStack(player)
@@ -45,3 +51,4 @@ class ManagerPetUi(val title: String = "Pet Gui", val rows: Int = 6, val slot: L
 }
 
 class ButtonUi(val item: ItemElement = ItemElement(), val script: String = "")
+class CustomButton(val slot: Int = 0, val item: ItemElement = ItemElement(), val script: String = "")

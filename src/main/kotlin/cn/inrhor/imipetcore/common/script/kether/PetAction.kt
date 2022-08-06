@@ -16,6 +16,7 @@ import org.bukkit.util.Vector
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
+import taboolib.module.ai.controllerLookAt
 import taboolib.module.kether.*
 import java.util.concurrent.CompletableFuture
 
@@ -23,7 +24,7 @@ class PetAction {
 
     class ActionPetEntity(val who: WhoType): ScriptAction<Entity>() {
         override fun run(frame: ScriptFrame): CompletableFuture<Entity> {
-            val e = if (who == WhoType.OWNER) frame.selectPetOwner() else frame.selectPetEntity()
+            val e = if (who == WhoType.OWNER) frame.selectPetData().petEntity?.owner else frame.selectPetData().petEntity?.entity
             return CompletableFuture.completedFuture(e)
         }
 
@@ -50,6 +51,15 @@ class PetAction {
         }
     }
 
+    class ActionPetLook(val en: ParsedAction<*>): ScriptAction<Void>() {
+        override fun run(frame: ScriptFrame): CompletableFuture<Void> {
+            frame.newFrame(en).run<Entity>().thenApply {
+                frame.selectPetData().petEntity?.entity?.controllerLookAt(it)
+            }
+            return CompletableFuture.completedFuture(null)
+        }
+    }
+
     companion object {
         @KetherParser(["pet"], shared = true)
         fun parserPet() = scriptParser {
@@ -59,6 +69,10 @@ class PetAction {
                 }
                 case("owner") {
                     ActionPetEntity(ActionPetEntity.WhoType.OWNER)
+                }
+                case("look") {
+                    val en = it.next(ArgTypes.ACTION)
+                    ActionPetLook(en)
                 }
                 case("select") {
                     val next = it.nextToken()

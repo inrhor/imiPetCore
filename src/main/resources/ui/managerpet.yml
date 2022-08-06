@@ -15,7 +15,7 @@ button:
         - "     &7&o点击切换"
         - ""
     script: |
-      pet follow set pet follow =? false
+      pet follow set check pet follow =? false
       ui open managerpet
   - item:
       material: GOLDEN_APPLE
@@ -51,6 +51,13 @@ button:
         - ""
       script: |
         ui open managerpet
+custom:
+  - slot: 8
+    item:
+      material: CHEST
+      name: "&7&l返回"
+    script:
+      ui open homepet
 previous:
   slot: 48
   item:
