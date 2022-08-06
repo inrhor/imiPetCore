@@ -71,17 +71,17 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
         entity?.clearTargetAi()
         petData.petOption().action.forEach {
             val id = it.id
-            val actionOption = id.getActionOption()
-            if (actionOption != null) {
-                val pri = it.priority
-                when (id) {
-                    "attack" -> {
-                        entity?.addGoalAi(AttackAi(this@PetEntity), pri)
-                    }
-                    "walk" -> {
-                        entity?.addGoalAi(WalkAi(this@PetEntity), pri)
-                    }
-                    else -> {
+            val pri = it.priority
+            when (id) {
+                "attack" -> {
+                    entity?.addGoalAi(AttackAi(this@PetEntity), pri)
+                }
+                "walk" -> {
+                    entity?.addGoalAi(WalkAi(this@PetEntity), pri)
+                }
+                else -> {
+                    val actionOption = id.getActionOption()
+                    if (actionOption != null) {
                         entity?.addGoalAi(HookAi(actionOption, this@PetEntity), pri)
                     }
                 }

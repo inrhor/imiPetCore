@@ -41,9 +41,9 @@ data class AttackAi(val petEntity: PetEntity, val action: String = "attack"): Si
         if (entity.boundingBox.max.distance(target.boundingBox.max)<= 3.0) {
             if (speed == delay) {
                 (target as LivingEntity).damage(attribute.attack, entity)
-                val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
                 val attackOption = petEntity.getStateOption(action)
                 if (attackOption != null) {
+                    val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
                     active?.addState(action, attackOption.lerpin, attackOption.lerpout, attackOption.speed)
                 }
             }else if (delay == 0) {

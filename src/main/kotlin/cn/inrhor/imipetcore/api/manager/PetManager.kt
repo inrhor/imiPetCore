@@ -8,7 +8,6 @@ import cn.inrhor.imipetcore.api.event.FollowPetEvent
 import cn.inrhor.imipetcore.api.event.PetDeathEvent
 import cn.inrhor.imipetcore.api.event.ReceivePetEvent
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
-import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
@@ -135,28 +134,24 @@ object PetManager {
     }
 
     fun Entity.setMeta(meta: String, obj: Any) {
-        setMetadata("imipetcore:$meta", FixedMetadataValue(ImiPetCore.plugin, obj))
-    }
-
-    /**
-     * @return 有否标签 imipetcore:"meta"
-     */
-    fun Entity.hasMeta(meta: String): Boolean {
-        return hasMetadata("imipetcore:$meta")
+        setMetadata("imipetcore_$meta", FixedMetadataValue(ImiPetCore.plugin, obj))
     }
 
     /**
      * @return 标签数值
      */
     fun Entity.getMeta(meta: String): MetadataValue? {
-        return getMetadata("imipetcore:$meta")[0]
+        val s = "imipetcore_$meta"
+        if (!hasMetadata(s)) return null
+        return getMetadata(s)[0]
     }
 
     /**
      * @return 主人
      */
     fun Entity.getOwner(): Player? {
-        return Bukkit.getPlayer(UUID.fromString(getMeta("owner")?.asString()))
+        val get = getMeta("owner")?: return null
+        return Bukkit.getPlayer(UUID.fromString(get.asString()))
     }
 
     /**

@@ -32,6 +32,10 @@ pet:
         lerpin: 0
         lerpout: 1
         speed: 1.0
+      - id: lookowner
+        lerpin: 0
+        lerpout: 1
+        speed: 1.0
   item:
     material: APPLE
     name: "&f                                    "

@@ -23,6 +23,12 @@ class HookAi(val actionOption: ActionOption, val petEntity: PetEntity): SimpleAi
         KetherShell.eval(actionOption.start, sender = adaptPlayer(owner)) {
             rootFrame().variables()["@PetData"] = petEntity.petData
         }
+        val action = actionOption.name
+        val attackOption = petEntity.getStateOption(action)
+        if (attackOption != null) {
+            val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
+            active?.addState(action, attackOption.lerpin, attackOption.lerpout, attackOption.speed)
+        }
     }
 
     override fun continueExecute(): Boolean {
