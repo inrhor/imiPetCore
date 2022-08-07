@@ -1,7 +1,11 @@
 package cn.inrhor.imipetcore.common.option
 
+import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.ui.ItemElement
 import org.bukkit.entity.EntityType
+import org.bukkit.entity.Player
+import taboolib.common.platform.function.adaptPlayer
+import taboolib.module.kether.KetherShell
 
 /**
  * 宠物配置
@@ -10,7 +14,9 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
                 val entityType: EntityType = EntityType.PIG,
                 val model: ModelOption = ModelOption(),
                 val action: MutableList<ActionAiOption> = mutableListOf(),
-                val item: ItemElement = ItemElement())
+                val item: ItemElement = ItemElement(),
+                val trigger: MutableList<TriggerOption> = mutableListOf()
+)
 
 /**
  * 行为动作Ai
@@ -40,3 +46,28 @@ class ModelOption(val id: String = "", val state: MutableList<StateOption> = mut
  * 模型动画配置
  */
 class StateOption(val id: String = "attack", val lerpin: Int = 0, val lerpout: Int = 1, val speed: Double = 1.0)
+
+/**
+ * 触发器
+ */
+class TriggerOption(val type: Type = Type.LEVEL_UP, val script: String = "") {
+
+    fun runScript(player: Player, petData: PetData) {
+        val att = petData.attribute
+        KetherShell.eval(script, sender = adaptPlayer(player)) {
+            rootFrame().variables()["@PetData"] = petData
+            rootFrame().variables()["pet_level"] = petData.level
+            rootFrame().variables()["pet_attack"] = att.attack
+            rootFrame().variables()["pet_attack_speed"] = att.attack_speed
+            rootFrame().variables()["pet_speed"] = att.speed
+            rootFrame().variables()["pet_current_exp"] = petData.currentExp
+            rootFrame().variables()["pet_max_exp"] = petData.maxExp
+            rootFrame().variables()["pet_current_hp"] = att.currentHP
+            rootFrame().variables()["pet_max_hp"] = att.maxHP
+        }
+    }
+
+    enum class Type {
+        LEVEL_UP
+    }
+}

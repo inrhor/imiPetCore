@@ -17,7 +17,11 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
         if (attack != null) {
             attack.entity = null
         }
-        petEntity.entity?.navigationMove(petEntity.owner, petEntity.petData.attribute.speed)
+        val pet = petEntity.entity?: return
+        val ow = petEntity.owner
+        if (pet.world != ow.world) {
+            pet.teleport(ow)
+        }else pet.navigationMove(ow, petEntity.petData.attribute.speed)
     }
 
     override fun continueExecute(): Boolean {

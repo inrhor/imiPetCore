@@ -101,9 +101,11 @@ class PetAction {
                     try {
                         it.mark()
                         it.expect("set")
-                        val a = it.nextToken()
+                        val a = it.next(ArgTypes.ACTION)
                         actionNow {
-                            player().renamePet(selectPetData(), a)
+                            newFrame(a).run<String>().thenAccept { s ->
+                                player().renamePet(selectPetData(), s)
+                            }
                         }
                     }catch (ex: Throwable) {
                         it.reset()
@@ -123,9 +125,11 @@ class PetAction {
                             try {
                                 it.mark()
                                 it.expect("set")
-                                val a = it.nextDouble()
+                                val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    selectPetData().name.setPetAttack(player(), a)
+                                    newFrame(s).run<Double>().thenAccept { a ->
+                                        selectPetData().name.setPetAttack(player(), a)
+                                    }
                                 }
                             }catch (ex: Throwable) {
                                 it.reset()
@@ -138,9 +142,11 @@ class PetAction {
                             try {
                                 it.mark()
                                 it.expect("set")
-                                val a = it.nextDouble()
+                                val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    selectPetData().name.setPetAttack(player(), a)
+                                    newFrame(s).run<Double>().thenAccept { a ->
+                                        selectPetData().name.setPetAttack(player(), a)
+                                    }
                                 }
                             }catch (ex: Throwable) {
                                 it.reset()
@@ -153,9 +159,11 @@ class PetAction {
                             try {
                                 it.mark()
                                 it.expect("set")
-                                val a = it.nextInt()
+                                val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    selectPetData().name.setPetAttackSpeed(player(), a)
+                                    newFrame(s).run<Int>().thenAccept { a ->
+                                        selectPetData().name.setPetAttackSpeed(player(), a)
+                                    }
                                 }
                             } catch (ex: Throwable) {
                                 it.reset()
@@ -168,9 +176,11 @@ class PetAction {
                             try {
                                 it.mark()
                                 it.expect("set")
-                                val a = it.nextDouble()
+                                val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    selectPetData().name.setCurrentHP(player(), a)
+                                    newFrame(s).run<Double>().thenAccept { a ->
+                                        selectPetData().name.setCurrentHP(player(), a)
+                                    }
                                 }
                             } catch (ex: Throwable) {
                                 it.reset()
@@ -183,9 +193,11 @@ class PetAction {
                             try {
                                 it.mark()
                                 it.expect("set")
-                                val a = it.nextDouble()
+                                val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    selectPetData().name.setMaxHP(player(), a)
+                                    newFrame(s).run<Double>().thenAccept { a ->
+                                        selectPetData().name.setMaxHP(player(), a)
+                                    }
                                 }
                             } catch (ex: Throwable) {
                                 it.reset()
@@ -201,9 +213,11 @@ class PetAction {
                     try {
                         it.mark()
                         it.expect("set")
-                        val a = it.nextInt()
+                        val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            selectPetData().name.setCurrentExp(player(), a)
+                            newFrame(s).run<Int>().thenAccept { a ->
+                                selectPetData().name.setCurrentExp(player(), a)
+                            }
                         }
                     } catch (ex: Throwable) {
                         it.reset()
@@ -216,9 +230,11 @@ class PetAction {
                     try {
                         it.mark()
                         it.expect("set")
-                        val a = it.nextInt()
+                        val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            selectPetData().name.setMaxExp(player(), a)
+                            newFrame(s).run<Int>().thenAccept { a ->
+                                selectPetData().name.setMaxExp(player(), a)
+                            }
                         }
                     } catch (ex: Throwable) {
                         it.reset()
@@ -231,9 +247,11 @@ class PetAction {
                     try {
                         it.mark()
                         it.expect("set")
-                        val a = it.nextInt()
+                        val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            selectPetData().name.setLevel(player(), a)
+                            newFrame(s).run<Int>().thenAccept { a ->
+                                selectPetData().name.setLevel(player(), a)
+                            }
                         }
                     } catch (ex: Throwable) {
                         it.reset()

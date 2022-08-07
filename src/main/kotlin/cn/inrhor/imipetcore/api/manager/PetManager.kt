@@ -3,14 +3,12 @@ package cn.inrhor.imipetcore.api.manager
 import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
-import cn.inrhor.imipetcore.api.event.AttributeChangePetEvent
-import cn.inrhor.imipetcore.api.event.FollowPetEvent
-import cn.inrhor.imipetcore.api.event.PetDeathEvent
-import cn.inrhor.imipetcore.api.event.ReceivePetEvent
+import cn.inrhor.imipetcore.api.event.*
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.option.TriggerOption
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -236,8 +234,26 @@ object PetManager {
      */
     fun String.setCurrentExp(owner: Player, value: Int) {
         val petData = owner.getPet(this)
-        petData.currentExp = value
+        if (value >= petData.maxExp) {
+            petData.currentExp = 0
+            petData.addLevel(owner, 1)
+        }else petData.currentExp = value
         AttributeChangePetEvent(owner, petData).call()
+    }
+
+    /**
+     * 宠物升级
+     */
+    fun PetData.addLevel(player: Player, int: Int) {
+        val max = petOption().default.level
+        if (level >= max) return
+        level = if (level+int > max) max else level+int
+        petOption().trigger.forEach {
+            if (it.type == TriggerOption.Type.LEVEL_UP) {
+                it.runScript(player, this)
+            }
+        }
+        PetLevelEvent(player, this, int, level).call()
     }
 
     /**

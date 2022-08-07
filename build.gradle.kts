@@ -19,6 +19,7 @@ taboolib {
     install("platform-bukkit")
     install("expansion-command-helper")
     install("module-ui")
+    install("expansion-javascript")
     classifier = null
     version = "6.0.9-45"
 }
