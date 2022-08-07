@@ -127,8 +127,8 @@ class PetAction {
                                 it.expect("set")
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    newFrame(s).run<Double>().thenAccept { a ->
-                                        selectPetData().name.setPetAttack(player(), a)
+                                    newFrame(s).run<Any>().thenAccept { a ->
+                                        selectPetData().name.setPetAttack(player(), Coerce.toDouble(a))
                                     }
                                 }
                             }catch (ex: Throwable) {
@@ -144,8 +144,8 @@ class PetAction {
                                 it.expect("set")
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    newFrame(s).run<Double>().thenAccept { a ->
-                                        selectPetData().name.setPetAttack(player(), a)
+                                    newFrame(s).run<Any>().thenAccept { a ->
+                                        selectPetData().name.setPetAttack(player(), Coerce.toDouble(a))
                                     }
                                 }
                             }catch (ex: Throwable) {
@@ -161,8 +161,8 @@ class PetAction {
                                 it.expect("set")
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    newFrame(s).run<Int>().thenAccept { a ->
-                                        selectPetData().name.setPetAttackSpeed(player(), a)
+                                    newFrame(s).run<Any>().thenAccept { a ->
+                                        selectPetData().name.setPetAttackSpeed(player(), Coerce.toInteger(a))
                                     }
                                 }
                             } catch (ex: Throwable) {
@@ -178,8 +178,8 @@ class PetAction {
                                 it.expect("set")
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    newFrame(s).run<Double>().thenAccept { a ->
-                                        selectPetData().name.setCurrentHP(player(), a)
+                                    newFrame(s).run<Any>().thenAccept { a ->
+                                        selectPetData().name.setCurrentHP(player(), Coerce.toDouble(a))
                                     }
                                 }
                             } catch (ex: Throwable) {
@@ -195,8 +195,8 @@ class PetAction {
                                 it.expect("set")
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    newFrame(s).run<Double>().thenAccept { a ->
-                                        selectPetData().name.setMaxHP(player(), a)
+                                    newFrame(s).run<Any>().thenAccept { a ->
+                                        player().setMaxHP(selectPetData(), Coerce.toDouble(a))
                                     }
                                 }
                             } catch (ex: Throwable) {
@@ -215,8 +215,8 @@ class PetAction {
                         it.expect("set")
                         val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            newFrame(s).run<Int>().thenAccept { a ->
-                                selectPetData().name.setCurrentExp(player(), a)
+                            newFrame(s).run<Any>().thenAccept { a ->
+                                selectPetData().name.setCurrentExp(player(), Coerce.toInteger(a))
                             }
                         }
                     } catch (ex: Throwable) {
@@ -232,8 +232,8 @@ class PetAction {
                         it.expect("set")
                         val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            newFrame(s).run<Int>().thenAccept { a ->
-                                selectPetData().name.setMaxExp(player(), a)
+                            newFrame(s).run<Any>().thenAccept { a ->
+                                player().setMaxExp(selectPetData(), Coerce.toInteger(a))
                             }
                         }
                     } catch (ex: Throwable) {
@@ -249,8 +249,8 @@ class PetAction {
                         it.expect("set")
                         val s = it.next(ArgTypes.ACTION)
                         actionNow {
-                            newFrame(s).run<Int>().thenAccept { a ->
-                                selectPetData().name.setLevel(player(), a)
+                            newFrame(s).run<Any>().thenAccept { a ->
+                                selectPetData().name.setLevel(player(), Coerce.toInteger(a))
                             }
                         }
                     } catch (ex: Throwable) {

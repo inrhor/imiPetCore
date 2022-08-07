@@ -128,7 +128,12 @@ object PetManager {
      * 重命名宠物名称
      */
     fun Player.renamePet(petData: PetData, newName: String) {
+        val old = petData.name
+        /*
+        判断重复命名
+         */
         petData.name = newName
+        database.renamePet(uniqueId, old, petData)
     }
 
     fun Entity.setMeta(meta: String, obj: Any) {
@@ -164,7 +169,7 @@ object PetManager {
             entity.remove()
             PetDeathEvent(owner, petData).call()
         }
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -176,7 +181,7 @@ object PetManager {
         attribute.currentHP += double
         val max = attribute.maxHP
         if (attribute.currentHP > max) attribute.currentHP = max
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -186,17 +191,16 @@ object PetManager {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.currentHP = value
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
      * 设置宠物最大血量
      */
-    fun String.setMaxHP(owner: Player, value: Double) {
-        val petData = owner.getPet(this)
+    fun Player.setMaxHP(petData: PetData, value: Double) {
         val attribute = petData.attribute
         attribute.maxHP = value
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(this, petData).call()
     }
 
     /**
@@ -206,7 +210,7 @@ object PetManager {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.attack = attack
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -216,7 +220,7 @@ object PetManager {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.speed = speed
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -226,7 +230,7 @@ object PetManager {
         val petData = owner.getPet(this)
         val attribute = petData.attribute
         attribute.attack_speed = attack_speed
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -238,7 +242,7 @@ object PetManager {
             petData.currentExp = 0
             petData.addLevel(owner, 1)
         }else petData.currentExp = value
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
     /**
@@ -259,10 +263,9 @@ object PetManager {
     /**
      * 设置宠物最大经验
      */
-    fun String.setMaxExp(owner: Player, value: Int) {
-        val petData = owner.getPet(this)
+    fun Player.setMaxExp(petData: PetData, value: Int) {
         petData.maxExp = value
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(this, petData).call()
     }
 
     /**
@@ -271,7 +274,7 @@ object PetManager {
     fun String.setLevel(owner: Player, value: Int) {
         val petData = owner.getPet(this)
         petData.level = value
-        AttributeChangePetEvent(owner, petData).call()
+        PetChangeEvent(owner, petData).call()
     }
 
 }

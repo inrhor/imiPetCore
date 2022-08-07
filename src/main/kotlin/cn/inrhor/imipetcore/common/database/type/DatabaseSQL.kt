@@ -19,4 +19,8 @@ class DatabaseSQL: Database() {
     override fun pull(uuid: UUID) {
 
     }
+
+    override fun renamePet(uuid: UUID, oldName: String, petData: PetData) {
+
+    }
 }

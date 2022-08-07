@@ -5,8 +5,8 @@ import org.bukkit.entity.Player
 import taboolib.platform.type.BukkitProxyEvent
 
 /**
- * 宠物属性状态变化事件
+ * 宠物数据变化事件
  * @param player
  * @param petData 宠物数据
  */
-class AttributeChangePetEvent(val player: Player, val petData: PetData): BukkitProxyEvent()
+class PetChangeEvent(val player: Player, val petData: PetData): BukkitProxyEvent()

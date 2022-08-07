@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.database
 
+import cn.inrhor.imipetcore.api.event.PetChangeEvent
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.type.*
 import org.bukkit.event.player.PlayerJoinEvent
@@ -24,6 +25,11 @@ abstract class Database {
     abstract fun deletePet(uuid: UUID, name: String)
 
     /**
+     * 宠物重命名
+     */
+    abstract fun renamePet(uuid: UUID, oldName: String, petData: PetData)
+
+    /**
      * 拉取数据
      * @param uuid
      */
@@ -43,6 +49,11 @@ abstract class Database {
         @SubscribeEvent
         fun join(ev: PlayerJoinEvent) {
             database.pull(ev.player.uniqueId)
+        }
+
+        @SubscribeEvent
+        fun petChange(ev: PetChangeEvent) {
+            database.updatePet(ev.player.uniqueId, ev.petData)
         }
 
     }

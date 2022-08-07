@@ -44,4 +44,12 @@ class DatabaseLocal: Database() {
         yaml["pet.$name"] = null
         yaml.saveToFile(file)
     }
+
+    override fun renamePet(uuid: UUID, oldName: String, petData: PetData) {
+        val file = getLocal(uuid)
+        val yaml = Configuration.loadFromFile(file)
+        yaml["pet.$oldName"] = null
+        yaml.setObject("pet.${petData.name}", petData)
+        yaml.saveToFile(file)
+    }
 }
