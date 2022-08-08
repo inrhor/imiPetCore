@@ -1,4 +1,4 @@
 action:
   lookowner:
-    should: "check distance boxMax pet owner to boxMax pet entity < 2.0 check random2 36 is 6"
+    should: "check world pet owner to pet entity =? true check distance boxMax pet owner to boxMax pet entity < 2.0 check random2 36 is 6"
     start: "pet look pet owner"

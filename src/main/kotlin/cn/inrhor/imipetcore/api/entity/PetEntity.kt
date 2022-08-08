@@ -113,18 +113,16 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
      */
     fun updateModel() {
         val name = owner.evalStrPetData(petData.petOption().default.displayName, petData)
-        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null) {
-            val modelID = petData.petOption().model.id
-            if (petData.following && modelID.isNotEmpty()) {
-                val me = ModelEngineAPI.api.modelManager
-                val active = me.createActiveModel(modelID)
-                if (modelEntity == null) modelEntity = me.createModeledEntity(entity)
-                modelEntity?.addActiveModel(active)
-                modelEntity?.detectPlayers()
-                modelEntity?.isInvisible = true
-                modelEntity?.nametagHandler?.setCustomName("name", name) // 标签 tag_name
-                modelEntity?.nametagHandler?.setCustomNameVisibility("name", true)
-            }
+        val modelID = petData.petOption().model.id
+        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null && petData.following && modelID.isNotEmpty()) {
+            val me = ModelEngineAPI.api.modelManager
+            val active = me.createActiveModel(modelID)
+            if (modelEntity == null) modelEntity = me.createModeledEntity(entity)
+            modelEntity?.addActiveModel(active)
+            modelEntity?.detectPlayers()
+            modelEntity?.isInvisible = true
+            modelEntity?.nametagHandler?.setCustomName("name", name) // 标签 tag_name
+            modelEntity?.nametagHandler?.setCustomNameVisibility("name", true)
         }else {
             entity?.customName = name
             entity?.isCustomNameVisible = true
