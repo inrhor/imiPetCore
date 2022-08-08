@@ -10,8 +10,10 @@ import cn.inrhor.imipetcore.api.entity.ai.HookAi
 import cn.inrhor.imipetcore.api.entity.ai.WalkAi
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.StateOption
+import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.model.ModeledEntity
+import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.module.ai.*
@@ -110,14 +112,22 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
      * 更新宠物模型
      */
     fun updateModel() {
-        val modelID = petData.petOption().model.id
-        if (petData.following && modelID.isNotEmpty()) {
-            val me = ModelEngineAPI.api.modelManager
-            val active = me.createActiveModel(modelID)
-            if (modelEntity == null)modelEntity = me.createModeledEntity(entity)
-            modelEntity?.addActiveModel(active)
-            modelEntity?.detectPlayers()
-            modelEntity?.isInvisible = true
+        val name = owner.evalStrPetData(petData.petOption().default.displayName, petData)
+        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null) {
+            val modelID = petData.petOption().model.id
+            if (petData.following && modelID.isNotEmpty()) {
+                val me = ModelEngineAPI.api.modelManager
+                val active = me.createActiveModel(modelID)
+                if (modelEntity == null) modelEntity = me.createModeledEntity(entity)
+                modelEntity?.addActiveModel(active)
+                modelEntity?.detectPlayers()
+                modelEntity?.isInvisible = true
+                modelEntity?.nametagHandler?.setCustomName("name", name) // 标签 tag_name
+                modelEntity?.nametagHandler?.setCustomNameVisibility("name", true)
+            }
+        }else {
+            entity?.customName = name
+            entity?.isCustomNameVisible = true
         }
     }
 

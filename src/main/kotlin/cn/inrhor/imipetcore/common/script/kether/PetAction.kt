@@ -110,7 +110,7 @@ class PetAction {
                     }catch (ex: Throwable) {
                         it.reset()
                         actionNow {
-                            selectPetData().name
+                            player()
                         }
                     }
                 }
@@ -128,7 +128,7 @@ class PetAction {
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(s).run<Any>().thenAccept { a ->
-                                        selectPetData().name.setPetAttack(player(), Coerce.toDouble(a))
+                                        player().setPetAttack(selectPetData(), Coerce.toDouble(a))
                                     }
                                 }
                             }catch (ex: Throwable) {
@@ -145,7 +145,7 @@ class PetAction {
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(s).run<Any>().thenAccept { a ->
-                                        selectPetData().name.setPetAttack(player(), Coerce.toDouble(a))
+                                        player().setPetAttack(selectPetData(), Coerce.toDouble(a))
                                     }
                                 }
                             }catch (ex: Throwable) {
@@ -162,7 +162,7 @@ class PetAction {
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(s).run<Any>().thenAccept { a ->
-                                        selectPetData().name.setPetAttackSpeed(player(), Coerce.toInteger(a))
+                                        player().setPetAttackSpeed(selectPetData(), Coerce.toInteger(a))
                                     }
                                 }
                             } catch (ex: Throwable) {
@@ -179,7 +179,7 @@ class PetAction {
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(s).run<Any>().thenAccept { a ->
-                                        selectPetData().name.setCurrentHP(player(), Coerce.toDouble(a))
+                                        player().setCurrentHP(selectPetData(), Coerce.toDouble(a))
                                     }
                                 }
                             } catch (ex: Throwable) {
@@ -216,7 +216,7 @@ class PetAction {
                         val s = it.next(ArgTypes.ACTION)
                         actionNow {
                             newFrame(s).run<Any>().thenAccept { a ->
-                                selectPetData().name.setCurrentExp(player(), Coerce.toInteger(a))
+                                player().setCurrentExp(selectPetData(), Coerce.toInteger(a))
                             }
                         }
                     } catch (ex: Throwable) {
@@ -250,7 +250,7 @@ class PetAction {
                         val s = it.next(ArgTypes.ACTION)
                         actionNow {
                             newFrame(s).run<Any>().thenAccept { a ->
-                                selectPetData().name.setLevel(player(), Coerce.toInteger(a))
+                                player().setLevel(selectPetData(), Coerce.toInteger(a))
                             }
                         }
                     } catch (ex: Throwable) {

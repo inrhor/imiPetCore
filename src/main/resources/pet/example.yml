@@ -1,9 +1,7 @@
 pet:
   id: test
   default:
-    displayName: |
-      pet name
-      player name
+    displayName: pet name
     attribute:
       health: 20.22
       speed: 1.0
