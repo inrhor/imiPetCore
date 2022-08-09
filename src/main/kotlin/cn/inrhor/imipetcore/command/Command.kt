@@ -6,11 +6,15 @@ import cn.inrhor.imipetcore.api.manager.PetManager.addPet
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.common.script.kether.eval
 import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
+import cn.inrhor.imipetcore.server.PluginLoader.loadTask
+import cn.inrhor.imipetcore.server.PluginLoader.logo
+import cn.inrhor.imipetcore.server.PluginLoader.unloadTask
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
 import taboolib.expansion.createHelper
+import taboolib.platform.util.sendLang
 
 /**
  * /imiPetCore
@@ -77,6 +81,16 @@ object Command {
             execute<Player> { sender, _, argument ->
                 sender.eval(argument)
             }
+        }
+    }
+
+    @CommandBody(permission = "imipetcore.admin.reload")
+    val reload = subCommand {
+        execute<CommandSender> { sender, _, _ ->
+            logo()
+            unloadTask()
+            loadTask()
+            sender.sendLang("COMMAND_RELOAD")
         }
     }
 

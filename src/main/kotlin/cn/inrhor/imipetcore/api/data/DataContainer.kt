@@ -1,11 +1,9 @@
 package cn.inrhor.imipetcore.api.data
 
-import cn.inrhor.imipetcore.api.entity.state.ActiveState
 import cn.inrhor.imipetcore.common.database.data.PlayerData
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import org.bukkit.entity.Player
-import taboolib.common.io.getInstance
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -17,7 +15,7 @@ object DataContainer {
     /**
      * 玩家容器
      */
-    private val playerContainer = ConcurrentHashMap<UUID, PlayerData>()
+    val playerContainer = ConcurrentHashMap<UUID, PlayerData>()
 
     /**
      * 宠物配置容器
@@ -25,22 +23,9 @@ object DataContainer {
     val petOptionMap = ConcurrentHashMap<String, PetOption>()
 
     /**
-     * 行为容器
-     */
-    val actionMap = ConcurrentHashMap<String, Class<*>>()
-
-    /**
      * 行为配置容器
      */
     val actionOptionMap = ConcurrentHashMap<String, ActionOption>()
-
-    /**
-     * @return 取实例化行为
-     */
-    fun String.getAction(): ActiveState? {
-        if (!actionMap.containsKey(this)) return null
-        return actionMap[this]?.getInstance(true)?.get() as ActiveState
-    }
 
     /**
      * @return 获得玩家数据

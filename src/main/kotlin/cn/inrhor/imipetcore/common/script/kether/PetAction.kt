@@ -11,6 +11,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setMaxExp
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
+import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.World
 import org.bukkit.entity.Entity
 import org.bukkit.util.Vector
@@ -34,19 +35,11 @@ class PetAction {
         }
     }
 
-    class ActionBoxMax(val en: ParsedAction<*>): ScriptAction<Vector>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Vector> {
-            return frame.newFrame(en).run<Entity>().thenApply {
-                it.boundingBox.max
-            }
-        }
-    }
-
     class ActionDistance(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Double>() {
         override fun run(frame: ScriptFrame): CompletableFuture<Double> {
-            return frame.newFrame(v1).run<Vector>().thenApply { i1 ->
-                frame.newFrame(v2).run<Vector>().thenApply { i2 ->
-                    i1.distance(i2)
+            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
+                frame.newFrame(v2).run<Entity>().thenApply { i2 ->
+                    i1.distanceLoc(i2)
                 }.join()
             }
         }
@@ -272,12 +265,6 @@ class PetAction {
                     }
                 }
             }
-        }
-
-        @KetherParser(["boxMax"])
-        fun parserBox() = scriptParser {
-            val en = it.next(ArgTypes.ACTION)
-            ActionBoxMax(en)
         }
 
         @KetherParser(["distance"])

@@ -1,10 +1,7 @@
 package cn.inrhor.imipetcore.api.entity
 
-import cn.inrhor.imipetcore.api.data.DataContainer.getAction
-import cn.inrhor.imipetcore.api.data.StateData
-import cn.inrhor.imipetcore.api.entity.state.ActiveState
 import cn.inrhor.imipetcore.api.manager.OptionManager.getActionOption
-import cn.inrhor.imipetcore.api.manager.PetManager.setMeta
+import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.entity.ai.AttackAi
 import cn.inrhor.imipetcore.api.entity.ai.HookAi
 import cn.inrhor.imipetcore.api.entity.ai.WalkAi
@@ -25,7 +22,7 @@ import taboolib.platform.util.sendLang
  * @param owner 主人
  * @param petData 宠物数据
  */
-class PetEntity(val owner: Player, val petData: PetData, var state: StateData = StateData()) {
+class PetEntity(val owner: Player, val petData: PetData) {
 
     /**
      * 实体
@@ -36,16 +33,6 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
      * 模型
      */
     var modelEntity: ModeledEntity? = null
-
-    init {
-        getStateOption().forEach {
-            val id = it.id
-            val action = id.getAction()
-            if (action != null) {
-                state.addState(id, action)
-            }
-        }
-    }
 
     /**
      * 释放宠物
@@ -127,13 +114,6 @@ class PetEntity(val owner: Player, val petData: PetData, var state: StateData = 
             entity?.customName = name
             entity?.isCustomNameVisible = true
         }
-    }
-
-    /**
-     * @return 行为状态数据
-     */
-    fun getActionData(name: String): ActiveState? {
-        return state.actionState[name]
     }
 
     /**

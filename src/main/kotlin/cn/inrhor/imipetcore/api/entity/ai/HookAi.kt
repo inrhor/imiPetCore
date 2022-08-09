@@ -6,23 +6,28 @@ import taboolib.common.platform.function.adaptPlayer
 import taboolib.common5.Coerce
 import taboolib.module.ai.SimpleAi
 import taboolib.module.kether.KetherShell
+import java.util.concurrent.CompletableFuture
 
-class HookAi(val actionOption: ActionOption, val petEntity: PetEntity): SimpleAi() {
+class HookAi(val actionOption: ActionOption, val petEntity: PetEntity, var time: Int = 0): SimpleAi() {
+
+    private fun eval(script: String): CompletableFuture<Any?> {
+        val owner = petEntity.owner
+        return KetherShell.eval("all [ $script ]", sender = adaptPlayer(owner)) {
+            rootFrame().variables()["@PetData"] = petEntity.petData
+            rootFrame().variables()["@TaskTime"] = time
+        }
+    }
 
     override fun shouldExecute(): Boolean {
-        val owner = petEntity.owner
-        return KetherShell.eval("all [ ${actionOption.should} ]", sender = adaptPlayer(owner)) {
-            rootFrame().variables()["@PetData"] = petEntity.petData
-        }.thenApply {
+        time = actionOption.taskTime
+        return eval(actionOption.shouldExecute).thenApply {
             Coerce.toBoolean(it)
         }.getNow(true)
     }
 
     override fun startTask() {
-        val owner = petEntity.owner
-        KetherShell.eval(actionOption.start, sender = adaptPlayer(owner)) {
-            rootFrame().variables()["@PetData"] = petEntity.petData
-        }
+        time = actionOption.taskTime
+        eval(actionOption.startTask)
         val action = actionOption.name
         val attackOption = petEntity.getStateOption(action)
         if (attackOption != null) {
@@ -32,7 +37,18 @@ class HookAi(val actionOption: ActionOption, val petEntity: PetEntity): SimpleAi
     }
 
     override fun continueExecute(): Boolean {
-        return false
+        return eval(actionOption.continueExecute).thenApply {
+            Coerce.toBoolean(it)
+        }.getNow(true)
+    }
+
+    override fun updateTask() {
+        eval(actionOption.updateTask)
+        time--
+    }
+
+    override fun resetTask() {
+        eval(actionOption.resetTask)
     }
 
 }
