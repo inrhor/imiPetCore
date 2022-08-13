@@ -1,0 +1,9 @@
+title: 医疗页面 | {{pet name}}
+rows: 4
+custom:
+  - slot: 8
+    item:
+      material: CHEST
+      name: "&7&l返回"
+    script:
+      ui open managerpet page ui page
