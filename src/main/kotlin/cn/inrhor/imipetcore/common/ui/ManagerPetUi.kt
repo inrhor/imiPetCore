@@ -51,4 +51,5 @@ class ManagerPetUi(val title: String = "Pet Gui", val rows: Int = 6, val slot: L
 }
 
 class ButtonUi(val item: ItemElement = ItemElement(), val script: String = "")
-class CustomButton(val slot: Int = 0, val item: ItemElement = ItemElement(), val script: String = "")
+class CustomButton(val slot: Int = 0, val item: ItemElement = ItemElement(),
+                   val script: String = "", val condition: String = "")

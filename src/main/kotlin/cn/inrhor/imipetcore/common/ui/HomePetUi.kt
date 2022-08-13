@@ -63,11 +63,11 @@ class ItemElement(val material: Material = Material.APPLE, val name: String = ""
         customModelData = modelData
     }
 
-    fun itemStackPet(player: Player, petData: PetData): ItemStack = buildItem(this@ItemElement.material) {
+    fun itemStackPet(player: Player, petData: PetData, vararg variable: UiVariable): ItemStack = buildItem(this@ItemElement.material) {
         val a = this@ItemElement
-        name = player.evalStrPetData(a.name, petData)
+        name = player.evalStrPetData(a.name, petData, *variable)
         a.lore.forEach { c ->
-            lore.add(player.evalStrPetData(c, petData))
+            lore.add(player.evalStrPetData(c, petData, *variable))
         }
         customModelData = modelData
     }

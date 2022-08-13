@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.script.kether
 
+import cn.inrhor.imipetcore.common.ui.UiData
 import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
 import cn.inrhor.imipetcore.common.ui.UiData.managerPetUi
 import taboolib.module.kether.KetherParser
@@ -52,6 +53,17 @@ class UiAction {
                             }
                         }
                         else -> error("ui open ?")
+                    }
+                }
+                case("custom") {
+                    when (it.nextToken()) {
+                        "open" -> {
+                            val ui = it.nextToken()
+                            actionNow {
+                                UiData.customUi[ui]?.open(player(), selectPetData())
+                            }
+                        }
+                        else -> error("ui custom ?")
                     }
                 }
             }

@@ -9,6 +9,7 @@ import cn.inrhor.imipetcore.common.database.type.DatabaseType
 import cn.inrhor.imipetcore.common.file.loadAction
 import cn.inrhor.imipetcore.common.file.loadPet
 import cn.inrhor.imipetcore.common.file.loadUi
+import cn.inrhor.imipetcore.common.ui.UiData
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -57,6 +58,7 @@ object PluginLoader {
         DataContainer.petOptionMap.clear()
         DataContainer.actionOptionMap.clear()
         DataContainer.playerContainer.clear()
+        UiData.customUi.clear()
     }
 
     fun logo() {

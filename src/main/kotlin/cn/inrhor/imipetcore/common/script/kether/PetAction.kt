@@ -1,6 +1,8 @@
 package cn.inrhor.imipetcore.common.script.kether
 
+import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
+import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
@@ -97,7 +99,7 @@ class PetAction {
                     }catch (ex: Throwable) {
                         it.reset()
                         actionNow {
-                            selectPetData().following
+                            selectPetData().isFollow()
                         }
                     }
                 }
@@ -179,12 +181,32 @@ class PetAction {
                         "current_hp" -> {
                             try {
                                 it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setCurrentHP(selectPetData(), Coerce.toDouble(a))
+                                when (it.expects("set", "add", "del")) {
+                                    "set" -> {
+                                        val s = it.next(ArgTypes.ACTION)
+                                        actionNow {
+                                            newFrame(s).run<Any>().thenAccept { a ->
+                                                player().setCurrentHP(selectPetData(), Coerce.toDouble(a))
+                                            }
+                                        }
                                     }
+                                    "add" -> {
+                                        val s = it.next(ArgTypes.ACTION)
+                                        actionNow {
+                                            newFrame(s).run<Any>().thenAccept { a ->
+                                                player().addCurrentHP(selectPetData(), Coerce.toDouble(a))
+                                            }
+                                        }
+                                    }
+                                    "del" -> {
+                                        val s = it.next(ArgTypes.ACTION)
+                                        actionNow {
+                                            newFrame(s).run<Any>().thenAccept { a ->
+                                                player().delCurrentHP(selectPetData(), Coerce.toDouble(a))
+                                            }
+                                        }
+                                    }
+                                    else -> error("pet attribute current_hp ?")
                                 }
                             } catch (ex: Throwable) {
                                 it.reset()

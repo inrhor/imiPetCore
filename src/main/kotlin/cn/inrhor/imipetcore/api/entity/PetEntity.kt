@@ -38,7 +38,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
      * 释放宠物
      */
     fun spawn() {
-        if (isDead()) {
+        if (petData.isDead()) {
             owner.sendLang("PET-IS-DEAD")
             return
         }
@@ -83,16 +83,9 @@ class PetEntity(val owner: Player, val petData: PetData) {
      */
     fun back() {
         petData.following = false
-        if (isDead()) return
+        if (petData.isDead()) return
         entity?.remove()
         entity = null
-    }
-
-    /**
-     * @return 宠物死亡
-     */
-    fun isDead(): Boolean {
-        return entity?.isDead?: (petData.attribute.currentHP <= 0)
     }
 
     /**
@@ -101,7 +94,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
     fun updateModel() {
         val name = owner.evalStrPetData(petData.petOption().default.displayName, petData)
         val modelID = petData.petOption().model.id
-        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null && petData.following && modelID.isNotEmpty()) {
+        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null && petData.isFollow() && modelID.isNotEmpty()) {
             val me = ModelEngineAPI.api.modelManager
             val active = me.createActiveModel(modelID)
             if (modelEntity == null) modelEntity = me.createModeledEntity(entity)

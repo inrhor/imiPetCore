@@ -1,6 +1,10 @@
 package cn.inrhor.imipetcore.api.manager
 
 import cn.inrhor.imipetcore.ImiPetCore
+import cn.inrhor.imipetcore.api.manager.MetaManager.getMeta
+import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
+import cn.inrhor.imipetcore.api.manager.PetManager.getPet
+import cn.inrhor.imipetcore.common.database.data.PetData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -34,6 +38,14 @@ object MetaManager {
     fun Entity.getOwner(): Player? {
         val get = getMeta("owner")?: return null
         return Bukkit.getPlayer(UUID.fromString(get.toString()))
+    }
+
+    /**
+     * @return 宠物数据
+     */
+    fun Entity.getPetData(owner: Player): PetData? {
+        val e = getMeta("entity")?: return null
+        return owner.getPet(e.toString()).petEntity?.petData
     }
 
     /**

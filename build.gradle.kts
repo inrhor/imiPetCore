@@ -10,6 +10,7 @@ taboolib {
     install("common-5")
     install("module-ai")
     install("module-nms")
+    install("module-nms-util")
     install("module-configuration")
     install("module-database")
     install("module-lang")

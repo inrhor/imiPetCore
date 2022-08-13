@@ -12,7 +12,7 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
      */
     override fun shouldExecute(): Boolean {
         val owner = petEntity.owner
-        return !petEntity.isDead() && owner.isOnline && !owner.isDead &&
+        return !petEntity.petData.isDead() && owner.isOnline && !owner.isDead &&
                 (petEntity.entity?.distanceLoc(owner)?: 0.0) > 10.0
     }
 

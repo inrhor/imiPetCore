@@ -16,7 +16,7 @@ object JoinQuit {
     fun join(ev: PlayerJoinEvent) {
         submit(delay = 5L) {
             ev.player.getData().petDataList.forEach {
-                if (it.following) ev.player.callPet(it.name)
+                if (it.isFollow()) ev.player.callPet(it.name)
             }
         }
     }
@@ -24,7 +24,7 @@ object JoinQuit {
     @SubscribeEvent
     fun quit(ev: PlayerQuitEvent) {
         ev.player.getData().petDataList.forEach {
-            if (it.following) ev.player.callPet(it.name, false)
+            if (it.isFollow()) ev.player.callPet(it.name, false)
         }
     }
 

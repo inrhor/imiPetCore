@@ -4,5 +4,6 @@ object UiData {
 
     var homePetUi = HomePetUi()
     var managerPetUi = ManagerPetUi()
+    val customUi = mutableMapOf<String, CustomUi>()
 
 }

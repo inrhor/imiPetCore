@@ -25,8 +25,8 @@ button:
         - ""
         - "     &7&o点击打开宠物医疗页面"
         - ""
-      script: |
-        ui open managerpet
+    script: |
+      ui custom open medical
   - item:
       material: EXPERIENCE_BOTTLE
       name: "&f                                    "
@@ -36,8 +36,8 @@ button:
         - ""
         - "     &7&o点击刷新"
         - ""
-      script: |
-        ui open managerpet
+    script: |
+      ui open managerpet
   - item:
       material: BOW
       name: "&f                                    "
@@ -49,8 +49,8 @@ button:
         - ""
         - "     &7&o点击刷新"
         - ""
-      script: |
-        ui open managerpet
+    script: |
+      ui open managerpet
 custom:
   - slot: 8
     item:

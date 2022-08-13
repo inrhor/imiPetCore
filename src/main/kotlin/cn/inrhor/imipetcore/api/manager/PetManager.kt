@@ -1,6 +1,5 @@
 package cn.inrhor.imipetcore.api.manager
 
-import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
@@ -9,12 +8,7 @@ import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.TriggerOption
-import org.bukkit.Bukkit
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.metadata.FixedMetadataValue
-import org.bukkit.metadata.MetadataValue
-import java.util.*
 
 /**
  * 宠物管理器
@@ -103,7 +97,7 @@ object PetManager {
     fun Player.followingPet(): List<PetEntity> {
         val list = mutableListOf<PetEntity>()
         getData().petDataList.forEach {
-            if (it.following && it.petEntity != null) list.add(it.petEntity!!)
+            if (it.isFollow()) list.add(it.petEntity!!)
         }
         return list
     }

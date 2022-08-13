@@ -14,6 +14,18 @@ data class PetData(@Transient var name: String = "null_name", val id: String = "
 
     @Transient
     var petEntity: PetEntity? = null
+
+    /**
+     * @return 宠物死亡
+     */
+    fun isDead(): Boolean {
+        return petEntity?.entity?.isDead?: (attribute.currentHP <= 0)
+    }
+
+    fun isFollow(): Boolean {
+        if (petEntity?.entity == null) following = false
+        return following
+    }
 }
 
 /**

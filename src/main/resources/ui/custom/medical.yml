@@ -1,9 +1,50 @@
+id: medical
 title: 医疗页面 | {{pet name}}
 rows: 4
+# 宠物可用页面，空为无限制
+pet: []
+variable:
+  - name: value
+    default: "1"
 custom:
   - slot: 8
     item:
       material: CHEST
       name: "&7&l返回"
-    script:
-      ui open managerpet page ui page
+    script: |
+      pet select pet name
+      ui open managerpet
+  - slot: 12
+    item:
+      material: REDSTONE
+      name: "&f                                    "
+      lore:
+        - "     &f治疗量：&8{{get value}}"
+        - "     &f所需费用：&8{{$ 'value*10'}}"
+        - ""
+    condition: |
+      any [ check economy get >= $ "value*10" ]
+    script: |
+      pet select pet name
+      economy del $ "value*10"
+      pet attribute current_hp add value
+  - slot: 14
+    item:
+      material: OAK_SIGN
+      name: "&f                                    "
+      lore:
+        - "     &f点击设置治疗量"
+        - ""
+    script: |
+      input value line 0
+      type double
+      default 0
+      text [ "" "第一行输入数字"]
+      click "pet select pet name
+      ui custom open medical"
+  - slot: 31
+    item:
+      material: BARRIER
+      name: "&c&l关闭"
+    script: |
+      ui close
