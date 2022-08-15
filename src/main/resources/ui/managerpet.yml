@@ -51,6 +51,16 @@ button:
         - ""
     script: |
       ui open managerpet
+  - item:
+      material: NAME_TAG
+      name: "&f                                    "
+      lore:
+        - "     &f价格：&81000"
+        - ""
+        - "     &7&o点击重命名"
+        - ""
+    script: |
+      input select rename text [ "宠物重命名" "在下一行输入" ] line 3
 custom:
   - slot: 8
     item:
