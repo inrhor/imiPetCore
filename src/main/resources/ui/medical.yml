@@ -1,4 +1,3 @@
-id: medical
 title: 医疗页面 | {{pet name}}
 rows: 4
 custom:
@@ -7,7 +6,6 @@ custom:
       material: CHEST
       name: "&7&l返回"
     script: |
-      pet select pet name
       ui open managerpet
   - slot: 12
     item:
@@ -20,7 +18,6 @@ custom:
     condition: |
       any [ check economy get >= $ "value*10" ]
     script: |
-      pet select pet name
       economy del $ "value*10"
       pet attribute current_hp add value
   - slot: 14
@@ -31,12 +28,7 @@ custom:
         - "     &f点击设置治疗量"
         - ""
     script: |
-      input value line 0
-      type double
-      default 0
-      text [ "" "第一行输入数字"]
-      click "pet select pet name
-      ui custom open medical"
+      input select medical text [ "回复血量值" "下一行输入数字" ] line 3
   - slot: 31
     item:
       material: BARRIER

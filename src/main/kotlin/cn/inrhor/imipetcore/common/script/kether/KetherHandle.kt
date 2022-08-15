@@ -5,7 +5,6 @@ import cn.inrhor.imipetcore.common.ui.UiVariable
 import cn.inrhor.imipetcore.util.variableReader
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
-import taboolib.common.platform.function.info
 import taboolib.common5.Coerce
 import taboolib.module.chat.colored
 import taboolib.module.kether.KetherShell
@@ -30,7 +29,6 @@ fun Player.evalStrPetData(script: String, petData: PetData, vararg variable: UiV
         text = text.replace("{{$e}}", eval(e, {
             it.rootFrame().variables()["@PetData"] = petData
             variable.forEach { v ->
-                info("vvvvvv "+v.name+"   def "+v.default)
                 it.rootFrame().variables()[v.name] = v.default
             }
         }, {

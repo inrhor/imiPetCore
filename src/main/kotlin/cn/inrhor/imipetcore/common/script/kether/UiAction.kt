@@ -1,8 +1,8 @@
 package cn.inrhor.imipetcore.common.script.kether
 
-import cn.inrhor.imipetcore.common.ui.UiData
 import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
 import cn.inrhor.imipetcore.common.ui.UiData.managerPetUi
+import cn.inrhor.imipetcore.common.ui.UiData.medicalUi
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.actionNow
 import taboolib.module.kether.scriptParser
@@ -52,18 +52,20 @@ class UiAction {
                                 managerPetUi.open(player(), selectPetData(), page)
                             }
                         }
-                        else -> error("ui open ?")
-                    }
-                }
-                case("custom") {
-                    when (it.nextToken()) {
-                        "open" -> {
-                            val ui = it.nextToken()
+                        "medical" -> {
+                            val value = try {
+                                it.mark()
+                                it.expect("value")
+                                it.nextDouble()
+                            }catch (ex: Throwable) {
+                                it.reset()
+                                1.0
+                            }
                             actionNow {
-                                UiData.customUi[ui]?.open(player(), selectPetData())
+                                medicalUi.open(player(), selectPetData(), value)
                             }
                         }
-                        else -> error("ui custom ?")
+                        else -> error("ui open ?")
                     }
                 }
             }
