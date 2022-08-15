@@ -14,9 +14,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import cn.inrhor.imipetcore.common.location.distanceLoc
-import org.bukkit.World
 import org.bukkit.entity.Entity
-import org.bukkit.util.Vector
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
