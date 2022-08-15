@@ -1,11 +1,6 @@
 id: medical
 title: 医疗页面 | {{pet name}}
 rows: 4
-# 宠物可用页面，空为无限制
-pet: []
-variable:
-  - name: value
-    default: "1"
 custom:
   - slot: 8
     item:
