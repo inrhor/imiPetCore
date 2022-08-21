@@ -23,6 +23,7 @@ object PetDamage {
         }else {
             val owner = entity.getOwner()?: return
             val petData = entity.getPetData(owner)?: return
+            if (ev.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK) return
             owner.delCurrentHP(petData, ev.damage)
         }
     }

@@ -5,6 +5,7 @@ import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import taboolib.common.platform.event.EventPriority
 import taboolib.common.platform.event.SubscribeEvent
 
 /**
@@ -12,7 +13,7 @@ import taboolib.common.platform.event.SubscribeEvent
  */
 object OwnerAttack {
 
-    @SubscribeEvent
+    @SubscribeEvent(EventPriority.HIGH)
     fun e(ev: EntityDamageByEntityEvent) {
         if (ev.damager !is Player) return
         val player = ev.damager as Player

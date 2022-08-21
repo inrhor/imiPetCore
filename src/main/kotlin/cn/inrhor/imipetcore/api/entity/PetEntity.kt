@@ -44,7 +44,6 @@ class PetEntity(val owner: Player, val petData: PetData) {
         }
         if (entity != null) return
         petData.following = true
-        if (entity != null) return
         entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
@@ -84,6 +83,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
     fun back() {
         petData.following = false
         if (petData.isDead()) return
+        modelEntity?.clearModels()
+        modelEntity = null
         entity?.remove()
         entity = null
     }
