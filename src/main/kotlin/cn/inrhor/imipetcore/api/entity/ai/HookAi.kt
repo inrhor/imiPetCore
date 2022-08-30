@@ -1,6 +1,8 @@
 package cn.inrhor.imipetcore.api.entity.ai
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
+import cn.inrhor.imipetcore.api.manager.ModelManager.setModelState
+import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.option.ActionOption
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.common5.Coerce
@@ -29,10 +31,10 @@ class HookAi(val actionOption: ActionOption, val petEntity: PetEntity, var time:
         time = actionOption.taskTime
         eval(actionOption.startTask)
         val action = actionOption.name
-        val attackOption = petEntity.getStateOption(action)
-        if (attackOption != null) {
-            val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
-            active?.addState(action, attackOption.lerpin, attackOption.lerpout, attackOption.speed)
+        val stateOption = petEntity.getStateOption(action)
+        if (stateOption != null) {
+            val model = petEntity.model()
+            petEntity.entity?.setModelState(model.id, model.select, action, stateOption)
         }
     }
 

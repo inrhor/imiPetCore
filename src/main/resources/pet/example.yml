@@ -24,6 +24,7 @@ pet:
     - id: lookowner
       priority: 9
   model:
+    select: MODEL_ENGINE
     id: hour
     state:
       - id: attack

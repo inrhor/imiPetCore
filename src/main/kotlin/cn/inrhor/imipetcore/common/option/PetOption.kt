@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.common.option
 
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.ui.ItemElement
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
@@ -40,7 +41,7 @@ class OptionAttribute(val health: Double = 20.0, val speed: Double = 1.0,
 /**
  * 宠物配置model
  */
-class ModelOption(val id: String = "", val state: MutableList<StateOption> = mutableListOf())
+class ModelOption(val select: ModelSelect = ModelSelect.COMMON, val id: String = "", val state: MutableList<StateOption> = mutableListOf())
 
 /**
  * 模型动画配置

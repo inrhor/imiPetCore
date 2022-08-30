@@ -3,6 +3,8 @@ package cn.inrhor.imipetcore.api.entity.ai
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.metaEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.removeMeta
+import cn.inrhor.imipetcore.api.manager.ModelManager.setModelState
+import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.entity.LivingEntity
 import taboolib.module.ai.SimpleAi
@@ -34,16 +36,17 @@ data class AttackAi(val petEntity: PetEntity, val action: String = "attack", var
 
     override fun updateTask() {
         val entity = petEntity.entity?: return
-        val attribute = petEntity.petData.attribute
-        val target = petEntity.entity?.metaEntity("target")?: return
+        val petData = petEntity.petData
+        val attribute = petData.attribute
+        val target = entity.metaEntity("target")?: return
         entity.navigationMove(target.location, attribute.speed)
         if (entity.distanceLoc(target)<= 3.0) {
-            if (petEntity.petData.attribute.attack_speed*20 == delay) {
+            if (petData.attribute.attack_speed*20 == delay) {
                 (target as LivingEntity).damage(attribute.attack, entity)
                 val attackOption = petEntity.getStateOption(action)
                 if (attackOption != null) {
-                    val active = petEntity.modelEntity?.getActiveModel(petEntity.petData.petOption().model.id)
-                    active?.addState(action, attackOption.lerpin, attackOption.lerpout, attackOption.speed)
+                    val model = petEntity.model()
+                    entity.setModelState(model.id, model.select, action, attackOption)
                 }
             }else if (delay == 0) {
                 delay = petEntity.petData.attribute.attack_speed*20

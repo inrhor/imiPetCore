@@ -5,12 +5,12 @@ import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.entity.ai.AttackAi
 import cn.inrhor.imipetcore.api.entity.ai.HookAi
 import cn.inrhor.imipetcore.api.entity.ai.WalkAi
+import cn.inrhor.imipetcore.api.manager.ModelManager.clearModel
+import cn.inrhor.imipetcore.api.manager.ModelManager.display
+import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
-import com.ticxo.modelengine.api.ModelEngineAPI
-import com.ticxo.modelengine.api.model.ModeledEntity
-import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.module.ai.*
@@ -30,11 +30,6 @@ class PetEntity(val owner: Player, val petData: PetData) {
     var entity: LivingEntity? = null
 
     /**
-     * 模型
-     */
-    var modelEntity: ModeledEntity? = null
-
-    /**
      * 释放宠物
      */
     fun spawn() {
@@ -48,7 +43,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
-        updateModel()
+        updateModel(true)
     }
 
     /**
@@ -83,8 +78,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
     fun back() {
         petData.following = false
         if (petData.isDead()) return
-        modelEntity?.clearModels()
-        modelEntity = null
+        entity?.clearModel(model().select)
         entity?.remove()
         entity = null
     }
@@ -92,22 +86,12 @@ class PetEntity(val owner: Player, val petData: PetData) {
     /**
      * 更新宠物模型
      */
-    fun updateModel() {
+    fun updateModel(init: Boolean = false) {
         val name = owner.evalStrPetData(petData.petOption().default.displayName, petData)
-        val modelID = petData.petOption().model.id
-        if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null && petData.isFollow() && modelID.isNotEmpty()) {
-            val me = ModelEngineAPI.api.modelManager
-            val active = me.createActiveModel(modelID)
-            if (modelEntity == null) modelEntity = me.createModeledEntity(entity)
-            modelEntity?.addActiveModel(active)
-            modelEntity?.detectPlayers()
-            modelEntity?.isInvisible = true
-            modelEntity?.nametagHandler?.setCustomName("name", name) // 标签 tag_name
-            modelEntity?.nametagHandler?.setCustomNameVisibility("name", true)
-        }else {
-            entity?.customName = name
-            entity?.isCustomNameVisible = true
-        }
+        val model = model()
+        val modelID = model.id
+        if (!petData.isFollow()) return
+        entity?.display(modelID, init, name, model.select)
     }
 
     /**

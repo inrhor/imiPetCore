@@ -3,6 +3,7 @@ package cn.inrhor.imipetcore.server
 import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.api.manager.ModelManager
 import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.type.DatabaseManager
 import cn.inrhor.imipetcore.common.database.type.DatabaseType
@@ -40,6 +41,7 @@ object PluginLoader {
             DatabaseManager.type = DatabaseType.MYSQL
         }
         Database.initDatabase()
+        ModelManager.modelLoader.load()
         loadPet()
         loadAction()
         loadUi()
