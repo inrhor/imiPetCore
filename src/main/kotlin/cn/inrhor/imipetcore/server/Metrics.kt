@@ -1,6 +1,7 @@
-package com.github.inrhor.pier.server
+package cn.inrhor.imipetcore.server
 
-import com.github.inrhor.pier.api.manager.BoardManager
+import cn.inrhor.imipetcore.api.data.DataContainer.actionOptionMap
+import cn.inrhor.imipetcore.api.data.DataContainer.petOptionMap
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.Platform
@@ -11,14 +12,17 @@ import taboolib.module.metrics.charts.SingleLineChart
 object Metrics {
 
     private val bStats by lazy {
-        Metrics(15732, pluginVersion, Platform.BUKKIT)
+        Metrics(16338, pluginVersion, Platform.BUKKIT)
     }
 
     @Awake(LifeCycle.ACTIVE)
     fun init() {
         bStats.let {
-            it.addCustomChart(SingleLineChart("board") {
-                BoardManager.boardMap.size
+            it.addCustomChart(SingleLineChart("pet") {
+                petOptionMap.size
+            })
+            it.addCustomChart(SingleLineChart("action") {
+                actionOptionMap.size
             })
         }
     }
