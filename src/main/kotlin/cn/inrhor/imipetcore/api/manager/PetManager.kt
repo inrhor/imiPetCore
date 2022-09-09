@@ -3,6 +3,7 @@ package cn.inrhor.imipetcore.api.manager
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
+import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
@@ -43,7 +44,7 @@ object PetManager {
      */
     fun Player.addPet(petData: PetData) {
         getData().petDataList.add(petData)
-        database.updatePet(uniqueId, petData)
+        database.createPet(uniqueId, petData)
         ReceivePetEvent(this, petData)
     }
 
@@ -123,10 +124,11 @@ object PetManager {
      */
     fun Player.renamePet(petData: PetData, newName: String) {
         val old = petData.name
-        /*
-        判断重复命名
-         */
+        if (existPetName(newName)) {
+            return
+        }
         petData.name = newName
+        petData.petEntity?.entity?.setMeta("entity", newName)
         database.renamePet(uniqueId, old, petData)
     }
 

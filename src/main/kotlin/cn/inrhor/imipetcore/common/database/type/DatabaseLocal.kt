@@ -31,6 +31,10 @@ class DatabaseLocal: Database() {
         }
     }
 
+    override fun createPet(uuid: UUID, petData: PetData) {
+        updatePet(uuid, petData)
+    }
+
     override fun updatePet(uuid: UUID, petData: PetData) {
         val file = getLocal(uuid)
         val yaml = Configuration.loadFromFile(file)
