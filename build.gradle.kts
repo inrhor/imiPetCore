@@ -27,10 +27,11 @@ taboolib {
 
 repositories {
     mavenCentral()
+    maven("https://mvn.lumine.io/repository/maven-public/") // model-engine
 }
 
 dependencies {
-    compileOnly("public:ModelEngine:2.5.1")
+    compileOnly("com.ticxo.modelengine:api:R3.0.0")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")

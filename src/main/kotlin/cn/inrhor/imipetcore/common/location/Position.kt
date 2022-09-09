@@ -24,12 +24,13 @@ fun Entity.distanceLoc(entity: Entity, def: Double = 1000000.0): Double {
             val modelOption = pet?.petEntity?.model()
             when (modelOption?.select) {
                 ModelSelect.MODEL_ENGINE -> {
-                    val modelEntity = ModelEngineAPI.api.modelManager.getModeledEntity(uniqueId)
-                    val e = modelEntity.entity
+                    val base = ModelEngineAPI.getModeledEntity(uniqueId).base
+                    val loc = base.location
+                    val hitbox = base.hitbox
                     val v = Vector(
-                        e.location.x + modelEntity.width / 2,
-                        e.location.y + modelEntity.height,
-                        e.location.z + modelEntity.width / 2
+                        loc.x + hitbox.maxWidth,
+                        loc.y + hitbox.height,
+                        loc.z + hitbox.maxWidth
                     )
                     return v.distance(entity.boundingBox.max)
                 }

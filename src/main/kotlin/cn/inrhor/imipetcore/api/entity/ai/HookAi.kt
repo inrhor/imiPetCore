@@ -1,7 +1,7 @@
 package cn.inrhor.imipetcore.api.entity.ai
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
-import cn.inrhor.imipetcore.api.manager.ModelManager.setModelState
+import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.option.ActionOption
 import taboolib.common.platform.function.adaptPlayer
@@ -34,7 +34,7 @@ class HookAi(val actionOption: ActionOption, val petEntity: PetEntity, var time:
         val stateOption = petEntity.getStateOption(action)
         if (stateOption != null) {
             val model = petEntity.model()
-            petEntity.entity?.setModelState(model.id, model.select, action, stateOption)
+            petEntity.entity?.playAnimation(model.id, model.select, action, stateOption)
         }
     }
 

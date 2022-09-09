@@ -1,6 +1,5 @@
 package cn.inrhor.imipetcore.api.manager
 
-import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.model.ModelLoader
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
@@ -23,15 +22,14 @@ object ModelManager {
     fun Entity.display(modelID: String, init: Boolean = false, name: String = "", select: ModelSelect = ModelSelect.MODEL_ENGINE) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val me = ModelEngineAPI.api.modelManager
-                val active = me.createActiveModel(modelID)
-                val modelEntity = if (init) me.createModeledEntity(this) else me.getModeledEntity(uniqueId)
-                modelEntity?.addActiveModel(active)
-                modelEntity?.detectPlayers()
-                modelEntity?.isInvisible = true
+                val active = ModelEngineAPI.createActiveModel(modelID)
+                val modelEntity = if (init) ModelEngineAPI.createModeledEntity(this) else ModelEngineAPI.getModeledEntity(uniqueId)
+                modelEntity?.addModel(active, true)
+                modelEntity?.isBaseEntityVisible = true
                 if (name.isNotEmpty()) {
-                    modelEntity?.nametagHandler?.setCustomName("name", name) // 标签 tag_name
-                    modelEntity?.nametagHandler?.setCustomNameVisibility("name", true)
+                    val nameHandle = active?.nametagHandler?.bones?.get("name")
+                    nameHandle?.customName = name // 标签 tag_name
+                    nameHandle?.isCustomNameVisible = true
                 }
             }
             else -> {
@@ -47,21 +45,26 @@ object ModelManager {
     fun Entity.clearModel(select: ModelSelect) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val me = ModelEngineAPI.api.modelManager
-                me.getModeledEntity(uniqueId).clearModels()
+                ModelEngineAPI.getModeledEntity(uniqueId).destroy()
             }
         }
     }
 
     /**
-     * 设置模型动作状态
+     * 播放模型动作动画
+     *
+     * lerpIn 插入动画所用的时间（以秒为单位）
+     * lerpOut 插出动画所用的时间（以秒为单位）
+     * speed 播放速度乘数（默认速度为 1）
+     * force 是否强制播放
      */
-    fun Entity.setModelState(modelID: String, select: ModelSelect, action: String, state: StateOption) {
+    fun Entity.playAnimation(modelID: String, select: ModelSelect, action: String, state: StateOption) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val modelEntity = ModelEngineAPI.api.modelManager.getModeledEntity(uniqueId)
-                val active = modelEntity.getActiveModel(modelID)
-                active?.addState(action, state.lerpin, state.lerpout, state.speed)
+                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId)
+                val active = modelEntity.getModel(modelID)
+                val animation = active.animationHandler
+                animation.playAnimation(action, state.lerpin, state.lerpout, state.speed, state.force)
             }
         }
     }

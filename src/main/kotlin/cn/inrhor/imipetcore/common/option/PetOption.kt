@@ -46,7 +46,7 @@ class ModelOption(val select: ModelSelect = ModelSelect.COMMON, val id: String =
 /**
  * 模型动画配置
  */
-class StateOption(val id: String = "attack", val lerpin: Int = 0, val lerpout: Int = 1, val speed: Double = 1.0)
+class StateOption(val id: String = "attack", val lerpin: Double = 0.0, val lerpout: Double = 3.0, val speed: Double = 1.0, val force: Boolean = true)
 
 /**
  * 触发器

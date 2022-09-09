@@ -3,7 +3,7 @@ package cn.inrhor.imipetcore.api.entity.ai
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.metaEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.removeMeta
-import cn.inrhor.imipetcore.api.manager.ModelManager.setModelState
+import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.entity.LivingEntity
@@ -46,7 +46,7 @@ data class AttackAi(val petEntity: PetEntity, val action: String = "attack", var
                 val attackOption = petEntity.getStateOption(action)
                 if (attackOption != null) {
                     val model = petEntity.model()
-                    entity.setModelState(model.id, model.select, action, attackOption)
+                    entity.playAnimation(model.id, model.select, action, attackOption)
                 }
             }else if (delay == 0) {
                 delay = petEntity.petData.attribute.attack_speed*20
