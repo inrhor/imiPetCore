@@ -3,9 +3,12 @@ package cn.inrhor.imipetcore.api.manager
 import cn.inrhor.imipetcore.common.model.ModelLoader
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
+import com.germ.germplugin.api.GermPacketAPI
 import com.ticxo.modelengine.api.ModelEngineAPI
 import ltd.icecold.orangeengine.api.OrangeEngineAPI
+import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
+import taboolib.common.platform.function.submit
 
 /**
  * 模型管理
@@ -37,6 +40,10 @@ object ModelManager {
             ModelSelect.ORANGE_ENGINE -> {
                 OrangeEngineAPI.getModelManager()?.addNewModelEntity(uniqueId, modelID)
             }
+            ModelSelect.GERM_ENGINE -> {
+                customName = modelID
+                return
+            }
         }
         customName = name
         isCustomNameVisible = true
@@ -52,6 +59,9 @@ object ModelManager {
             }
             ModelSelect.ORANGE_ENGINE -> {
                 OrangeEngineAPI.getModelManager()?.removeModelEntity(uniqueId, true)
+            }
+            ModelSelect.GERM_ENGINE -> {
+                customName = ""
             }
         }
     }
@@ -74,6 +84,15 @@ object ModelManager {
             }
             ModelSelect.ORANGE_ENGINE -> {
                 OrangeEngineAPI.getModelManager()?.getModelEntity(uniqueId)?.playAnimation(action)
+            }
+            ModelSelect.GERM_ENGINE -> {
+                val s = "${modelID}_${action}"
+                Bukkit.getOnlinePlayers().forEach {
+                    GermPacketAPI.sendModelAnimation(it, this, s)
+                    submit(async = true, delay = state.lerpout.toLong()) {
+                        GermPacketAPI.stopModelAnimation(it, this@playAnimation, s)
+                    }
+                }
             }
         }
     }

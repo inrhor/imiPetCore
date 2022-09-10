@@ -31,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("public:GermPlugin:4.0.3")
     compileOnly("com.ticxo.modelengine:api:R3.0.0")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")

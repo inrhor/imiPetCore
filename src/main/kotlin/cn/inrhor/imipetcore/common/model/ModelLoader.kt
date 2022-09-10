@@ -6,7 +6,10 @@ import org.bukkit.Bukkit
 /**
  * 模型加载器
  */
-class ModelLoader(var modelEngine: Boolean = false, var orangeEngine: Boolean = false) {
+class ModelLoader(
+    var modelEngine: Boolean = false,
+    var orangeEngine: Boolean = false,
+    var germEngine: Boolean = false) {
 
     fun load() {
         if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null) {
@@ -20,5 +23,5 @@ class ModelLoader(var modelEngine: Boolean = false, var orangeEngine: Boolean = 
 }
 
 enum class ModelSelect {
-    COMMON, MODEL_ENGINE, ORANGE_ENGINE
+    COMMON, MODEL_ENGINE, ORANGE_ENGINE, GERM_ENGINE
 }
