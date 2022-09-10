@@ -22,7 +22,7 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
     override fun startTask() {
         val pet = petEntity.entity?: return
         val ow = petEntity.owner
-        if (pet.world != ow.world) {
+        if (pet.world != ow.world || pet.distanceLoc(ow) > 64.0 ) {
             pet.teleport(ow)
         }else pet.navigationMove(ow, petEntity.petData.attribute.speed)
     }

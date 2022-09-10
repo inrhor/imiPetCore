@@ -4,6 +4,7 @@ import cn.inrhor.imipetcore.common.model.ModelLoader
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
 import com.ticxo.modelengine.api.ModelEngineAPI
+import ltd.icecold.orangeengine.api.OrangeEngineAPI
 import org.bukkit.entity.Entity
 
 /**
@@ -25,18 +26,20 @@ object ModelManager {
                 val active = ModelEngineAPI.createActiveModel(modelID)
                 val modelEntity = if (init) ModelEngineAPI.createModeledEntity(this) else ModelEngineAPI.getModeledEntity(uniqueId)
                 modelEntity?.addModel(active, true)
-                modelEntity?.isBaseEntityVisible = true
+                modelEntity?.isBaseEntityVisible = false
                 if (name.isNotEmpty()) {
                     val nameHandle = active?.nametagHandler?.bones?.get("name")
                     nameHandle?.customName = name // 标签 tag_name
                     nameHandle?.isCustomNameVisible = true
                 }
+                return
             }
-            else -> {
-                customName = name
-                isCustomNameVisible = true
+            ModelSelect.ORANGE_ENGINE -> {
+                OrangeEngineAPI.getModelManager()?.addNewModelEntity(uniqueId, modelID)
             }
         }
+        customName = name
+        isCustomNameVisible = true
     }
 
     /**
@@ -46,6 +49,9 @@ object ModelManager {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
                 ModelEngineAPI.getModeledEntity(uniqueId).destroy()
+            }
+            ModelSelect.ORANGE_ENGINE -> {
+                OrangeEngineAPI.getModelManager()?.removeModelEntity(uniqueId, true)
             }
         }
     }
@@ -61,10 +67,13 @@ object ModelManager {
     fun Entity.playAnimation(modelID: String, select: ModelSelect, action: String, state: StateOption) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId)
-                val active = modelEntity.getModel(modelID)
-                val animation = active.animationHandler
+                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId)?: return
+                val active = modelEntity.getModel(modelID)?: return
+                val animation = active.animationHandler?: return
                 animation.playAnimation(action, state.lerpin, state.lerpout, state.speed, state.force)
+            }
+            ModelSelect.ORANGE_ENGINE -> {
+                OrangeEngineAPI.getModelManager()?.getModelEntity(uniqueId)?.playAnimation(action)
             }
         }
     }

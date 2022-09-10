@@ -19,7 +19,7 @@ custom:
       any [ check economy get >= $ "value*10" ]
     script: |
       economy del $ "value*10"
-      pet attribute current_hp add value
+      pet attribute current_hp add get value
   - slot: 14
     item:
       material: OAK_SIGN

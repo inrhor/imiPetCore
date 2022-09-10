@@ -226,7 +226,7 @@ class PetAction {
                             } catch (ex: Throwable) {
                                 it.reset()
                                 actionNow {
-                                    selectPetData().attribute.currentHP
+                                    selectPetData().attribute.maxHP
                                 }
                             }
                         }
