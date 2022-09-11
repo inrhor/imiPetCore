@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.api.entity.ai
+package cn.inrhor.imipetcore.api.entity.ai.universal
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.metaEntity
