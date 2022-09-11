@@ -26,23 +26,30 @@ object ModelManager {
     fun Entity.display(modelID: String, init: Boolean = false, name: String = "", select: ModelSelect = ModelSelect.MODEL_ENGINE) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val active = ModelEngineAPI.createActiveModel(modelID)
-                val modelEntity = if (init) ModelEngineAPI.createModeledEntity(this) else ModelEngineAPI.getModeledEntity(uniqueId)
-                modelEntity?.addModel(active, true)
-                modelEntity?.isBaseEntityVisible = false
-                if (name.isNotEmpty()) {
-                    val nameHandle = active?.nametagHandler?.bones?.get("name")
-                    nameHandle?.customName = name // 标签 tag_name
-                    nameHandle?.isCustomNameVisible = true
+                if (modelLoader.modelEngine) {
+                    val active = ModelEngineAPI.createActiveModel(modelID)
+                    val modelEntity =
+                        if (init) ModelEngineAPI.createModeledEntity(this) else ModelEngineAPI.getModeledEntity(uniqueId)
+                    modelEntity?.addModel(active, true)
+                    modelEntity?.isBaseEntityVisible = false
+                    if (name.isNotEmpty()) {
+                        val nameHandle = active?.nametagHandler?.bones?.get("name")
+                        nameHandle?.customName = name // 标签 tag_name
+                        nameHandle?.isCustomNameVisible = true
+                    }
+                    return
                 }
-                return
             }
             ModelSelect.ORANGE_ENGINE -> {
-                OrangeEngineAPI.getModelManager()?.addNewModelEntity(uniqueId, modelID)
+                if (modelLoader.orangeEngine) {
+                    OrangeEngineAPI.getModelManager()?.addNewModelEntity(uniqueId, modelID)
+                }
             }
             ModelSelect.GERM_ENGINE -> {
-                customName = modelID
-                return
+                if (modelLoader.germEngine) {
+                    customName = modelID
+                    return
+                }
             }
         }
         customName = name
@@ -55,13 +62,19 @@ object ModelManager {
     fun Entity.clearModel(select: ModelSelect) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                ModelEngineAPI.getModeledEntity(uniqueId).destroy()
+                if (modelLoader.modelEngine) {
+                    ModelEngineAPI.getModeledEntity(uniqueId).destroy()
+                }
             }
             ModelSelect.ORANGE_ENGINE -> {
-                OrangeEngineAPI.getModelManager()?.removeModelEntity(uniqueId, true)
+                if (modelLoader.orangeEngine) {
+                    OrangeEngineAPI.getModelManager()?.removeModelEntity(uniqueId, true)
+                }
             }
             ModelSelect.GERM_ENGINE -> {
-                customName = ""
+                if (modelLoader.germEngine) {
+                    customName = ""
+                }
             }
         }
     }
@@ -77,20 +90,27 @@ object ModelManager {
     fun Entity.playAnimation(modelID: String, select: ModelSelect, action: String, state: StateOption) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
-                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId)?: return
-                val active = modelEntity.getModel(modelID)?: return
-                val animation = active.animationHandler?: return
-                animation.playAnimation(action, state.lerpin, state.lerpout, state.speed, state.force)
+                if (modelLoader.modelEngine) {
+                    val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId) ?: return
+                    val active = modelEntity.getModel(modelID) ?: return
+                    val animation = active.animationHandler ?: return
+                    animation.playAnimation(action, state.lerpin, state.lerpout, state.speed, state.force)
+
+                }
             }
             ModelSelect.ORANGE_ENGINE -> {
-                OrangeEngineAPI.getModelManager()?.getModelEntity(uniqueId)?.playAnimation(action)
+                if (modelLoader.orangeEngine) {
+                    OrangeEngineAPI.getModelManager()?.getModelEntity(uniqueId)?.playAnimation(action)
+                }
             }
             ModelSelect.GERM_ENGINE -> {
-                val s = "${modelID}_${action}"
-                Bukkit.getOnlinePlayers().forEach {
-                    GermPacketAPI.sendModelAnimation(it, this, s)
-                    submit(async = true, delay = state.lerpout.toLong()) {
-                        GermPacketAPI.stopModelAnimation(it, this@playAnimation, s)
+                if (modelLoader.germEngine) {
+                    val s = "${modelID}_${action}"
+                    Bukkit.getOnlinePlayers().forEach {
+                        GermPacketAPI.sendModelAnimation(it, this, s)
+                        submit(async = true, delay = state.lerpout.toLong()) {
+                            GermPacketAPI.stopModelAnimation(it, this@playAnimation, s)
+                        }
                     }
                 }
             }

@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.api.entity.ai
+package cn.inrhor.imipetcore.api.entity.ai.nms
 
 import net.minecraft.server.v1_12_R1.PathfinderGoal
 

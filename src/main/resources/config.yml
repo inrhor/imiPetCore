@@ -8,3 +8,5 @@ data:
   password: root
   database: imipetcore
   table: imipetcore_table
+
+nms: taboolib

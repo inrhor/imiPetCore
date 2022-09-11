@@ -1,10 +1,10 @@
 package cn.inrhor.imipetcore.api.entity
 
-import cn.inrhor.imipetcore.api.manager.OptionManager.getActionOption
+import cn.inrhor.imipetcore.ImiPetCore.config
+import cn.inrhor.imipetcore.api.entity.ai.addAi
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
-import cn.inrhor.imipetcore.api.entity.ai.AttackAi
-import cn.inrhor.imipetcore.api.entity.ai.HookAi
-import cn.inrhor.imipetcore.api.entity.ai.WalkAi
+import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.addNmsAi
+import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiWalk
 import cn.inrhor.imipetcore.api.manager.ModelManager.clearModel
 import cn.inrhor.imipetcore.api.manager.ModelManager.display
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
@@ -55,20 +55,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         petData.petOption().action.forEach {
             val id = it.id
             val pri = it.priority
-            when (id) {
-                "attack" -> {
-                    entity?.addGoalAi(AttackAi(this@PetEntity), pri)
-                }
-                "walk" -> {
-                    entity?.addGoalAi(WalkAi(this@PetEntity), pri)
-                }
-                else -> {
-                    val actionOption = id.getActionOption()
-                    if (actionOption != null) {
-                        entity?.addGoalAi(HookAi(actionOption, this@PetEntity), pri)
-                    }
-                }
-            }
+            entity?.addAi(this@PetEntity, id, pri)
         }
     }
 

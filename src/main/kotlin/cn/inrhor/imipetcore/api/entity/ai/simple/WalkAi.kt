@@ -1,30 +1,25 @@
-package cn.inrhor.imipetcore.api.entity.ai.universal
+package cn.inrhor.imipetcore.api.entity.ai.simple
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
-import cn.inrhor.imipetcore.common.location.distanceLoc
+import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiWalk
 import taboolib.module.ai.SimpleAi
-import taboolib.module.ai.navigationMove
 
 class WalkAi(val petEntity: PetEntity): SimpleAi() {
+
+    val universal = UniversalAiWalk(petEntity)
 
     /**
      * 检查，true执行startTask
      */
     override fun shouldExecute(): Boolean {
-        val owner = petEntity.owner
-        return !petEntity.petData.isDead() && owner.isOnline && !owner.isDead &&
-                (petEntity.entity?.distanceLoc(owner)?: 0.0) > 10.0
+        return universal.shouldExecute()
     }
 
     /**
      * 执行任务
      */
     override fun startTask() {
-        val pet = petEntity.entity?: return
-        val ow = petEntity.owner
-        if (pet.world != ow.world || pet.distanceLoc(ow) > 64.0 ) {
-            pet.teleport(ow)
-        }else pet.navigationMove(ow, petEntity.petData.attribute.speed)
+        universal.startTask()
     }
 
     /**

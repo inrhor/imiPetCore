@@ -1,31 +1,30 @@
-package cn.inrhor.imipetcore.api.entity.ai.simple
+package cn.inrhor.imipetcore.api.entity.ai.nms
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiHook
 import cn.inrhor.imipetcore.common.option.ActionOption
-import taboolib.module.ai.SimpleAi
 
-class HookAi(val actionOption: ActionOption, val petEntity: PetEntity, var time: Int = 0): SimpleAi() {
+class NmsAiHook(val actionOption: ActionOption, val petEntity: PetEntity, var time: Int = 0): NmsAi() {
 
     val universalAi = UniversalAiHook(actionOption, petEntity, time)
 
-    override fun shouldExecute(): Boolean {
+    override fun a(): Boolean {
         return universalAi.shouldExecute()
     }
 
-    override fun startTask() {
+    override fun c() {
         universalAi.startTask()
     }
 
-    override fun continueExecute(): Boolean {
+    override fun b(): Boolean {
         return universalAi.continueExecute()
     }
 
-    override fun updateTask() {
+    override fun e() {
         universalAi.updateTask()
     }
 
-    override fun resetTask() {
+    override fun d() {
         universalAi.resetTask()
     }
 
