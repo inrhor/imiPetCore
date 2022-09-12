@@ -20,6 +20,7 @@ import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
 import taboolib.module.ai.controllerLookAt
 import taboolib.module.kether.*
+import taboolib.platform.util.asLangText
 import java.util.concurrent.CompletableFuture
 
 class PetAction {
@@ -87,14 +88,23 @@ class PetAction {
                 case("follow") {
                     try {
                         it.mark()
-                        it.expect("set")
-                        val a = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(a).run<Any>().thenAccept { e ->
-                                player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                        when (it.expects("set", "lang")) {
+                            "set" -> {
+                                val a = it.next(ArgTypes.ACTION)
+                                actionNow {
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                                    }
+                                }
                             }
+                            "lang" -> {
+                                actionNow {
+                                    player().asLangText("PET_FOLLOW_" + selectPetData().isFollow().toString().uppercase())
+                                }
+                            }
+                            else -> error("pet follow ?")
                         }
-                    }catch (ex: Throwable) {
+                    }catch (ex: Exception) {
                         it.reset()
                         actionNow {
                             selectPetData().isFollow()

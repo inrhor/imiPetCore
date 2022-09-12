@@ -10,7 +10,7 @@ button:
       material: LEAD
       name: "&f                                    "
       lore:
-        - "     &f跟随状态：&8{{pet follow}}"
+        - "     &f跟随状态：&8{{pet follow lang}}"
         - ""
         - "     &7&o点击切换"
         - ""

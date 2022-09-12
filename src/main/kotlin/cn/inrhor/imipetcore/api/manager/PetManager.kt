@@ -9,6 +9,7 @@ import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.TriggerOption
+import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
 /**
@@ -138,9 +139,10 @@ object PetManager {
     fun Player.delCurrentHP(petData: PetData, double: Double) {
         val attribute = petData.attribute
         attribute.currentHP -= double
-        val entity = petData.petEntity?.entity ?: return
+        val entity = petData.petEntity?.entity?: return
         if (attribute.currentHP <= 0) {
             entity.remove()
+            petData.petEntity?.entity = null
             PetDeathEvent(this, petData).call()
         }
         PetChangeEvent(this, petData).call()
@@ -160,19 +162,21 @@ object PetManager {
     /**
      * 设置宠物当前血量
      */
-    fun Player.setCurrentHP(petData: PetData, value: Double) {
+    fun Player.setCurrentHP(petData: PetData, value: Double = petData.attribute.currentHP, effect: Boolean = false, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.currentHP = value
-        PetChangeEvent(this, petData).call()
+        if (effect) petData.petEntity?.entity?.health = value
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物最大血量
      */
-    fun Player.setMaxHP(petData: PetData, value: Double) {
+    fun Player.setMaxHP(petData: PetData, value: Double = petData.attribute.maxHP, effect: Boolean = false, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.maxHP = value
-        PetChangeEvent(this, petData).call()
+        if (effect) petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = value
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**

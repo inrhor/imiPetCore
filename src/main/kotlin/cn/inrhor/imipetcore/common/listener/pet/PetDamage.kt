@@ -41,6 +41,8 @@ object PetDamage {
         val entity = ev.entity
         val owner = entity.getOwner()?: return
         val petData = entity.getPetData(owner)?: return
+        ev.drops.clear()
+        ev.droppedExp = 0
         PetDeathEvent(owner, petData).call()
     }
 

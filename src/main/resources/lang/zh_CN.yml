@@ -7,10 +7,12 @@ LOADER_INFO:
 
 COMMAND_RELOAD: "&7&l[ &c&li &7&l]&f 已重载 &3&lImiPetCore &f插件"
 
-PET-IS-DEAD:
-  - ""
+PET_IS_DEAD:
+  - "&f"
   - "      &a&l宠物引擎"
-  - ""
+  - "&f"
   - "          &7你的宠物处于死亡状态"
   - "          &7请进行医疗它"
-  - ""
+  - "&f"
+PET_FOLLOW_TRUE: 跟随
+PET_FOLLOW_FALSE: 未跟随

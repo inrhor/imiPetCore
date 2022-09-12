@@ -8,8 +8,7 @@ import taboolib.module.nms.MinecraftVersion
  * @param entity 其它实体
  * @return 距离
  */
-fun Entity.distanceLoc(entity: Entity, def: Double = 1000000.0): Double {
-    if (world != entity.world) return def
+fun Entity.distanceLoc(entity: Entity): Double {
     if (MinecraftVersion.major <= 5) {
         return location.distance(entity.location)
     }

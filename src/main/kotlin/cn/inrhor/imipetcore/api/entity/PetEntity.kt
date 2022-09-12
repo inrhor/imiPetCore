@@ -5,6 +5,8 @@ import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager.clearModel
 import cn.inrhor.imipetcore.api.manager.ModelManager.display
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
+import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
+import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
@@ -31,7 +33,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
      */
     fun spawn() {
         if (petData.isDead()) {
-            owner.sendLang("PET-IS-DEAD")
+            owner.sendLang("PET_IS_DEAD")
             return
         }
         if (entity != null) return
@@ -40,6 +42,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
+        owner.setMaxHP(petData, effect = true, call = false)
+        owner.setCurrentHP(petData, effect = true, call = false)
         updateModel(true)
     }
 

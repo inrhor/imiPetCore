@@ -15,7 +15,7 @@ class UniversalAiWalk(val petEntity: PetEntity): UniversalAi() {
     override fun startTask() {
         val pet = petEntity.entity?: return
         val ow = petEntity.owner
-        if (pet.world != ow.world || pet.distanceLoc(ow) > 64.0 ) {
+        if (pet.distanceLoc(ow) > 64.0 ) {
             pet.teleport(ow)
         }else pet.navigationMove(ow, petEntity.petData.attribute.speed)
     }
