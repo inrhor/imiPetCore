@@ -6,7 +6,6 @@ import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.platform.event.SubscribeEvent
-import taboolib.common.platform.function.info
 import taboolib.common.platform.function.submit
 
 /**
@@ -26,7 +25,6 @@ object JoinQuit {
     @SubscribeEvent
     fun quit(ev: PlayerQuitEvent) {
         ev.player.followingPet().forEach {
-            info("back")
             it.back(false)
         }
     }

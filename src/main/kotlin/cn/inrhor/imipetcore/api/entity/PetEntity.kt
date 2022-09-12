@@ -8,11 +8,11 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.location.referFollowLoc
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import taboolib.common.platform.function.info
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
 
@@ -39,7 +39,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         }
         if (entity != null) return
         petData.following = true
-        entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
+        entity = owner.world.spawnEntity(owner.referFollowLoc(), petData.petOption().entityType) as LivingEntity
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
@@ -65,10 +65,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
      * 删除宠物
      */
     fun back(update: Boolean = true) {
-        if (update) {
-            info("update")
-            petData.following = false
-        }
+        if (update) petData.following = false
         if (petData.isDead()) return
         entity?.clearModel(model().select)
         entity?.remove()
