@@ -4,6 +4,8 @@ import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
+import cn.inrhor.imipetcore.api.manager.ModelManager.delDriveRide
+import cn.inrhor.imipetcore.api.manager.ModelManager.driveRide
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
@@ -141,11 +143,35 @@ object PetManager {
         attribute.currentHP -= double
         val entity = petData.petEntity?.entity?: return
         if (attribute.currentHP <= 0) {
+            attribute.currentHP = 0.0
             entity.remove()
             petData.petEntity?.entity = null
             PetDeathEvent(this, petData).call()
         }
         PetChangeEvent(this, petData).call()
+    }
+
+    /**
+     * 玩家乘骑宠物
+     */
+    fun Player.driveRidePet(petData: PetData, actionType: ModelManager.ActionType) {
+        val select = petData.petOption().model.select
+        petData.petEntity?.entity?.driveRide(this, select, actionType)
+    }
+
+    /**
+     * 玩家乘骑宠物
+     */
+    fun Player.driveRidePet(petData: PetData, actionType: String) {
+        driveRidePet(petData, ModelManager.ActionType.valueOf(actionType.uppercase()))
+    }
+
+    /**
+     * 玩家取消乘骑宠物
+     */
+    fun Player.unDriveRidePet(petData: PetData) {
+        val select = petData.petOption().model.select
+        petData.petEntity?.entity?.delDriveRide(select)
     }
 
     /**

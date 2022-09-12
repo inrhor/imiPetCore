@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.listener
+package cn.inrhor.imipetcore.common.listener.player
 
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import org.bukkit.event.entity.PlayerDeathEvent

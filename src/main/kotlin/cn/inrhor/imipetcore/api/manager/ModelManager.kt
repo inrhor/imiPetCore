@@ -5,6 +5,8 @@ import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
 import com.germ.germplugin.api.GermPacketAPI
 import com.ticxo.modelengine.api.ModelEngineAPI
+import com.ticxo.modelengine.api.mount.controller.flying.FlyingMountController
+import com.ticxo.modelengine.api.mount.controller.walking.WalkingMountController
 import ltd.icecold.orangeengine.api.OrangeEngineAPI
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
@@ -115,6 +117,40 @@ object ModelManager {
                 }
             }
         }
+    }
+
+    /**
+     * 乘骑宠物
+     *
+     * @param driver 驾驶者
+     * @param select 模型引擎
+     * @param actionType 行为类型
+     */
+    fun Entity.driveRide(driver: Entity, select: ModelSelect, actionType: ActionType) {
+        when (select) {
+            ModelSelect.MODEL_ENGINE -> {
+                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId)?: return
+                val controller = if (actionType == ActionType.WALK) WalkingMountController() else FlyingMountController()
+                modelEntity.mountManager.isCanSteer = true
+                modelEntity.mountManager.setDriver(driver, controller)
+            }
+        }
+    }
+
+    /**
+     * 卸载乘骑
+     */
+    fun Entity.delDriveRide(select: ModelSelect) {
+        when (select) {
+            ModelSelect.MODEL_ENGINE -> {
+                val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId) ?: return
+                modelEntity.mountManager.removeDriver()
+            }
+        }
+    }
+
+    enum class ActionType {
+        FLY, WALK
     }
 
 }

@@ -22,7 +22,7 @@ import taboolib.module.lang.sendLang
  */
 object PluginLoader {
 
-    @Awake(LifeCycle.LOAD)
+    @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()
         loadTask()

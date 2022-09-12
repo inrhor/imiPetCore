@@ -18,6 +18,9 @@ class ModelLoader(
         if (Bukkit.getPluginManager().getPlugin("OrangeEngine") != null) {
             orangeEngine = OrangeEngineAPI.getModelManager() != null
         }
+        if (Bukkit.getPluginManager().getPlugin("GermEngine") != null) {
+            germEngine = true
+        }
     }
 
 }

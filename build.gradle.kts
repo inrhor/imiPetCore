@@ -21,6 +21,17 @@ taboolib {
     install("expansion-command-helper")
     install("module-ui")
     install("expansion-javascript")
+    description {
+        contributors {
+            name("inrhor")
+            desc("Minecraft Pet Core")
+        }
+        dependencies {
+            name("ModelEngine").optional(true)
+            name("OrangeEngine").optional(true)
+            name("GermEngine").optional(true)
+        }
+    }
     classifier = null
     version = "6.0.9-76"
 }

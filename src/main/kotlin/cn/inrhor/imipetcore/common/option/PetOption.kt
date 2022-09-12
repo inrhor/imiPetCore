@@ -69,6 +69,6 @@ class TriggerOption(val type: Type = Type.LEVEL_UP, val script: String = "") {
     }
 
     enum class Type {
-        LEVEL_UP, DEATH
+        LEVEL_UP, DEATH, OWNER_RIGHT_CLICK
     }
 }

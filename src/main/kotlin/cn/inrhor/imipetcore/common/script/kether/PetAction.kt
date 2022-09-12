@@ -4,6 +4,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
+import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
@@ -13,6 +14,8 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setMaxExp
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
+import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
+import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.Location
 import org.bukkit.entity.Entity
@@ -81,6 +84,20 @@ class PetAction {
                 case("look") {
                     val en = it.next(ArgTypes.ACTION)
                     ActionPetLook(en)
+                }
+                case("drive") {
+                    it.expect("type")
+                    val str = it.next(ArgTypes.ACTION)
+                    actionNow {
+                        newFrame(str).run<String>().thenApply { s ->
+                            player().driveRidePet(selectPetData(), s)
+                        }
+                    }
+                }
+                case("undrive") {
+                    actionNow {
+                        player().unDriveRidePet(selectPetData())
+                    }
                 }
                 case("move") {
                     val loc = it.next(ArgTypes.ACTION)
@@ -179,7 +196,7 @@ class PetAction {
                                 val s = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setPetAttack(selectPetData(), Coerce.toDouble(a))
+                                        player().setPetSpeed(selectPetData(), Coerce.toDouble(a))
                                     }
                                 }
                             }catch (ex: Throwable) {
