@@ -14,11 +14,14 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import cn.inrhor.imipetcore.common.location.distanceLoc
+import org.bukkit.Location
 import org.bukkit.entity.Entity
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
+import taboolib.module.ai.controllerJumpReady
 import taboolib.module.ai.controllerLookAt
+import taboolib.module.ai.navigationMove
 import taboolib.module.kether.*
 import taboolib.platform.util.asLangText
 import java.util.concurrent.CompletableFuture
@@ -78,6 +81,23 @@ class PetAction {
                 case("look") {
                     val en = it.next(ArgTypes.ACTION)
                     ActionPetLook(en)
+                }
+                case("move") {
+                    val loc = it.next(ArgTypes.ACTION)
+                    it.expect("speed")
+                    val speed = it.next(ArgTypes.ACTION)
+                    actionNow {
+                        newFrame(loc).run<Location>().thenApply { l ->
+                            newFrame(speed).run<Any>().thenApply { d ->
+                                selectPetData().petEntity?.entity?.navigationMove(l, Coerce.toDouble(d))
+                            }
+                        }
+                    }
+                }
+                case("jump") {
+                    actionNow {
+                        selectPetData().petEntity?.entity?.controllerJumpReady()
+                    }
                 }
                 case("select") {
                     val next = it.nextToken()
