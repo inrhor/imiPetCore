@@ -12,6 +12,7 @@ import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.info
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
 
@@ -63,8 +64,11 @@ class PetEntity(val owner: Player, val petData: PetData) {
     /**
      * 删除宠物
      */
-    fun back() {
-        petData.following = false
+    fun back(update: Boolean = true) {
+        if (update) {
+            info("update")
+            petData.following = false
+        }
         if (petData.isDead()) return
         entity?.clearModel(model().select)
         entity?.remove()

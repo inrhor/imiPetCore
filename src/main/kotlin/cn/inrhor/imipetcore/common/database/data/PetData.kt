@@ -23,7 +23,7 @@ data class PetData(@Transient var name: String = "null_name", val id: String = "
     }
 
     fun isFollow(): Boolean {
-        if (petEntity?.entity == null) following = false
+        if (isDead()) following = false
         return following
     }
 }

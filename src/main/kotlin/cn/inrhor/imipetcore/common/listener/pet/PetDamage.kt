@@ -43,7 +43,7 @@ object PetDamage {
         val petData = entity.getPetData(owner)?: return
         ev.drops.clear()
         ev.droppedExp = 0
-        PetDeathEvent(owner, petData).call()
+       PetDeathEvent(owner, petData).call()
     }
 
     @SubscribeEvent

@@ -1,8 +1,6 @@
 package cn.inrhor.imipetcore.api.manager
 
 import cn.inrhor.imipetcore.ImiPetCore
-import cn.inrhor.imipetcore.api.manager.MetaManager.getMeta
-import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.common.database.data.PetData
 import org.bukkit.Bukkit

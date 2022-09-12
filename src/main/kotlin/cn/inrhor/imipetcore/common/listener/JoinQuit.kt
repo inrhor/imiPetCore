@@ -2,9 +2,11 @@ package cn.inrhor.imipetcore.common.listener
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
+import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.info
 import taboolib.common.platform.function.submit
 
 /**
@@ -23,8 +25,9 @@ object JoinQuit {
 
     @SubscribeEvent
     fun quit(ev: PlayerQuitEvent) {
-        ev.player.getData().petDataList.forEach {
-            if (it.isFollow()) ev.player.callPet(it.name, false)
+        ev.player.followingPet().forEach {
+            info("back")
+            it.back(false)
         }
     }
 
