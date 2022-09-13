@@ -56,4 +56,8 @@ class DatabaseLocal: Database() {
         yaml.setObject("pet.${petData.name}", petData)
         yaml.saveToFile(file)
     }
+
+    override fun changePetID(uuid: UUID, petData: PetData) {
+        updatePet(uuid, petData)
+    }
 }

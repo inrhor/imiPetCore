@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.common.script.kether
 
 import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
+import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
 import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
@@ -162,6 +163,23 @@ class PetAction {
                         it.reset()
                         actionNow {
                             selectPetData().name
+                        }
+                    }
+                }
+                case("id") {
+                    try {
+                        it.mark()
+                        it.expect("set")
+                        val a = it.next(ArgTypes.ACTION)
+                        actionNow {
+                            newFrame(a).run<String>().thenAccept { s ->
+                                player().changePetId(selectPetData(), s)
+                            }
+                        }
+                    }catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().id
                         }
                     }
                 }

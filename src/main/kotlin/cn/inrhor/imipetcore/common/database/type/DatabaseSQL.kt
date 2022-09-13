@@ -246,4 +246,15 @@ class DatabaseSQL: Database() {
             set("name", petData.name)
         }
     }
+
+    override fun changePetID(uuid: UUID, petData: PetData) {
+        val id = userId(uuid)
+        tablePet.update(source) {
+            where { and {
+                "user" eq id
+                "name" eq petData.name
+            } }
+            set("number", petData.id)
+        }
+    }
 }

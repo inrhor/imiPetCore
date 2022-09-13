@@ -30,6 +30,11 @@ abstract class Database {
     abstract fun renamePet(uuid: UUID, oldName: String, petData: PetData)
 
     /**
+     * 宠物ID更变
+     */
+    abstract fun changePetID(uuid: UUID, petData: PetData)
+
+    /**
      * 创建宠物数据
      */
     abstract fun createPet(uuid: UUID, petData: PetData)

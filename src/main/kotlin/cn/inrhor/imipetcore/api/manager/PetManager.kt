@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
@@ -133,6 +134,20 @@ object PetManager {
         petData.name = newName
         petData.petEntity?.entity?.setMeta("entity", newName)
         database.renamePet(uniqueId, old, petData)
+    }
+
+    /**
+     * 修改宠物ID
+     */
+    fun Player.changePetId(petData: PetData, newID: String) {
+        if (!DataContainer.petOptionMap.contains(newID)) return
+        petData.id = newID
+        database.changePetID(uniqueId, petData)
+        val en = petData.petEntity?: return
+        if (petData.isFollow()) {
+            en.back()
+            en.spawn()
+        }
     }
 
     /**
