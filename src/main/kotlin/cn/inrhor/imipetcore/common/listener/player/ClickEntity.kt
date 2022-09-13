@@ -4,6 +4,7 @@ import cn.inrhor.imipetcore.api.event.OwnerRightClickPet
 import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
 import cn.inrhor.imipetcore.api.manager.MetaManager.getPetData
 import cn.inrhor.imipetcore.common.option.TriggerOption
+import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import taboolib.common.platform.event.SubscribeEvent
 
@@ -20,12 +21,7 @@ object ClickEntity {
 
     @SubscribeEvent
     fun trigger(ev: OwnerRightClickPet) {
-        val petData = ev.petData
-        petData.petOption().trigger.forEach {
-            if (it.type == TriggerOption.Type.OWNER_RIGHT_CLICK) {
-                it.runScript(ev.player, petData)
-            }
-        }
+        ev.petData.trigger(ev.player, TriggerOption.Type.OWNER_RIGHT_CLICK)
     }
 
 }

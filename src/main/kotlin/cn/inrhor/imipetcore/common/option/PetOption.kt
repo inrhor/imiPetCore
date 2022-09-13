@@ -69,6 +69,17 @@ class TriggerOption(val type: Type = Type.LEVEL_UP, val script: String = "") {
     }
 
     enum class Type {
-        LEVEL_UP, DEATH, OWNER_RIGHT_CLICK
+        LEVEL_UP, DEATH, OWNER_RIGHT_CLICK, RECEIVE_PET
+    }
+}
+
+/**
+ * 宠物触发器
+ */
+fun PetData.trigger(player: Player, type: TriggerOption.Type) {
+    petOption().trigger.forEach {
+        if (it.type == type) {
+            it.runScript(player, this)
+        }
     }
 }

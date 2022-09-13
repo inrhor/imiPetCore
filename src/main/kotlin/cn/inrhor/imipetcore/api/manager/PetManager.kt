@@ -12,6 +12,7 @@ import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.option.TriggerOption
+import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
 
@@ -265,11 +266,7 @@ object PetManager {
         val max = petOption().default.level
         if (level >= max) return
         level = if (level+int > max) max else level+int
-        petOption().trigger.forEach {
-            if (it.type == TriggerOption.Type.LEVEL_UP) {
-                it.runScript(player, this)
-            }
-        }
+        trigger(player, TriggerOption.Type.LEVEL_UP)
         PetLevelEvent(player, this, int, level).call()
     }
 

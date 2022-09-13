@@ -6,6 +6,7 @@ import cn.inrhor.imipetcore.api.manager.MetaManager.getPetData
 import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.common.option.TriggerOption
+import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.event.entity.EntityCombustEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDeathEvent
@@ -51,11 +52,7 @@ object PetDamage {
         val petData = ev.petData
         val player = ev.player
         player.setCurrentHP(petData, 0.0)
-        petData.petOption().trigger.forEach {
-            if (it.type == TriggerOption.Type.DEATH) {
-                it.runScript(player, petData)
-            }
-        }
+        petData.trigger(player, TriggerOption.Type.DEATH)
     }
 
 }
