@@ -33,7 +33,7 @@ taboolib {
         }
     }
     classifier = null
-    version = "6.0.9-76"
+    version = "6.0.9-88"
 }
 
 repositories {
@@ -53,6 +53,13 @@ dependencies {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjvm-default=all")
+    }
 }
 
 configure<JavaPluginConvention> {
