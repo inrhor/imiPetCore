@@ -64,12 +64,10 @@ class PetAction {
         }
     }
 
-    class ActionWorldWhere(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Boolean>() {
+    class ActionWorldWhere(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
         override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
             return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                frame.newFrame(v2).run<String>().thenApply { i2 ->
-                    i1.world.name == i2
-                }.join()
+                v2.contains(i1.world.name)
             }
         }
     }
@@ -84,6 +82,10 @@ class PetAction {
     }
 
     companion object {
+        private val tokenType = ArgTypes.listOf {
+            it.nextToken()
+        }
+
         @KetherParser(["pet"], shared = true)
         fun parserPet() = scriptParser {
             it.switch {
@@ -386,7 +388,7 @@ class PetAction {
                     ActionWorld(v1, v2)
                 }
                 "where" -> {
-                    val v2 = it.next(ArgTypes.ACTION)
+                    val v2 = it.next(tokenType)
                     ActionWorldWhere(v1, v2)
                 }
                 else -> error("world x ??")
