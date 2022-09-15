@@ -6,6 +6,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
 import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
+import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
@@ -58,6 +59,16 @@ class PetAction {
             return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
                 frame.newFrame(v2).run<Entity>().thenApply { i2 ->
                     i1.world == i2.world
+                }.join()
+            }
+        }
+    }
+
+    class ActionWorldWhere(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Boolean>() {
+        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
+            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
+                frame.newFrame(v2).run<String>().thenApply { i2 ->
+                    i1.world.name == i2
                 }.join()
             }
         }
@@ -164,6 +175,11 @@ class PetAction {
                         actionNow {
                             selectPetData().name
                         }
+                    }
+                }
+                case("follow_number") {
+                    actionNow {
+                        player().followingPet().size
                     }
                 }
                 case("id") {
@@ -363,9 +379,18 @@ class PetAction {
         @KetherParser(["world"])
         fun parserWorld() = scriptParser {
             val v1 = it.next(ArgTypes.ACTION)
-            it.expect("to")
-            val v2 = it.next(ArgTypes.ACTION)
-            ActionWorld(v1, v2)
+            it.mark()
+            when (it.expects("to", "where")) {
+                "to" -> {
+                    val v2 = it.next(ArgTypes.ACTION)
+                    ActionWorld(v1, v2)
+                }
+                "where" -> {
+                    val v2 = it.next(ArgTypes.ACTION)
+                    ActionWorldWhere(v1, v2)
+                }
+                else -> error("world x ??")
+            }
         }
     }
 
