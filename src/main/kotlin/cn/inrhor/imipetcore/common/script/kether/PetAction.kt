@@ -72,6 +72,18 @@ class PetAction {
         }
     }
 
+    class ActionWorldAbout(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
+        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
+            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
+                val world = i1.world.name
+                v2.forEach {
+                    if (world.contains(it)) return@thenApply true
+                }
+                false
+            }
+        }
+    }
+
     class ActionPetLook(val en: ParsedAction<*>): ScriptAction<Void>() {
         override fun run(frame: ScriptFrame): CompletableFuture<Void> {
             frame.newFrame(en).run<Entity>().thenApply {
@@ -390,6 +402,10 @@ class PetAction {
                 "where" -> {
                     val v2 = it.next(tokenType)
                     ActionWorldWhere(v1, v2)
+                }
+                "about" -> {
+                    val v2 = it.next(tokenType)
+                    ActionWorldAbout(v1, v2)
                 }
                 else -> error("world x ??")
             }
