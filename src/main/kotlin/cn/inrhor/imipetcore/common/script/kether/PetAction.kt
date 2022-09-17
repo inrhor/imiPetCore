@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.script.kether
 
+import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
@@ -189,6 +190,11 @@ class PetAction {
                         actionNow {
                             selectPetData().name
                         }
+                    }
+                }
+                case("number") {
+                    actionNow {
+                        player().getData().petDataList.size
                     }
                 }
                 case("follow_number") {
