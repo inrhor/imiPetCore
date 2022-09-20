@@ -1,5 +1,7 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.api.manager.MetaManager.removeMeta
+import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.common.model.ModelLoader
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
@@ -134,6 +136,10 @@ object ModelManager {
                 modelEntity.mountManager.isCanSteer = true
                 modelEntity.mountManager.setDriver(driver, controller)
             }
+            else -> {
+                setMeta("drive", actionType)
+                addPassenger(driver)
+            }
         }
     }
 
@@ -145,6 +151,10 @@ object ModelManager {
             ModelSelect.MODEL_ENGINE -> {
                 val modelEntity = ModelEngineAPI.getModeledEntity(uniqueId) ?: return
                 modelEntity.mountManager.removeDriver()
+            }
+            else -> {
+                removeMeta("drive")
+                passengers.forEach { removePassenger(it) }
             }
         }
     }

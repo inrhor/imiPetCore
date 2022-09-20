@@ -16,6 +16,7 @@ object PetDamage {
 
     @SubscribeEvent
     fun damage(ev: EntityDamageEvent) {
+        if (ev.isCancelled) return
         val entity = ev.entity
         if (ev.cause == EntityDamageEvent.DamageCause.SUFFOCATION) {
             if (entity.hasMetadata("imipetcore_entity")) {

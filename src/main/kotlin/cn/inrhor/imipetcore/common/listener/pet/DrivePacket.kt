@@ -1,10 +1,11 @@
-package cn.inrhor.imipetcore.common.listener
+package cn.inrhor.imipetcore.common.listener.pet
 
 import cn.inrhor.imipetcore.api.manager.MetaManager.getMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.util.Vector
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.PacketReceiveEvent
 
 object DrivePacket {
@@ -15,14 +16,16 @@ object DrivePacket {
         if (ev.packet.name != "PacketPlayInSteerVehicle") return
         val vehicle = ev.player.vehicle?: return
         val actionType = vehicle.getMeta("drive")?: return
-        val swSpeed = ev.packet.read<Float>("c")?: return // 1.16.5及以下分别是a b
-        val fwSpeed = ev.packet.read<Float>("d")?: return
-        val jumping = ev.packet.read<Boolean>("e")?: return
+        // 1.16.5及以下分别是a  b c
+        val list = if (MinecraftVersion.isUniversal) listOf("c", "d", "e") else listOf("a", "b", "c")
+        val swSpeed = ev.packet.read<Float>(list[0])?: return // 前进速度
+        val adSpeed = ev.packet.read<Float>(list[1])?: return // 横向速度
+        val jumping = ev.packet.read<Boolean>(list[2])?: return
         val pLoc = ev.player.location
         vehicle.setRotation(pLoc.yaw, pLoc.pitch)
         val forwardDir = pLoc.direction
         val sideways = forwardDir.clone().crossProduct(Vector(0, -1, 0))
-        val total = forwardDir.multiply(fwSpeed/10).add(sideways.multiply(swSpeed/5))
+        val total = forwardDir.multiply(adSpeed/10).add(sideways.multiply(swSpeed/5))
         if (actionType == ModelManager.ActionType.FLY) {
             total.y = if (jumping) 0.5 else 0.0
         }else {
