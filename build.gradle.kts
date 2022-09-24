@@ -30,6 +30,7 @@ taboolib {
             name("ModelEngine").optional(true)
             name("OrangeEngine").optional(true)
             name("GermEngine").optional(true)
+            name("DragonCore").optional(true)
         }
     }
     classifier = null

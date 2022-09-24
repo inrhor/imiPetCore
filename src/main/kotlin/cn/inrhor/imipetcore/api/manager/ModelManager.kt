@@ -9,9 +9,11 @@ import com.germ.germplugin.api.GermPacketAPI
 import com.ticxo.modelengine.api.ModelEngineAPI
 import com.ticxo.modelengine.api.mount.controller.flying.FlyingMountController
 import com.ticxo.modelengine.api.mount.controller.walking.WalkingMountController
+import eos.moe.dragoncore.api.ModelAPI
 import ltd.icecold.orangeengine.api.OrangeEngineAPI
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.function.submit
 
 /**
@@ -55,6 +57,12 @@ object ModelManager {
                     return
                 }
             }
+            ModelSelect.Dragon_Core -> {
+                if (modelLoader.dragonCore) {
+                    ModelAPI.setEntityModel(uniqueId, modelID)
+                    return
+                }
+            }
         }
         customName = name
         isCustomNameVisible = true
@@ -80,6 +88,11 @@ object ModelManager {
                     customName = ""
                 }
             }
+            ModelSelect.Dragon_Core -> {
+                if (modelLoader.dragonCore) {
+                    ModelAPI.removeEntityModel(uniqueId)
+                }
+            }
         }
     }
 
@@ -91,7 +104,7 @@ object ModelManager {
      * speed 播放速度乘数（默认速度为 1）
      * force 是否强制播放
      */
-    fun Entity.playAnimation(modelID: String, select: ModelSelect, action: String, state: StateOption) {
+    fun LivingEntity.playAnimation(modelID: String, select: ModelSelect, action: String, state: StateOption) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
                 if (modelLoader.modelEngine) {
@@ -116,6 +129,11 @@ object ModelManager {
                             GermPacketAPI.stopModelAnimation(it, this@playAnimation, s)
                         }
                     }
+                }
+            }
+            ModelSelect.Dragon_Core -> {
+                if (modelLoader.dragonCore) {
+                    ModelAPI.setEntityAnimation(this, action, state.time)
                 }
             }
         }

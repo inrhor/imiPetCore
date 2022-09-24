@@ -9,7 +9,8 @@ import org.bukkit.Bukkit
 class ModelLoader(
     var modelEngine: Boolean = false,
     var orangeEngine: Boolean = false,
-    var germEngine: Boolean = false) {
+    var germEngine: Boolean = false,
+    var dragonCore: Boolean = false) {
 
     fun load() {
         if (Bukkit.getPluginManager().getPlugin("ModelEngine") != null) {
@@ -21,10 +22,13 @@ class ModelLoader(
         if (Bukkit.getPluginManager().getPlugin("GermEngine") != null) {
             germEngine = true
         }
+        if (Bukkit.getPluginManager().getPlugin("DragonCore") != null) {
+            dragonCore = true
+        }
     }
 
 }
 
 enum class ModelSelect {
-    COMMON, MODEL_ENGINE, ORANGE_ENGINE, GERM_ENGINE
+    COMMON, MODEL_ENGINE, ORANGE_ENGINE, GERM_ENGINE, Dragon_Core
 }
