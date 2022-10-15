@@ -57,7 +57,7 @@ object ModelManager {
                     return
                 }
             }
-            ModelSelect.Dragon_Core -> {
+            ModelSelect.DRAGON_CORE -> {
                 if (modelLoader.dragonCore) {
                     ModelAPI.setEntityModel(uniqueId, modelID)
                     return
@@ -88,7 +88,7 @@ object ModelManager {
                     customName = ""
                 }
             }
-            ModelSelect.Dragon_Core -> {
+            ModelSelect.DRAGON_CORE -> {
                 if (modelLoader.dragonCore) {
                     ModelAPI.removeEntityModel(uniqueId)
                 }
@@ -131,7 +131,7 @@ object ModelManager {
                     }
                 }
             }
-            ModelSelect.Dragon_Core -> {
+            ModelSelect.DRAGON_CORE -> {
                 if (modelLoader.dragonCore) {
                     ModelAPI.setEntityAnimation(this, action, state.time)
                 }

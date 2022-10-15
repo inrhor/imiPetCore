@@ -30,5 +30,5 @@ class ModelLoader(
 }
 
 enum class ModelSelect {
-    COMMON, MODEL_ENGINE, ORANGE_ENGINE, GERM_ENGINE, Dragon_Core
+    COMMON, MODEL_ENGINE, ORANGE_ENGINE, GERM_ENGINE, DRAGON_CORE
 }

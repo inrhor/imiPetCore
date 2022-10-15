@@ -15,7 +15,7 @@ object JoinQuit {
 
     @SubscribeEvent
     fun join(ev: PlayerJoinEvent) {
-        submit(delay = 5L) {
+        submit(delay = 6L) {
             ev.player.getData().petDataList.forEach {
                 if (it.isFollow()) ev.player.callPet(it.name)
             }

@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.common.database.type
 
 import cn.inrhor.imipetcore.ImiPetCore
+import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.api.data.DataContainer.playerData
 import cn.inrhor.imipetcore.common.database.Database
@@ -26,8 +27,11 @@ class DatabaseLocal: Database() {
         val yaml = Configuration.loadFromFile(getLocal(uuid))
         yaml.getConfigurationSection("pet")?.getKeys(false)?.forEach {
             val petData = yaml.getObject<PetData>("pet.$it", false)
-            petData.name = it
-            uuid.playerData().petDataList.add(petData)
+            val id = petData.id
+            if (DataContainer.petOptionMap.containsKey(id)) {
+                petData.name = it
+                uuid.playerData().petDataList.add(petData)
+            }
         }
     }
 
