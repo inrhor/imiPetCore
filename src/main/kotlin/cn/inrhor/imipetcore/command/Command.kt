@@ -5,7 +5,6 @@ import cn.inrhor.imipetcore.api.data.DataContainer.petOptionMap
 import cn.inrhor.imipetcore.api.manager.PetManager.addPet
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.common.script.kether.eval
-import cn.inrhor.imipetcore.common.ui.UiData.homePetUi
 import cn.inrhor.imipetcore.server.PluginLoader.loadTask
 import cn.inrhor.imipetcore.server.PluginLoader.logo
 import cn.inrhor.imipetcore.server.PluginLoader.unloadTask
@@ -26,13 +25,6 @@ object Command {
     @CommandBody
     val main = mainCommand {
         createHelper()
-    }
-
-    @CommandBody(permission = "imipetcore.use.open")
-    val open = subCommand {
-        execute<Player> { sender, _, _ ->
-            homePetUi.open(sender)
-        }
     }
 
     @CommandBody(permission = "imipetcore.admin.send")

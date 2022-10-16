@@ -2,10 +2,10 @@ package cn.inrhor.imipetcore.common.option
 
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
-import cn.inrhor.imipetcore.common.ui.ItemElement
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
+import taboolib.library.xseries.XMaterial
 import taboolib.module.kether.KetherShell
 
 /**
@@ -18,6 +18,11 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
                 val item: ItemElement = ItemElement(),
                 val trigger: MutableList<TriggerOption> = mutableListOf()
 )
+
+class ItemElement(
+    val material: XMaterial = XMaterial.ZOMBIE_HEAD,
+    val name: String = "", val lore: List<String> = listOf(),
+    val modelData: Int = 0)
 
 /**
  * 行为动作Ai

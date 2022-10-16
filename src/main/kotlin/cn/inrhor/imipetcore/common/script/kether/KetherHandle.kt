@@ -1,7 +1,6 @@
 package cn.inrhor.imipetcore.common.script.kether
 
 import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.common.ui.UiVariable
 import cn.inrhor.imipetcore.util.variableReader
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
@@ -22,6 +21,8 @@ fun Player.eval(script: String, variable: (ScriptContext) -> Unit, get: (Any?) -
 fun Player.eval(script: String) {
     eval(script, {}, {Coerce.toBoolean(it)}, true)
 }
+
+class UiVariable(val name: String = "", val default: Any)
 
 fun Player.evalStrPetData(script: String, petData: PetData, vararg variable: UiVariable): String {
     var text = script
