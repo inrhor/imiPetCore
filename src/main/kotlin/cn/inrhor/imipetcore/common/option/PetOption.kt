@@ -2,11 +2,15 @@ package cn.inrhor.imipetcore.common.option
 
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
+import cn.inrhor.imipetcore.common.script.kether.evalString
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.library.xseries.XMaterial
 import taboolib.module.kether.KetherShell
+import taboolib.module.kether.ScriptContext
+import taboolib.platform.util.buildItem
 
 /**
  * 宠物配置
@@ -22,7 +26,22 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
 class ItemElement(
     val material: XMaterial = XMaterial.ZOMBIE_HEAD,
     val name: String = "", val lore: List<String> = listOf(),
-    val modelData: Int = 0)
+    val modelData: Int = 0) {
+
+    fun itemStack(player: Player, variable: (ScriptContext) -> Unit): ItemStack = buildItem(material) {
+        val a = this@ItemElement
+        name = player.evalString(a.name) {
+            variable(it)
+        }
+        a.lore.forEach {
+            lore.add(player.evalString(it){ s ->
+                variable(s)
+            })
+        }
+        customModelData = modelData
+    }
+
+}
 
 /**
  * 行为动作Ai

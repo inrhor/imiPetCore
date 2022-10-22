@@ -40,6 +40,10 @@ fun Player.evalStrPetData(script: String, petData: PetData, vararg variable: UiV
 }
 
 fun Player.evalString(script: String): String {
+    return evalString(script) {}
+}
+
+fun Player.evalString(script: String, variable: (ScriptContext) -> Unit): String {
     var text = script
     script.variableReader().forEach { e ->
         text = text.replace("{{$e}}", eval(e, {}, {
