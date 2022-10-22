@@ -24,11 +24,11 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
 )
 
 class ItemElement(
-    val material: XMaterial = XMaterial.ZOMBIE_HEAD,
+    val material: String = "ZOMBIE_HEAD",
     val name: String = "", val lore: List<String> = listOf(),
     val modelData: Int = 0) {
 
-    fun itemStack(player: Player, variable: (ScriptContext) -> Unit): ItemStack = buildItem(material) {
+    fun itemStack(player: Player, variable: (ScriptContext) -> Unit): ItemStack = buildItem(XMaterial.valueOf(material)) {
         val a = this@ItemElement
         name = player.evalString(a.name) {
             variable(it)
