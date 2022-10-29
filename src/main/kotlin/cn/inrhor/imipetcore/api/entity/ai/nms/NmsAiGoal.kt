@@ -2,14 +2,12 @@ package cn.inrhor.imipetcore.api.entity.ai.nms
 
 import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAi
 import org.bukkit.entity.Entity
-import taboolib.common.platform.function.info
 import taboolib.module.nms.MinecraftVersion
 
 object NmsAiGoal {
 
     fun Entity.addNmsAi(nmsAi: UniversalAi, priority: Int) {
         try {
-            info("addNmsAi")
             val nmsEntity = this::class.java.getMethod("getHandle").invoke(this)
             val major = MinecraftVersion.major
             val v = if (major == 4) "v1_12_R1" else "v1_16_R3"

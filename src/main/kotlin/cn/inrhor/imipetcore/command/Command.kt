@@ -29,11 +29,11 @@ object Command {
 
     @CommandBody(permission = "imipetcore.admin.send")
     val send = subCommand {
-        dynamic(commit = "player") {
+        dynamic("player") {
             suggestion<CommandSender> { _, _ -> Bukkit.getOnlinePlayers().map { it.name } }
-            dynamic(commit = "id") {
+            dynamic("id") {
                 suggestion<CommandSender> { _, _ -> petOptionMap.keys.map { it } }
-                dynamic(commit = "name") {
+                dynamic("name") {
                     execute<CommandSender> { sender, context, argument ->
                         val player = Bukkit.getPlayer(context.argument(-2))?: return@execute run {
                             // lang
@@ -49,9 +49,9 @@ object Command {
 
     @CommandBody(permission = "imipetcore.admin.remove")
     val remove = subCommand {
-        dynamic(commit = "player") {
+        dynamic("player") {
             suggestion<CommandSender> { _, _ -> Bukkit.getOnlinePlayers().map { it.name } }
-            dynamic(commit = "name") {
+            dynamic("name") {
                 suggestion<CommandSender> { _, context ->
                     Bukkit.getPlayer(context.argument(-1))?.getData()?.petDataList?.map { it.name }
                 }

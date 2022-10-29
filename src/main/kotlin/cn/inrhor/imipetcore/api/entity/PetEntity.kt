@@ -8,7 +8,6 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.common.location.referFollowLoc
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.LivingEntity
@@ -39,7 +38,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         }
         if (entity != null) return
         petData.following = true
-        entity = owner.world.spawnEntity(owner.referFollowLoc(), petData.petOption().entityType) as LivingEntity
+        entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
