@@ -12,13 +12,15 @@ import java.io.File
  * @param outStr 文件不存在时输出Lang
  * @param mkdirs 是否创建 example.yml
  */
-fun getFile(child: String, outStr: String, mkdirs: Boolean, example: String = "example"): File {
+fun getFile(child: String, outStr: String, mkdirs: Boolean, vararg example: String = arrayOf("example")): File {
     val file = File(ImiPetCore.plugin.dataFolder, child)
     if (!file.exists() && mkdirs) { // 如果 <child> 文件夹不存在就给示例配置
         if (outStr.isNotEmpty()) {
             console().sendLang(outStr)
         }
-        ImiPetCore.resource.releaseResourceFile("$child/$example.yml", true)
+        example.forEach {
+            ImiPetCore.resource.releaseResourceFile("$child/$it.yml", true)
+        }
     }
     return file
 }

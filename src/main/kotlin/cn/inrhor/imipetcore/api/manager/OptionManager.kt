@@ -2,10 +2,12 @@ package cn.inrhor.imipetcore.api.manager
 
 import cn.inrhor.imipetcore.api.data.DataContainer.actionOptionMap
 import cn.inrhor.imipetcore.api.data.DataContainer.petOptionMap
+import cn.inrhor.imipetcore.api.data.DataContainer.skillOptionMap
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.ModelOption
 import cn.inrhor.imipetcore.common.option.PetOption
+import cn.inrhor.imipetcore.common.option.SkillOption
 
 object OptionManager {
     /**
@@ -34,6 +36,13 @@ object OptionManager {
      */
     fun ActionOption.save() {
         actionOptionMap[name] = this
+    }
+
+    /**
+     *  存储技能配置
+     */
+    fun SkillOption.save() {
+        skillOptionMap[id] = this
     }
 
     /**

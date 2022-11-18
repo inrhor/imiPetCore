@@ -31,10 +31,11 @@ taboolib {
             name("OrangeEngine").optional(true)
             name("GermEngine").optional(true)
             name("DragonCore").optional(true)
+            name("UiUniverse").optional(true)
         }
     }
     classifier = null
-    version = "6.0.10-9"
+    version = "6.0.10-21"
 }
 
 repositories {

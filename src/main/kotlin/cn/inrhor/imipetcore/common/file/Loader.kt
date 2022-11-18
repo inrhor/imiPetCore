@@ -1,9 +1,9 @@
 package cn.inrhor.imipetcore.common.file
 
-import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.manager.OptionManager.save
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.PetOption
+import cn.inrhor.imipetcore.common.option.SkillOption
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.getObject
 
@@ -28,6 +28,21 @@ fun loadAction() {
         yaml.getConfigurationSection("action")?.getKeys(false)?.forEach { e ->
             val option = yaml.getObject<ActionOption>("action.$e", false)
             option.name = e
+            option.save()
+        }
+    }
+}
+
+/**
+ * 加载技能文件
+ */
+fun loadSkill() {
+    val folder = getFile("skill", "SKILL_EMPTY_FILE", true)
+    getFileList(folder).forEach {
+        val yaml = Configuration.loadFromFile(it)
+        yaml.getConfigurationSection("skill")?.getKeys(false)?.forEach { e ->
+            val option = yaml.getObject<SkillOption>("skill.$e", false)
+            option.id = e
             option.save()
         }
     }

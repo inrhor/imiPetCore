@@ -11,6 +11,7 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.AttributeData
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.database.data.SkillSystemData
 import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
@@ -33,11 +34,13 @@ object PetManager {
             // lang
             return
         }
-        val def = id.petOption().default
+        val opt = id.petOption()
+        val def = opt.default
         val a = def.attribute
         val p = a.health
         val petData = PetData(name, id, following,
-            AttributeData(p, p, a.speed, a.attack, a.attack_speed), 0, def.exp)
+            AttributeData(p, p, a.speed, a.attack, a.attack_speed), 0, def.exp,
+            skillSystemData = SkillSystemData(opt.skill.number))
         addPet(petData)
         if (following) callPet(name)
     }

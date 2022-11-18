@@ -20,8 +20,11 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
                 val model: ModelOption = ModelOption(),
                 val action: MutableList<ActionAiOption> = mutableListOf(),
                 val item: ItemElement = ItemElement(),
-                val trigger: MutableList<TriggerOption> = mutableListOf()
+                val trigger: MutableList<TriggerOption> = mutableListOf(),
+                val skill: SkillDataOption = SkillDataOption()
 )
+
+class SkillDataOption(val number: Int = 3)
 
 class ItemElement(
     val material: String = "ZOMBIE_HEAD",

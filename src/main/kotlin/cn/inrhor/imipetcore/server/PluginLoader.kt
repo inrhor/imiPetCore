@@ -9,6 +9,7 @@ import cn.inrhor.imipetcore.common.database.type.DatabaseManager
 import cn.inrhor.imipetcore.common.database.type.DatabaseType
 import cn.inrhor.imipetcore.common.file.loadAction
 import cn.inrhor.imipetcore.common.file.loadPet
+import cn.inrhor.imipetcore.common.file.loadSkill
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -43,6 +44,7 @@ object PluginLoader {
         ModelManager.modelLoader.load()
         loadPet()
         loadAction()
+        loadSkill()
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
         }

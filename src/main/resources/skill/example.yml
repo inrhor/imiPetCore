@@ -1,0 +1,17 @@
+skill:
+  test:
+    name: 测试技能
+    script: |
+      pet-skill mmtest type none
+    tree:
+      # 所需技能点
+      point: 10
+      # 升级选择新技能
+      select:
+        - example_1
+    # 冷却 (支持JavaScript运算)
+    coolDown: "30-point*2"
+  examp_1:
+    name: 测试技能1
+    script: |
+      pet-skill mmselecttest type select_target

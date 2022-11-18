@@ -42,3 +42,7 @@ pet:
       - "     &f名称：&8{{pet name}}"
       - ""
     modelData: 12
+  # 技能系统
+  skill:
+    # 默认装载上限
+    number: 3
