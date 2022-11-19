@@ -41,6 +41,7 @@ data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0,
  * 技能系统数据
  */
 data class SkillSystemData(
+    var point: Int = 0,
     var number: Int = 3,
     var loadSkill: MutableList<SkillData> = mutableListOf(),
     var unloadSkill: MutableList<SkillData> = mutableListOf())
@@ -48,4 +49,5 @@ data class SkillSystemData(
 /**
  * 技能数据
  */
-data class SkillData(val id: String = "null", val skillName: String = "null", var coolDown: Int = 0)
+data class SkillData(var id: String = "null", var skillName: String = "null",
+                     var coolDown: Int = 0, var point: Int = 0)

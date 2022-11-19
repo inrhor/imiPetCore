@@ -57,4 +57,83 @@ object SkillManager {
         load.removeAt(s)
     }
 
+    /**
+     * @return 宠物技能数据
+     */
+    fun PetData.getSkillData(id: String): SkillData? {
+        skillSystemData.loadSkill.forEach {
+            if (it.id == id) return it
+        }
+        skillSystemData.unloadSkill.forEach {
+            if (it.id == id) return it
+        }
+        return null
+    }
+
+    /**
+     * 为宠物增加技能点
+     */
+    fun PetData.addPoint(int: Int) {
+        skillSystemData.point += int
+    }
+
+    /**
+     * 为宠物扣除技能点
+     *
+     * @return 操作成否
+     */
+    fun PetData.delPoint(int: Int): Boolean {
+        if (skillSystemData.point >= int) {
+            skillSystemData.point -= int
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 为宠物技能添加技能点
+     *
+     * @param del 是否扣除宠物技能点
+     * @return 操作成否
+     */
+    fun PetData.addSkillPoint(id: String, int: Int, del: Boolean = true): Boolean {
+        val skill = getSkillData(id)?: return false
+        if (del && delPoint(int)) {
+            skill.point += int
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 更替宠物技能
+     */
+    fun PetData.replaceSkill(id: String, new: String) {
+        val skill = getSkillData(id)?: return
+        val opt = new.skillOption()?: return
+        skill.id = opt.id
+        skill.skillName = opt.name
+        skill.coolDown = 0
+        skill.point = 0
+    }
+
+    /**
+     * 删除宠物技能
+     *
+     * @return 操作成否
+     */
+    fun PetData.removeSkill(id: String): Boolean {
+        val n = skillSystemData.loadSkill.iterator()
+        while (n.hasNext()) {
+            val a = n.next()
+            if (a.id == id) n.remove(); return true
+        }
+        val un = skillSystemData.unloadSkill.iterator()
+        while (un.hasNext()) {
+            val a = un.next()
+            if (a.id == id) un.remove(); return true
+        }
+        return false
+    }
+
 }
