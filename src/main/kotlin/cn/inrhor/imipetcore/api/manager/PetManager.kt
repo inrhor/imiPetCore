@@ -105,8 +105,16 @@ object PetManager {
 
     fun Player.followingPet(): List<PetEntity> {
         val list = mutableListOf<PetEntity>()
+        followingPetData().forEach {
+            list.add(it.petEntity!!)
+        }
+        return list
+    }
+
+    fun Player.followingPetData(): List<PetData> {
+        val list = mutableListOf<PetData>()
         getData().petDataList.forEach {
-            if (it.isFollow()) list.add(it.petEntity!!)
+            if (it.isFollow()) list.add(it)
         }
         return list
     }

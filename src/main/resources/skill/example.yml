@@ -1,3 +1,34 @@
+icon:
+  point:
+    lore:
+      - "     &f&l{{pet skill name}}"
+      - ""
+      - "     &f技能点：&8{{pet skill point}} &f/ &8{{pet skill point max}}"
+      - ""
+      - "     &8&o点击赋予技能点"
+      - ""
+  update:
+    lore:
+      - "     &f&l{{pet skill name}}"
+      - ""
+      - "     &8&o点击升级技能"
+      - ""
+  load:
+    lore:
+      - "     &f&l{{pet skill name}}"
+      - ""
+      - "     &f冷却：&8{{pet skill coolDown}} &f秒"
+      - ""
+      - "     &8&o点击使用"
+      - ""
+  unload:
+    lore:
+      - "     &f&l{{pet skill name}}"
+      - ""
+      - "     &f冷却：&8{{pet skill coolDown}} &f秒"
+      - ""
+      - "     &8&o点击使用"
+      - ""
 skill:
   test:
     name: 测试技能
@@ -11,6 +42,13 @@ skill:
         - example_1
     # 冷却 (支持JavaScript运算)
     coolDown: "30-point*2"
+    # 图标
+    icon:
+      material: APPLE
+      name: "&f                                    "
+      lore:
+        - "     &f&l{{pet skill name}}"
+        - ""
   examp_1:
     name: 测试技能1
     script: |

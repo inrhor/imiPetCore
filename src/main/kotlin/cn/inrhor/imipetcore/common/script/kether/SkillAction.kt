@@ -1,421 +1,137 @@
 package cn.inrhor.imipetcore.common.script.kether
 
-import cn.inrhor.imipetcore.api.data.DataContainer.getData
-import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
-import cn.inrhor.imipetcore.api.manager.PetManager.callPet
-import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
-import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
-import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
-import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
-import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
-import cn.inrhor.imipetcore.api.manager.PetManager.getPet
-import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
-import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
-import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
-import cn.inrhor.imipetcore.api.manager.PetManager.setLevel
-import cn.inrhor.imipetcore.api.manager.PetManager.setMaxExp
-import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
-import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
-import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
-import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
-import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
-import cn.inrhor.imipetcore.common.location.distanceLoc
-import org.bukkit.Location
-import org.bukkit.entity.Entity
+import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.skillData
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
-import taboolib.library.kether.ParsedAction
-import taboolib.module.ai.controllerJumpReady
-import taboolib.module.ai.controllerLookAt
-import taboolib.module.ai.navigationMove
 import taboolib.module.kether.*
-import taboolib.platform.util.asLangText
-import java.util.concurrent.CompletableFuture
 
-class PetAction {
-
-    class ActionPetEntity(val who: WhoType): ScriptAction<Entity>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Entity> {
-            val e = if (who == WhoType.OWNER) frame.selectPetData().petEntity?.owner else frame.selectPetData().petEntity?.entity
-            return CompletableFuture.completedFuture(e)
-        }
-
-        enum class WhoType {
-            OWNER, PET
-        }
-    }
-
-    class ActionDistance(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Double>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Double> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                frame.newFrame(v2).run<Entity>().thenApply { i2 ->
-                    i1.distanceLoc(i2)
-                }.join()
-            }
-        }
-    }
-
-    class ActionWorld(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                frame.newFrame(v2).run<Entity>().thenApply { i2 ->
-                    i1.world == i2.world
-                }.join()
-            }
-        }
-    }
-
-    class ActionWorldWhere(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                v2.contains(i1.world.name)
-            }
-        }
-    }
-
-    class ActionWorldAbout(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                val world = i1.world.name
-                v2.forEach {
-                    if (world.contains(it)) return@thenApply true
-                }
-                false
-            }
-        }
-    }
-
-    class ActionPetLook(val en: ParsedAction<*>): ScriptAction<Void>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Void> {
-            frame.newFrame(en).run<Entity>().thenApply {
-                frame.selectPetData().petEntity?.entity?.controllerLookAt(it)
-            }
-            return CompletableFuture.completedFuture(null)
-        }
-    }
+class SkillAction {
 
     companion object {
-        private val tokenType = ArgTypes.listOf {
-            it.nextToken()
-        }
 
-        @KetherParser(["pet"], shared = true)
-        fun parserPet() = scriptParser {
+        /*@KetherParser(["actionSkill"], shared = true)
+        fun parserSkill() = scriptParser {
             it.switch {
-                case("entity") {
-                    ActionPetEntity(ActionPetEntity.WhoType.PET)
-                }
-                case("owner") {
-                    ActionPetEntity(ActionPetEntity.WhoType.OWNER)
-                }
-                case("look") {
-                    val en = it.next(ArgTypes.ACTION)
-                    ActionPetLook(en)
-                }
-                case("drive") {
-                    it.expect("type")
-                    val str = it.next(ArgTypes.ACTION)
-                    actionNow {
-                        newFrame(str).run<String>().thenApply { s ->
-                            player().driveRidePet(selectPetData(), s)
-                        }
-                    }
-                }
-                case("undrive") {
-                    actionNow {
-                        player().unDriveRidePet(selectPetData())
-                    }
-                }
-                case("move") {
-                    val loc = it.next(ArgTypes.ACTION)
-                    it.expect("speed")
-                    val speed = it.next(ArgTypes.ACTION)
-                    actionNow {
-                        newFrame(loc).run<Location>().thenApply { l ->
-                            newFrame(speed).run<Any>().thenApply { d ->
-                                selectPetData().petEntity?.entity?.navigationMove(l, Coerce.toDouble(d))
-                            }
-                        }
-                    }
-                }
-                case("jump") {
-                    actionNow {
-                        selectPetData().petEntity?.entity?.controllerJumpReady()
-                    }
-                }
                 case("select") {
-                    val next = it.nextToken()
+                    val id = it.nextToken()
                     actionNow {
-                        variables().set("@PetData", player().getPet(next))
+                        variables().set("@SkillOption", id.skillOption())
                     }
                 }
-                case("follow") {
+            }
+        }*/
+
+        @KetherParser(["petSkill"], shared = true)
+        fun parserPetSkill() = scriptParser {
+            it.switch {
+                case("select") {
+                    val id = it.nextToken()
+                    actionNow {
+                        variables().set("@PetSkillData", id.skillData(selectPetData()))
+                    }
+                }
+                case("name") {
+                    actionNow {
+                        selectSkillData().skillName
+                    }
+                }
+                case("point") {
                     try {
                         it.mark()
-                        when (it.expects("set", "lang")) {
+                        when (it.expects("set", "add", "del")) {
                             "set" -> {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                                        selectSkillData().point = Coerce.toInteger(e)
                                     }
                                 }
                             }
-                            "lang" -> {
+                            "add" -> {
+                                val a = it.next(ArgTypes.ACTION)
                                 actionNow {
-                                    player().asLangText("PET_FOLLOW_" + selectPetData().isFollow().toString().uppercase())
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        selectSkillData().point += Coerce.toInteger(e)
+                                    }
                                 }
                             }
-                            else -> error("pet follow ?")
+                            "del" -> {
+                                val a = it.next(ArgTypes.ACTION)
+                                actionNow {
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        selectSkillData().point -= Coerce.toInteger(e)
+                                    }
+                                }
+                            }
+                            else -> error("unknown point ???")
                         }
                     }catch (ex: Exception) {
                         it.reset()
                         actionNow {
-                            selectPetData().isFollow()
+                            selectSkillData().point
                         }
                     }
                 }
-                case("name") {
+                case("coolDown") {
                     try {
                         it.mark()
-                        it.expect("set")
-                        val a = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(a).run<String>().thenAccept { s ->
-                                player().renamePet(selectPetData(), s)
+                        when (it.expects("set", "add", "del")) {
+                            "set" -> {
+                                val a = it.next(ArgTypes.ACTION)
+                                actionNow {
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        selectSkillData().coolDown = Coerce.toInteger(e)
+                                    }
+                                }
                             }
+                            "add" -> {
+                                val a = it.next(ArgTypes.ACTION)
+                                actionNow {
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        selectSkillData().coolDown += Coerce.toInteger(e)
+                                    }
+                                }
+                            }
+                            "del" -> {
+                                val a = it.next(ArgTypes.ACTION)
+                                actionNow {
+                                    newFrame(a).run<Any>().thenAccept { e ->
+                                        selectSkillData().coolDown -= Coerce.toInteger(e)
+                                    }
+                                }
+                            }
+                            else -> error("unknown coolDown ???")
                         }
-                    }catch (ex: Throwable) {
+                    }catch (ex: Exception) {
                         it.reset()
                         actionNow {
-                            selectPetData().name
+                            selectSkillData().coolDown
                         }
                     }
                 }
-                case("number") {
-                    actionNow {
-                        player().getData().petDataList.size
+                case("skill") {
+                    it.mark()
+                    when (it.expects("add", "remove")) {
+                        "add" -> {
+                            it.expect("id")
+                            val id = it.nextToken()
+                            actionNow {
+                                selectPetData().addNewSkill(player(), id)
+                            }
+                        }
+                        "remove" -> {
+                            it.expect("id")
+                            val id = it.nextToken()
+                            actionNow {
+                                selectPetData().removeSkill(player(), id)
+                            }
+                        }
+                        else -> error("unknown skill ???")
                     }
                 }
-                case("follow_number") {
-                    actionNow {
-                        player().followingPet().size
-                    }
-                }
-                case("id") {
-                    try {
-                        it.mark()
-                        it.expect("set")
-                        val a = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(a).run<String>().thenAccept { s ->
-                                player().changePetId(selectPetData(), s)
-                            }
-                        }
-                    }catch (ex: Throwable) {
-                        it.reset()
-                        actionNow {
-                            selectPetData().id
-                        }
-                    }
-                }
-                case("release") {
-                    actionNow {
-                        player().deletePet(selectPetData().name)
-                    }
-                }
-                case("attribute") {
-                    when (it.nextToken()) {
-                        "attack" -> {
-                            try {
-                                it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setPetAttack(selectPetData(), Coerce.toDouble(a))
-                                    }
-                                }
-                            }catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.attack
-                                }
-                            }
-                        }
-                        "speed" -> {
-                            try {
-                                it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setPetSpeed(selectPetData(), Coerce.toDouble(a))
-                                    }
-                                }
-                            }catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.speed
-                                }
-                            }
-                        }
-                        "attack_speed" -> {
-                            try {
-                                it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setPetAttackSpeed(selectPetData(), Coerce.toInteger(a))
-                                    }
-                                }
-                            } catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.attack_speed
-                                }
-                            }
-                        }
-                        "current_hp" -> {
-                            try {
-                                it.mark()
-                                when (it.expects("set", "add", "del")) {
-                                    "set" -> {
-                                        val s = it.next(ArgTypes.ACTION)
-                                        actionNow {
-                                            newFrame(s).run<Any>().thenAccept { a ->
-                                                player().setCurrentHP(selectPetData(), Coerce.toDouble(a))
-                                            }
-                                        }
-                                    }
-                                    "add" -> {
-                                        val s = it.next(ArgTypes.ACTION)
-                                        actionNow {
-                                            newFrame(s).run<Any>().thenAccept { a ->
-                                                player().addCurrentHP(selectPetData(), Coerce.toDouble(a))
-                                            }
-                                        }
-                                    }
-                                    "del" -> {
-                                        val s = it.next(ArgTypes.ACTION)
-                                        actionNow {
-                                            newFrame(s).run<Any>().thenAccept { a ->
-                                                player().delCurrentHP(selectPetData(), Coerce.toDouble(a))
-                                            }
-                                        }
-                                    }
-                                    else -> error("pet attribute current_hp ?")
-                                }
-                            } catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.currentHP
-                                }
-                            }
-                        }
-                        "max_hp" -> {
-                            try {
-                                it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setMaxHP(selectPetData(), Coerce.toDouble(a))
-                                    }
-                                }
-                            } catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.maxHP
-                                }
-                            }
-                        }
-                        else -> error("pet attribute ?")
-                    }
-                }
-                case("current_exp") {
-                    try {
-                        it.mark()
-                        it.expect("set")
-                        val s = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(s).run<Any>().thenAccept { a ->
-                                player().setCurrentExp(selectPetData(), Coerce.toInteger(a))
-                            }
-                        }
-                    } catch (ex: Throwable) {
-                        it.reset()
-                        actionNow {
-                            selectPetData().currentExp
-                        }
-                    }
-                }
-                case("max_exp") {
-                    try {
-                        it.mark()
-                        it.expect("set")
-                        val s = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(s).run<Any>().thenAccept { a ->
-                                player().setMaxExp(selectPetData(), Coerce.toInteger(a))
-                            }
-                        }
-                    } catch (ex: Throwable) {
-                        it.reset()
-                        actionNow {
-                            selectPetData().maxExp
-                        }
-                    }
-                }
-                case("level") {
-                    try {
-                        it.mark()
-                        it.expect("set")
-                        val s = it.next(ArgTypes.ACTION)
-                        actionNow {
-                            newFrame(s).run<Any>().thenAccept { a ->
-                                player().setLevel(selectPetData(), Coerce.toInteger(a))
-                            }
-                        }
-                    } catch (ex: Throwable) {
-                        it.reset()
-                        actionNow {
-                            selectPetData().level
-                        }
-                    }
-                }
-            }
-        }
-
-        @KetherParser(["distance"])
-        fun parserDis() = scriptParser {
-            val v1 = it.next(ArgTypes.ACTION)
-            it.expect("to")
-            val v2 = it.next(ArgTypes.ACTION)
-            ActionDistance(v1, v2)
-        }
-
-        @KetherParser(["world"])
-        fun parserWorld() = scriptParser {
-            val v1 = it.next(ArgTypes.ACTION)
-            it.mark()
-            when (it.expects("to", "where")) {
-                "to" -> {
-                    val v2 = it.next(ArgTypes.ACTION)
-                    ActionWorld(v1, v2)
-                }
-                "where" -> {
-                    val v2 = it.next(tokenType)
-                    ActionWorldWhere(v1, v2)
-                }
-                "about" -> {
-                    val v2 = it.next(tokenType)
-                    ActionWorldAbout(v1, v2)
-                }
-                else -> error("world x ??")
             }
         }
     }
-
 }
