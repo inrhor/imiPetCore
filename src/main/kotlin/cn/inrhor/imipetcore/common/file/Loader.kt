@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.common.file
 
 import cn.inrhor.imipetcore.api.manager.OptionManager.save
 import cn.inrhor.imipetcore.common.option.ActionOption
+import cn.inrhor.imipetcore.common.option.IconOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import cn.inrhor.imipetcore.common.option.SkillOption
 import taboolib.module.configuration.Configuration
@@ -42,6 +43,11 @@ fun loadSkill() {
         val yaml = Configuration.loadFromFile(it)
         yaml.getConfigurationSection("skill")?.getKeys(false)?.forEach { e ->
             val option = yaml.getObject<SkillOption>("skill.$e", false)
+            option.id = e
+            option.save()
+        }
+        yaml.getConfigurationSection("icon")?.getKeys(false)?.forEach { e ->
+            val option = yaml.getObject<IconOption>("icon.$e", false)
             option.id = e
             option.save()
         }

@@ -1,8 +1,11 @@
 package cn.inrhor.imipetcore.common.script.kether
 
 import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.loadSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.skillData
+import cn.inrhor.imipetcore.api.manager.SkillManager.skillOption
+import cn.inrhor.imipetcore.api.manager.SkillManager.unloadSkill
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.module.kether.*
@@ -11,17 +14,26 @@ class SkillAction {
 
     companion object {
 
-        /*@KetherParser(["actionSkill"], shared = true)
+        @KetherParser(["skillOption"], shared = true)
         fun parserSkill() = scriptParser {
             it.switch {
                 case("select") {
                     val id = it.nextToken()
                     actionNow {
-                        variables().set("@SkillOption", id.skillOption())
+                        variables().set("@IdSkill", id)
                     }
                 }
+                case("coolDown") {
+                    actionNow { selectIdSkill().skillOption()?.coolDown?: 0 }
+                }
+                case("point") {
+                    actionNow { selectIdSkill().skillOption()?.tree?.point?: 0 }
+                }
+                case("name") {
+                    actionNow { selectIdSkill().skillOption()?.name?: "" }
+                }
             }
-        }*/
+        }
 
         @KetherParser(["petSkill"], shared = true)
         fun parserPetSkill() = scriptParser {
@@ -31,6 +43,9 @@ class SkillAction {
                     actionNow {
                         variables().set("@PetSkillData", id.skillData(selectPetData()))
                     }
+                }
+                case("id") {
+                    actionNow { selectSkillData().id }
                 }
                 case("name") {
                     actionNow {
@@ -130,6 +145,14 @@ class SkillAction {
                         }
                         else -> error("unknown skill ???")
                     }
+                }
+                case("load") {
+                    actionNow {
+                        selectPetData().loadSkill(player(), selectSkillData(), selectIndex())
+                    }
+                }
+                case("unload") {
+                    actionNow { selectPetData().unloadSkill(player(), selectIndex()) }
                 }
             }
         }

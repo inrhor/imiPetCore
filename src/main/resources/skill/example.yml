@@ -1,34 +1,38 @@
 icon:
   point:
-    lore:
-      - "     &f&l{{pet skill name}}"
-      - ""
-      - "     &f技能点：&8{{pet skill point}} &f/ &8{{pet skill point max}}"
-      - ""
-      - "     &8&o点击赋予技能点"
-      - ""
+    item:
+      lore:
+        - "     &f&l{{petSkill name}}"
+        - ""
+        # - "     &f技能点：&8{{petSkill point}} &f/ &8{{pet skill point max}}"
+        - ""
+        - "     &8&o点击赋予技能点"
+        - ""
   update:
-    lore:
-      - "     &f&l{{pet skill name}}"
-      - ""
-      - "     &8&o点击升级技能"
-      - ""
+    item:
+      lore:
+        - "     &f&l{{petSkill name}}"
+        - ""
+        - "     &8&o点击升级技能"
+        - ""
   load:
-    lore:
-      - "     &f&l{{pet skill name}}"
-      - ""
-      - "     &f冷却：&8{{pet skill coolDown}} &f秒"
-      - ""
-      - "     &8&o点击使用"
-      - ""
+    item:
+      lore:
+        - "     &f&l{{petSkill name}}"
+        - ""
+        - "     &f冷却：&8{{petSkill coolDown}} &f秒"
+        - ""
+        - "     &8&o点击使用"
+        - ""
   unload:
-    lore:
-      - "     &f&l{{pet skill name}}"
-      - ""
-      - "     &f冷却：&8{{pet skill coolDown}} &f秒"
-      - ""
-      - "     &8&o点击使用"
-      - ""
+    item:
+      lore:
+        - "     &f&l{{petSkill name}}"
+        - ""
+        - "     &f冷却：&8{{petSkill coolDown}} &f秒"
+        - ""
+        - "     &8&o点击装载技能"
+        - ""
 skill:
   test:
     name: 测试技能
@@ -47,7 +51,7 @@ skill:
       material: APPLE
       name: "&f                                    "
       lore:
-        - "     &f&l{{pet skill name}}"
+        - "     &f&l{{petSkill name}}"
         - ""
   examp_1:
     name: 测试技能1

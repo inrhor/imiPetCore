@@ -41,6 +41,8 @@ object SkillManager {
 
     /**
      * 为宠物装载技能
+     *
+     * @param slot 装载槽位
      */
     fun PetData.loadSkill(owner: Player, skillData: SkillData, slot: Int = 0) {
         val number = skillSystemData.number
@@ -49,25 +51,41 @@ object SkillManager {
         if (number > size) {
             load.add(skillData)
         }else {
-            if (load.isEmpty()) return
-            val s = if (slot <= size-1) slot else 0
-            skillSystemData.unloadSkill[s] = load[s]
-            load[slot] = skillData
+            if (load.isNotEmpty()) {
+                skillSystemData.unloadSkill.add(skillSystemData.loadSkill[slot])
+                skillSystemData.loadSkill[slot] = skillData
+            }
         }
+        removeUnloadSkill(skillData.id)
         PetChangeEvent(owner, this).call()
     }
 
     /**
      * 为宠物卸载技能
+     *
+     * @param slot 卸载何处技能
      */
     fun PetData.unloadSkill(owner: Player, slot: Int) {
         val load = skillSystemData.loadSkill
         if (load.isEmpty()) return
         val size = load.size
         val s = if (slot <= size-1) slot else 0
-        skillSystemData.unloadSkill[s] = load[s]
+        // 置于未装载技能列表末尾
+        skillSystemData.unloadSkill.add(load[s])
         load.removeAt(s)
         PetChangeEvent(owner, this).call()
+    }
+
+    /**
+     * 移除未装载技能里的技能
+     */
+    fun PetData.removeUnloadSkill(id: String) {
+        val unload = skillSystemData.unloadSkill
+        if (unload.isEmpty()) return
+        val data = unload.find { it.id == id }
+        if (data != null) {
+            unload.remove(data)
+        }
     }
 
     /**
@@ -187,12 +205,12 @@ object SkillManager {
     }
 
     /**
-     * @retuen 可升级的技能
+     * @return 可升级的技能
      */
     fun PetData.getUpdateSkills(): MutableList<SkillData> {
         val list = mutableListOf<SkillData>()
         getAllSkills().forEach {
-            if (it.fillPoint()) list.add(it)
+            if (it.fillPoint() && (it.id.skillOption()?.tree?.select?: listOf()).isNotEmpty()) list.add(it)
         }
         return list
     }
@@ -201,7 +219,9 @@ object SkillManager {
      * @return 满足技能点
      */
     fun SkillData.fillPoint(): Boolean {
-        return point >= (skillOption()?.tree?.point ?: 0)
+        val p = skillOption()?.tree?.point ?: 0
+        if (p <= 0) return false
+        return point >= p
     }
 
 

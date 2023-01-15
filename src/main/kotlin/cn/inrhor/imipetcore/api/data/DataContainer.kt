@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.api.data
 
 import cn.inrhor.imipetcore.common.database.data.PlayerData
 import cn.inrhor.imipetcore.common.option.ActionOption
+import cn.inrhor.imipetcore.common.option.IconOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import cn.inrhor.imipetcore.common.option.SkillOption
 import org.bukkit.entity.Player
@@ -32,6 +33,11 @@ object DataContainer {
      * 技能配置容器
      */
     val skillOptionMap = ConcurrentHashMap<String, SkillOption>()
+
+    /**
+     * 技能图标容器
+     */
+    val iconOptionMap = ConcurrentHashMap<String, IconOption>()
 
     /**
      * @return 获得玩家数据
