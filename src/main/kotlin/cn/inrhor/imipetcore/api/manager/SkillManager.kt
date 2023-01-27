@@ -126,26 +126,46 @@ object SkillManager {
      * @param del 是否扣除宠物技能点
      * @return 操作成否
      */
-    fun PetData.addSkillPoint(owner: Player, id: String, int: Int, del: Boolean = true): Boolean {
-        val skill = getSkillData(id)?: return false
-        if (del && delPoint(owner, int)) {
-            skill.point += int
-            PetChangeEvent(owner, this).call()
-            return true
+    fun PetData.addSkillPoint(owner: Player, skillData: SkillData, int: Int, del: Boolean = true): Boolean {
+        if (del) {
+            if (!delPoint(owner, int)) return false
         }
-        return false
+        skillData.point += int
+        PetChangeEvent(owner, this).call()
+        return true
+    }
+
+    /**
+     * 为宠物技能减少技能点
+     *
+     * @return 操作成否
+     */
+    fun PetData.delSkillPoint(owner: Player, skillData: SkillData, int: Int): Boolean {
+        skillData.point -= int
+        PetChangeEvent(owner, this).call()
+        return true
+    }
+
+    /**
+     * 为宠物技能设置技能点
+     *
+     * @return 操作成否
+     */
+    fun PetData.setSkillPoint(owner: Player, skillData: SkillData, int: Int): Boolean {
+        skillData.point = int
+        PetChangeEvent(owner, this).call()
+        return true
     }
 
     /**
      * 更替宠物技能
      */
-    fun PetData.replaceSkill(owner: Player, id: String, new: String) {
-        val skill = getSkillData(id)?: return
+    fun PetData.replaceSkill(owner: Player, skillData: SkillData, new: String) {
         val opt = new.skillOption()?: return
-        skill.id = opt.id
-        skill.skillName = opt.name
-        skill.coolDown = 0
-        skill.point = 0
+        skillData.id = opt.id
+        skillData.skillName = opt.name
+        skillData.coolDown = 0
+        skillData.point = 0
         PetChangeEvent(owner, this).call()
     }
 
@@ -233,6 +253,42 @@ object SkillManager {
         list.addAll(skillSystemData.loadSkill)
         list.addAll(skillSystemData.unloadSkill)
         return list
+    }
+
+    /**
+     * @return 技能树配置集
+     */
+    fun SkillData.treeSkillOption(): MutableList<SkillOption> {
+        val list = mutableListOf<SkillOption>()
+        skillOption()?.tree?.select?.forEach {
+            val opt = it.skillOption()
+            if (opt != null) list.add(opt)
+        }
+        return list
+    }
+
+    /**
+     * 宠物技能冷却设置
+     */
+    fun PetData.setCoolDown(owner: Player, skillData: SkillData, int: Int) {
+        skillData.coolDown = int
+        PetChangeEvent(owner, this).call()
+    }
+
+    /**
+     * 宠物技能冷却减少
+     */
+    fun PetData.delCoolDown(owner: Player, skillData: SkillData, int: Int) {
+        skillData.coolDown -= int
+        PetChangeEvent(owner, this).call()
+    }
+
+    /**
+     * 宠物技能冷却增加
+     */
+    fun PetData.addCoolDown(owner: Player, skillData: SkillData, int: Int) {
+        skillData.coolDown += int
+        PetChangeEvent(owner, this).call()
     }
 
 }

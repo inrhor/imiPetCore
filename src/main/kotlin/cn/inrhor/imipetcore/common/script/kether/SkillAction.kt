@@ -1,8 +1,15 @@
 package cn.inrhor.imipetcore.common.script.kether
 
+import cn.inrhor.imipetcore.api.manager.SkillManager.addCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.addSkillPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.delCoolDown
+import cn.inrhor.imipetcore.api.manager.SkillManager.delSkillPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.loadSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.replaceSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.setCoolDown
+import cn.inrhor.imipetcore.api.manager.SkillManager.setSkillPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.skillData
 import cn.inrhor.imipetcore.api.manager.SkillManager.skillOption
 import cn.inrhor.imipetcore.api.manager.SkillManager.unloadSkill
@@ -60,7 +67,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().point = Coerce.toInteger(e)
+                                        selectPetData().setSkillPoint(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -68,7 +75,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().point += Coerce.toInteger(e)
+                                        selectPetData().addSkillPoint(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -76,7 +83,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().point -= Coerce.toInteger(e)
+                                        selectPetData().delSkillPoint(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -97,7 +104,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().coolDown = Coerce.toInteger(e)
+                                        selectPetData().setCoolDown(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -105,7 +112,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().coolDown += Coerce.toInteger(e)
+                                        selectPetData().addCoolDown(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -113,7 +120,7 @@ class SkillAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        selectSkillData().coolDown -= Coerce.toInteger(e)
+                                        selectPetData().delCoolDown(player(), selectSkillData(), Coerce.toInteger(e))
                                     }
                                 }
                             }
@@ -126,26 +133,6 @@ class SkillAction {
                         }
                     }
                 }
-                case("skill") {
-                    it.mark()
-                    when (it.expects("add", "remove")) {
-                        "add" -> {
-                            it.expect("id")
-                            val id = it.nextToken()
-                            actionNow {
-                                selectPetData().addNewSkill(player(), id)
-                            }
-                        }
-                        "remove" -> {
-                            it.expect("id")
-                            val id = it.nextToken()
-                            actionNow {
-                                selectPetData().removeSkill(player(), id)
-                            }
-                        }
-                        else -> error("unknown skill ???")
-                    }
-                }
                 case("load") {
                     actionNow {
                         selectPetData().loadSkill(player(), selectSkillData(), selectIndex())
@@ -153,6 +140,11 @@ class SkillAction {
                 }
                 case("unload") {
                     actionNow { selectPetData().unloadSkill(player(), selectIndex()) }
+                }
+                case("update") {
+                    actionNow {
+                        selectPetData().replaceSkill(player(), selectSkillData(), selectIdSkill())
+                    }
                 }
             }
         }

@@ -19,6 +19,8 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
+import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.Location
 import org.bukkit.entity.Entity
@@ -383,6 +385,26 @@ class PetAction {
                         actionNow {
                             selectPetData().level
                         }
+                    }
+                }
+                case("skill") {
+                    it.mark()
+                    when (it.expects("add", "remove")) {
+                        "add" -> {
+                            it.expect("id")
+                            val id = it.nextToken()
+                            actionNow {
+                                selectPetData().addNewSkill(player(), id)
+                            }
+                        }
+                        "remove" -> {
+                            it.expect("id")
+                            val id = it.nextToken()
+                            actionNow {
+                                selectPetData().removeSkill(player(), id)
+                            }
+                        }
+                        else -> error("unknown skill ???")
                     }
                 }
             }
