@@ -50,4 +50,4 @@ data class SkillSystemData(
  * 技能数据
  */
 data class SkillData(var id: String = "null", var skillName: String = "null",
-                     var coolDown: Int = 0, var point: Int = 0)
+                     var point: Int = 0, var coolDownTime: Long = 0)

@@ -6,7 +6,10 @@ import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.option.ItemElement
 import cn.inrhor.imipetcore.common.option.SkillOption
+import cn.inrhor.imipetcore.common.script.kether.eval
 import org.bukkit.entity.Player
+import taboolib.common5.Coerce
+import taboolib.platform.util.sendLang
 
 /**
  * 宠物技能管理器
@@ -164,7 +167,7 @@ object SkillManager {
         val opt = new.skillOption()?: return
         skillData.id = opt.id
         skillData.skillName = opt.name
-        skillData.coolDown = 0
+//        skillData.coolDown = 0
         skillData.point = 0
         PetChangeEvent(owner, this).call()
     }
@@ -269,26 +272,86 @@ object SkillManager {
 
     /**
      * 宠物技能冷却设置
+     *
      */
-    fun PetData.setCoolDown(owner: Player, skillData: SkillData, int: Int) {
-        skillData.coolDown = int
+    fun PetData.setCoolDown(owner: Player, skillData: SkillData, second: Int) {
+        skillData.coolDownTime = System.currentTimeMillis()+second*1000
         PetChangeEvent(owner, this).call()
     }
 
     /**
      * 宠物技能冷却减少
+     *
      */
-    fun PetData.delCoolDown(owner: Player, skillData: SkillData, int: Int) {
-        skillData.coolDown -= int
+    fun PetData.delCoolDown(owner: Player, skillData: SkillData, second: Int) {
+        skillData.coolDownTime -= second * 1000
         PetChangeEvent(owner, this).call()
     }
 
     /**
      * 宠物技能冷却增加
+     *
      */
-    fun PetData.addCoolDown(owner: Player, skillData: SkillData, int: Int) {
-        skillData.coolDown += int
+    fun PetData.addCoolDown(owner: Player, skillData: SkillData, second: Int) {
+        skillData.coolDownTime += second * 1000
         PetChangeEvent(owner, this).call()
     }
 
+    /**
+     * 发动宠物技能
+     */
+    fun PetData.launchSkill(owner: Player, skillData: SkillData) {
+        if (skillData.isCoolDown()) {
+            owner.sendLang("SKILL_IS_COOL_DOWN")
+            return
+        }
+        setCoolDown(owner, skillData, (skillData.skillOption()?.coolDown?: "0").toInt())
+        owner.eval(skillData.skillOption()?.script?: "", {
+            it.rootFrame().variables()["@PetData"] = this
+        }, { Coerce.toBoolean(it) }, true)
+    }
+
+    /**
+     * @return 技能冷却时间（秒）
+     */
+    fun SkillData.coolDown(): Int {
+        if (!isCoolDown()) return 0
+        return Coerce.toInteger((coolDownTime - System.currentTimeMillis())/1000)
+    }
+
+    /**
+     * @return 技能是否处于冷却中
+     */
+    fun SkillData.isCoolDown(): Boolean {
+        return coolDownTime > System.currentTimeMillis()
+    }
+
+    /**
+     * 发动技能（不控制冷却）
+     *
+     * 控制冷却请使用SkillData.launch
+     */
+    fun PetData.launchSkill(skillType: SkillType, skill: String, skillSelect: SkillSelect) {
+        when (skillType) {
+            SkillType.MYTHIC_MOBS -> {
+                
+            }
+        }
+    }
+
+}
+
+/**
+ * 技能类型
+ */
+enum class SkillType {
+    MYTHIC_MOBS // mythicMobs
+}
+
+/**
+ * 技能使用方法
+ */
+enum class SkillSelect {
+    NONE, // 无
+    SELECT_TARGET, // 选择目标
 }

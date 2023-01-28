@@ -16,3 +16,11 @@ PET_IS_DEAD:
   - "&f"
 PET_FOLLOW_TRUE: 跟随
 PET_FOLLOW_FALSE: 未跟随
+
+SKILL_IS_COOL_DOWN:
+  - "&f"
+  - "      &a&l宠物引擎"
+  - "&f"
+  - "          &7技能 &f{0} &7处于冷却中"
+  - "          &7还需要等待 &f{1} &7秒"
+  - "&f"

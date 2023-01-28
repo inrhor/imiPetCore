@@ -1,18 +1,21 @@
 package cn.inrhor.imipetcore.common.script.kether
 
 import cn.inrhor.imipetcore.api.manager.SkillManager.addCoolDown
-import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.addSkillPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.coolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.delCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.delSkillPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.isCoolDown
+import cn.inrhor.imipetcore.api.manager.SkillManager.launchSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.loadSkill
-import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.replaceSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.setCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.setSkillPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.skillData
 import cn.inrhor.imipetcore.api.manager.SkillManager.skillOption
 import cn.inrhor.imipetcore.api.manager.SkillManager.unloadSkill
+import cn.inrhor.imipetcore.api.manager.SkillSelect
+import cn.inrhor.imipetcore.api.manager.SkillType
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.module.kether.*
@@ -99,7 +102,7 @@ class SkillAction {
                 case("coolDown") {
                     try {
                         it.mark()
-                        when (it.expects("set", "add", "del")) {
+                        when (it.expects("set", "add", "del", "bool")) {
                             "set" -> {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
@@ -124,12 +127,17 @@ class SkillAction {
                                     }
                                 }
                             }
+                            "bool" -> {
+                                actionNow {
+                                    selectSkillData().isCoolDown()
+                                }
+                            }
                             else -> error("unknown coolDown ???")
                         }
                     }catch (ex: Exception) {
                         it.reset()
                         actionNow {
-                            selectSkillData().coolDown
+                            selectSkillData().coolDown()
                         }
                     }
                 }
@@ -144,6 +152,33 @@ class SkillAction {
                 case("update") {
                     actionNow {
                         selectPetData().replaceSkill(player(), selectSkillData(), selectIdSkill())
+                    }
+                }
+                case("launch") {
+                    try {
+                        it.mark()
+                        when (it.expects("mm")) {
+                            "mm" -> {
+                                val skill = it.nextToken()
+                                val type = try {
+                                    it.mark()
+                                    it.expect("type")
+                                    it.nextToken()
+                                }catch (ex: Exception) {
+                                    it.reset()
+                                    "NONE"
+                                }
+                                actionNow {
+                                    selectPetData().launchSkill(SkillType.MYTHIC_MOBS, skill, SkillSelect.valueOf(type.uppercase()))
+                                }
+                            }
+                            else -> error("unknown launch ???")
+                        }
+                    }catch (ex: Exception) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().launchSkill(player(), selectSkillData())
+                        }
                     }
                 }
             }
