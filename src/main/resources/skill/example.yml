@@ -60,7 +60,8 @@ skill:
       select:
         - example_1
     # 冷却 (支持JavaScript运算)
-    coolDown: "30-point*2"
+    # point 变量为技能数据的技能点
+    coolDown: "$ 30-point*2"
     # 图标
     icon:
       material: APPLE

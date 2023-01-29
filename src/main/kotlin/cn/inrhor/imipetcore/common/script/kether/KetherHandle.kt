@@ -54,7 +54,7 @@ fun Player.evalString(script: String): String {
 fun Player.evalString(script: String, variable: (ScriptContext) -> Unit): String {
     var text = script
     script.variableReader().forEach { e ->
-        text = text.replace("{{$e}}", eval(e, {}, {
+        text = text.replace("{{$e}}", eval(e, {variable(it)}, {
             Coerce.toString(it)
         }, script).toString())
     }

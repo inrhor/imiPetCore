@@ -34,7 +34,7 @@ class SkillAction {
                     }
                 }
                 case("coolDown") {
-                    actionNow { selectIdSkill().skillOption()?.coolDown?: 0 }
+                    actionNow { selectIdSkill().skillOption()?.coolDown?: "0" }
                 }
                 case("point") {
                     actionNow { selectIdSkill().skillOption()?.tree?.point?: 0 }

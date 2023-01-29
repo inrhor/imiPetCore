@@ -21,6 +21,8 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
 import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
+import cn.inrhor.imipetcore.api.manager.SkillManager.addPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.delPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.Location
@@ -390,7 +392,7 @@ class PetAction {
                 }
                 case("skill") {
                     it.mark()
-                    when (it.expects("add", "remove")) {
+                    when (it.expects("add", "remove", "point")) {
                         "add" -> {
                             it.expect("id")
                             val id = it.nextToken()
@@ -403,6 +405,28 @@ class PetAction {
                             val id = it.nextToken()
                             actionNow {
                                 selectPetData().removeSkill(player(), id)
+                            }
+                        }
+                        "point" -> {
+                            it.mark()
+                            when (it.expects("add", "del")) {
+                                "add" -> {
+                                    val a = it.next(ArgTypes.ACTION)
+                                    actionNow {
+                                        newFrame(a).run<Any>().thenAccept { e ->
+                                            selectPetData().addPoint(player(), Coerce.toInteger(e))
+                                        }
+                                    }
+                                }
+                                "del" -> {
+                                    val a = it.next(ArgTypes.ACTION)
+                                    actionNow {
+                                        newFrame(a).run<Any>().thenAccept { e ->
+                                            selectPetData().delPoint(player(), Coerce.toInteger(e))
+                                        }
+                                    }
+                                }
+                                else -> error("unknown skill point ???")
                             }
                         }
                         else -> error("unknown skill ???")

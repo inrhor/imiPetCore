@@ -134,10 +134,13 @@ object SkillManager {
      * @return 操作成否
      */
     fun PetData.addSkillPoint(owner: Player, skillData: SkillData, int: Int, del: Boolean = true): Boolean {
+        val sp = skillData.point
+        val tp = skillData.skillOption()?.tree?.point?: 0
+        val a = if (sp + int > tp) tp else int
         if (del) {
-            if (!delPoint(owner, int)) return false
+            if (!delPoint(owner, a)) return false
         }
-        skillData.point += int
+        skillData.point += a
         PetChangeEvent(owner, this).call()
         return true
     }
@@ -149,6 +152,7 @@ object SkillManager {
      */
     fun PetData.delSkillPoint(owner: Player, skillData: SkillData, int: Int): Boolean {
         skillData.point -= int
+        if (skillData.point < 0) skillData.point = 0
         PetChangeEvent(owner, this).call()
         return true
     }
@@ -160,6 +164,8 @@ object SkillManager {
      */
     fun PetData.setSkillPoint(owner: Player, skillData: SkillData, int: Int): Boolean {
         skillData.point = int
+        val tp = skillData.skillOption()?.tree?.point?: 0
+        if (skillData.point > tp) skillData.point = tp
         PetChangeEvent(owner, this).call()
         return true
     }
@@ -171,7 +177,6 @@ object SkillManager {
         val opt = new.skillOption()?: return
         skillData.id = opt.id
         skillData.skillName = opt.name
-//        skillData.coolDown = 0
         skillData.point = 0
         PetChangeEvent(owner, this).call()
     }
@@ -309,7 +314,7 @@ object SkillManager {
             owner.sendLang("SKILL_IS_COOL_DOWN", skillData.skillName, skillData.coolDown())
             return
         }
-        setCoolDown(owner, skillData, (skillData.skillOption()?.coolDown?: "0").toInt())
+        setCoolDown(owner, skillData, skillData.skillOption()?.coolDown(skillData)?: 0)
         owner.eval(skillData.skillOption()?.script?: "", {
             it.rootFrame().variables()["@PetData"] = this
         }, { Coerce.toBoolean(it) }, true)
@@ -354,6 +359,21 @@ object SkillManager {
         when (skillType) {
             SkillType.MYTHIC_MOBS -> launchMythicSkill()
         }
+    }
+
+    /**
+     * 使用技能后设置冷却时调用技能配置进行冷却算法
+     *
+     * @return 技能冷却算法
+     */
+    fun SkillOption.coolDown(skillData: SkillData? = null): Int {
+        return Coerce.toInteger(coolDown.eval({
+            it.rootFrame().variables()["@IdSkill"] = skillData?.id
+            it.rootFrame().variables()["point"] = skillData?.point
+            it.rootFrame().variables()["@PetSkillData"] = skillData
+        }, {
+            Coerce.toInteger(it)
+        }, 0))
     }
 
 }

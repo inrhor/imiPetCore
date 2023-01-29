@@ -35,7 +35,7 @@ taboolib {
         }
     }
     classifier = null
-    version = "6.0.10-73"
+    version = "6.0.10-76"
 }
 
 repositories {
@@ -45,7 +45,7 @@ repositories {
 
 dependencies {
     compileOnly("public:GermPlugin:4.0.3")
-    compileOnly("com.ticxo.modelengine:api:R3.0.1")
+    compileOnly("com.ticxo.modelengine:api:R3.1.3")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
