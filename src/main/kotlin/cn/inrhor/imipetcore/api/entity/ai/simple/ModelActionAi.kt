@@ -1,7 +1,7 @@
 package cn.inrhor.imipetcore.api.entity.ai.simple
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
-import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiWalk
+import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiModelAction
 import taboolib.module.ai.SimpleAi
 
 /**
@@ -9,7 +9,7 @@ import taboolib.module.ai.SimpleAi
  */
 class ModelActionAi(val petEntity: PetEntity): SimpleAi() {
 
-    val universal = UniversalAiWalk(petEntity)
+    val universal = UniversalAiModelAction(petEntity)
 
     /**
      * 检查，true执行startTask
@@ -25,13 +25,12 @@ class ModelActionAi(val petEntity: PetEntity): SimpleAi() {
         universal.startTask()
     }
 
-    /**
-     * 是否继续执行
-     * false，终止并执行resetTask
-     * true执行updateTask
-     */
     override fun continueExecute(): Boolean {
-        return false
+        return universal.continueExecute()
+    }
+
+    override fun resetTask() {
+        universal.resetTask()
     }
 
 }

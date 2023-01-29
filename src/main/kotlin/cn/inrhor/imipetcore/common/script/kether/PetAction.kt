@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.common.script.kether
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
 import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
@@ -405,6 +406,12 @@ class PetAction {
                             }
                         }
                         else -> error("unknown skill ???")
+                    }
+                }
+                case("animation") {
+                    val action = it.nextToken()
+                    actionNow {
+                        selectPetData().petEntity?.playAnimation(action, true)
                     }
                 }
             }

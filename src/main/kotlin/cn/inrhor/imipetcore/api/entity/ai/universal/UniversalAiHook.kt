@@ -2,7 +2,6 @@ package cn.inrhor.imipetcore.api.entity.ai.universal
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
-import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.option.ActionOption
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.common5.Coerce
@@ -30,11 +29,7 @@ class UniversalAiHook(val actionOption: ActionOption, val petEntity: PetEntity, 
         time = actionOption.taskTime
         eval(actionOption.startTask)
         val action = actionOption.name
-        val stateOption = petEntity.getStateOption(action)
-        if (stateOption != null) {
-            val model = petEntity.model()
-            petEntity.entity?.playAnimation(model.id, model.select, action, stateOption)
-        }
+        petEntity.playAnimation(action)
     }
 
     override fun continueExecute(): Boolean {

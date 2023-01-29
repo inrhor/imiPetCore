@@ -5,4 +5,11 @@ package cn.inrhor.imipetcore.common.database.data
  *
  * @param petDataList 宠物数据
  */
-data class PlayerData(val petDataList: MutableList<PetData> = mutableListOf())
+data class PlayerData(
+    val petDataList: MutableList<PetData> = mutableListOf(),
+    val castSkillData: CastSkillData = CastSkillData())
+
+/**
+ * 技能选择目标数据
+ */
+class CastSkillData(var skill: String = "", var petData: PetData? = null)

@@ -1,7 +1,9 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.manager.MetaManager.removeMeta
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
+import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.common.model.ModelLoader
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
@@ -15,6 +17,8 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.function.submit
+import taboolib.common5.Baffle
+import java.util.concurrent.TimeUnit
 
 /**
  * 模型管理
@@ -98,6 +102,18 @@ object ModelManager {
 
     /**
      * 播放模型动作动画
+     */
+    fun PetEntity.playAnimation(action: String, force: Boolean = false) {
+        val model = model()
+        val stateOption = getStateOption(action)?: return
+        if (force) {
+            actionBaffle = Baffle.of(stateOption.time.toLong(), TimeUnit.SECONDS)
+        }
+        entity?.playAnimation(model.id, model.select, action, stateOption)
+    }
+
+    /**
+     * 播放模型动作动画
      *
      * lerpIn 插入动画所用的时间（以秒为单位）
      * lerpOut 插出动画所用的时间（以秒为单位）
@@ -112,7 +128,6 @@ object ModelManager {
                     val active = modelEntity.getModel(modelID) ?: return
                     val animation = active.animationHandler ?: return
                     animation.playAnimation(action, state.lerpin, state.lerpout, state.speed, state.force)
-
                 }
             }
             ModelSelect.ORANGE_ENGINE -> {
@@ -125,7 +140,7 @@ object ModelManager {
                     val s = "${modelID}_${action}"
                     Bukkit.getOnlinePlayers().forEach {
                         GermPacketAPI.sendModelAnimation(it, this, s)
-                        submit(async = true, delay = state.lerpout.toLong()) {
+                        submit(async = true, delay = state.time.toLong()) {
                             GermPacketAPI.stopModelAnimation(it, this@playAnimation, s)
                         }
                     }

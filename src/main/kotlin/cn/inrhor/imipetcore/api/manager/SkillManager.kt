@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.api.manager
 
+import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.data.DataContainer.skillOptionMap
 import cn.inrhor.imipetcore.api.event.PetChangeEvent
 import cn.inrhor.imipetcore.common.database.data.PetData
@@ -7,9 +8,12 @@ import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.option.ItemElement
 import cn.inrhor.imipetcore.common.option.SkillOption
 import cn.inrhor.imipetcore.common.script.kether.eval
+import ink.ptms.um.Mythic
 import org.bukkit.entity.Player
+import taboolib.common5.Baffle
 import taboolib.common5.Coerce
 import taboolib.platform.util.sendLang
+import java.util.concurrent.TimeUnit
 
 /**
  * 宠物技能管理器
@@ -302,7 +306,7 @@ object SkillManager {
      */
     fun PetData.launchSkill(owner: Player, skillData: SkillData) {
         if (skillData.isCoolDown()) {
-            owner.sendLang("SKILL_IS_COOL_DOWN")
+            owner.sendLang("SKILL_IS_COOL_DOWN", skillData.skillName, skillData.coolDown())
             return
         }
         setCoolDown(owner, skillData, (skillData.skillOption()?.coolDown?: "0").toInt())
@@ -332,10 +336,23 @@ object SkillManager {
      * 控制冷却请使用SkillData.launch
      */
     fun PetData.launchSkill(skillType: SkillType, skill: String, skillSelect: SkillSelect) {
-        when (skillType) {
-            SkillType.MYTHIC_MOBS -> {
-                
+       fun launchMythicSkill() {
+           val entity = petEntity?.entity?: return
+            when (skillSelect) {
+                SkillSelect.SELECT_TARGET -> {
+                    // -> 监听 ClickEntity 类 castSkill
+                    val data = petEntity?.owner?.getData()?.castSkillData?: return
+                    data.skill = skill
+                    data.petData = this
+                }
+                else -> {
+                    Mythic.API.castSkill(entity, skill)
+                }
             }
+        }
+
+        when (skillType) {
+            SkillType.MYTHIC_MOBS -> launchMythicSkill()
         }
     }
 
@@ -352,6 +369,6 @@ enum class SkillType {
  * 技能使用方法
  */
 enum class SkillSelect {
-    NONE, // 无
+    NONE, // 直接释放
     SELECT_TARGET, // 选择目标
 }

@@ -50,6 +50,7 @@ dependencies {
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
+    taboo("ink.ptms:um:1.0.0-beta-20")
     compileOnly(fileTree("libs"))
 }
 

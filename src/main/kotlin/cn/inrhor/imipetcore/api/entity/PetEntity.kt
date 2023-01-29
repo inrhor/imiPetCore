@@ -12,6 +12,7 @@ import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import taboolib.common5.Baffle
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
 
@@ -27,6 +28,11 @@ class PetEntity(val owner: Player, val petData: PetData) {
      * 实体
      */
     var entity: LivingEntity? = null
+
+    /**
+     * 强制播放模型动作
+     */
+    var actionBaffle: Baffle? = null
 
     /**
      * 释放宠物
