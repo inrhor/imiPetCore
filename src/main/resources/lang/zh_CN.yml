@@ -24,3 +24,9 @@ SKILL_IS_COOL_DOWN:
   - "          &7技能 &f{0} &7处于冷却中"
   - "          &7还需要等待 &f{1} &7秒"
   - "&f"
+
+SKILL_SELECT_TARGET:
+  - subtitle: "&c请右键目标实施技能"
+    type: title
+    title: '{0}'
+    stay: 100

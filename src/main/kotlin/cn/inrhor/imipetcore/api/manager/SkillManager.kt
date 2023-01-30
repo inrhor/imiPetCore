@@ -317,6 +317,7 @@ object SkillManager {
         setCoolDown(owner, skillData, skillData.skillOption()?.coolDown(skillData)?: 0)
         owner.eval(skillData.skillOption()?.script?: "", {
             it.rootFrame().variables()["@PetData"] = this
+            it.rootFrame().variables()["@PetSkillData"] = skillData
         }, { Coerce.toBoolean(it) }, true)
     }
 
@@ -340,15 +341,17 @@ object SkillManager {
      *
      * 控制冷却请使用SkillData.launch
      */
-    fun PetData.launchSkill(skillType: SkillType, skill: String, skillSelect: SkillSelect) {
+    fun PetData.launchSkill(skillType: SkillType, skill: String, skillSelect: SkillSelect, skillData: SkillData) {
        fun launchMythicSkill() {
            val entity = petEntity?.entity?: return
             when (skillSelect) {
                 SkillSelect.SELECT_TARGET -> {
                     // -> 监听 ClickEntity 类 castSkill
-                    val data = petEntity?.owner?.getData()?.castSkillData?: return
+                    val owner = petEntity?.owner?: return
+                    val data = owner.getData().castSkillData
                     data.skill = skill
                     data.petData = this
+                    owner.sendLang("SKILL_SELECT_TARGET", skillData.skillName)
                 }
                 else -> {
                     Mythic.API.castSkill(entity, skill)

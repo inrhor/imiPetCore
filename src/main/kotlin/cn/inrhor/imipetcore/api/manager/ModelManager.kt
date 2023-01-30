@@ -52,7 +52,8 @@ object ModelManager {
             }
             ModelSelect.ORANGE_ENGINE -> {
                 if (modelLoader.orangeEngine) {
-                    OrangeEngineAPI.getModelManager()?.addNewModelEntity(uniqueId, modelID)
+                    val manager = OrangeEngineAPI.getModelManager()?: return
+                    manager.addNewModelEntity(uniqueId, modelID)
                 }
             }
             ModelSelect.GERM_ENGINE -> {

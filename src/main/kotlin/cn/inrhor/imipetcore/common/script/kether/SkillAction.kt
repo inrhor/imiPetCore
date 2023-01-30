@@ -169,7 +169,7 @@ class SkillAction {
                                     "NONE"
                                 }
                                 actionNow {
-                                    selectPetData().launchSkill(SkillType.MYTHIC_MOBS, skill, SkillSelect.valueOf(type.uppercase()))
+                                    selectPetData().launchSkill(SkillType.MYTHIC_MOBS, skill, SkillSelect.valueOf(type.uppercase()), selectSkillData())
                                 }
                             }
                             else -> error("unknown launch ???")
