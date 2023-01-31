@@ -4,6 +4,7 @@ import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.manager.ModelManager
+import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.type.DatabaseManager
 import cn.inrhor.imipetcore.common.database.type.DatabaseType
@@ -47,6 +48,9 @@ object PluginLoader {
         loadSkill()
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
+            it.getData().petDataList.forEach { petData ->
+                if (petData.isFollow()) it.callPet(petData)
+            }
         }
     }
 

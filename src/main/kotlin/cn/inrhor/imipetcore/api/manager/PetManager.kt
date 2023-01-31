@@ -106,7 +106,7 @@ object PetManager {
     fun Player.followingPet(): List<PetEntity> {
         val list = mutableListOf<PetEntity>()
         followingPetData().forEach {
-            list.add(it.petEntity!!)
+            it.petEntity?.let { pet -> list.add(pet) }
         }
         return list
     }
@@ -131,6 +131,23 @@ object PetManager {
             petEntity(name).back()
         }
         val petData = getPet(name)
+        database.updatePet(uniqueId, petData)
+        FollowPetEvent(this, petData, following).call()
+    }
+
+    /**
+     * 宠物跟随
+     *
+     * @param following 跟随（默认true)
+     */
+    fun Player.callPet(petData: PetData, following: Boolean = true) {
+        if (following) {
+            if (petData.petEntity?.entity == null) {
+                petData.petEntity?.spawn()
+            }
+        }else {
+            petData.petEntity?.back()
+        }
         database.updatePet(uniqueId, petData)
         FollowPetEvent(this, petData, following).call()
     }
