@@ -19,21 +19,25 @@ class UniversalAiHook(val actionOption: ActionOption, val petEntity: PetEntity, 
     }
 
     override fun shouldExecute(): Boolean {
+        val s = actionOption.shouldExecute
+        if (s.isEmpty()) return false
         time = actionOption.taskTime
-        return eval(actionOption.shouldExecute).thenApply {
+        return eval(s).thenApply {
             Coerce.toBoolean(it)
         }.getNow(true)
     }
 
     override fun startTask() {
         time = actionOption.taskTime
-        eval(actionOption.startTask)
         val action = actionOption.name
         petEntity.playAnimation(action)
+        eval(actionOption.startTask)
     }
 
     override fun continueExecute(): Boolean {
-        return eval(actionOption.continueExecute).thenApply {
+        val s = actionOption.continueExecute
+        if (s.isEmpty()) return false
+        return eval(s).thenApply {
             Coerce.toBoolean(it)
         }.getNow(true)
     }

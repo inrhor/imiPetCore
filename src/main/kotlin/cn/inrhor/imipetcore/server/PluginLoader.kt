@@ -15,6 +15,7 @@ import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.function.console
+import taboolib.common.platform.function.warning
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
 
@@ -43,9 +44,21 @@ object PluginLoader {
         }
         Database.initDatabase()
         ModelManager.modelLoader.load()
-        loadPet()
-        loadAction()
-        loadSkill()
+        try {
+            loadPet()
+        }catch (ex: Exception) {
+            warning("加载配置文件出错，请检查宠物配置")
+        }
+        try {
+            loadAction()
+        }catch (ex: Exception) {
+            warning("加载配置文件出错，请检查行为配置")
+        }
+        try {
+            loadSkill()
+        }catch (ex: Exception) {
+            warning("加载配置文件出错，请检查技能配置")
+        }
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
             it.getData().petDataList.forEach { petData ->

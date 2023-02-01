@@ -141,15 +141,7 @@ object PetManager {
      * @param following 跟随（默认true)
      */
     fun Player.callPet(petData: PetData, following: Boolean = true) {
-        if (following) {
-            if (petData.petEntity?.entity == null) {
-                petData.petEntity?.spawn()
-            }
-        }else {
-            petData.petEntity?.back()
-        }
-        database.updatePet(uniqueId, petData)
-        FollowPetEvent(this, petData, following).call()
+        callPet(petData.name, following)
     }
 
     /**

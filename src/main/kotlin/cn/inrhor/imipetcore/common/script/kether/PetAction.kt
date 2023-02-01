@@ -24,7 +24,6 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.addPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.delPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
-import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import taboolib.common5.Coerce
@@ -50,46 +49,6 @@ class PetAction {
         }
     }
 
-    class ActionDistance(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Double>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Double> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                frame.newFrame(v2).run<Entity>().thenApply { i2 ->
-                    i1.distanceLoc(i2)
-                }.join()
-            }
-        }
-    }
-
-    class ActionWorld(val v1: ParsedAction<*>, val v2: ParsedAction<*>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                frame.newFrame(v2).run<Entity>().thenApply { i2 ->
-                    i1.world == i2.world
-                }.join()
-            }
-        }
-    }
-
-    class ActionWorldWhere(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                v2.contains(i1.world.name)
-            }
-        }
-    }
-
-    class ActionWorldAbout(val v1: ParsedAction<*>, val v2: List<String>): ScriptAction<Boolean>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<Boolean> {
-            return frame.newFrame(v1).run<Entity>().thenApply { i1 ->
-                val world = i1.world.name
-                v2.forEach {
-                    if (world.contains(it)) return@thenApply true
-                }
-                false
-            }
-        }
-    }
-
     class ActionPetLook(val en: ParsedAction<*>): ScriptAction<Void>() {
         override fun run(frame: ScriptFrame): CompletableFuture<Void> {
             frame.newFrame(en).run<Entity>().thenApply {
@@ -100,9 +59,6 @@ class PetAction {
     }
 
     companion object {
-        private val tokenType = ArgTypes.listOf {
-            it.nextToken()
-        }
 
         @KetherParser(["pet"], shared = true)
         fun parserPet() = scriptParser {
@@ -433,40 +389,13 @@ class PetAction {
                     }
                 }
                 case("animation") {
-                    val action = it.nextToken()
+                    val action = it.next(ArgTypes.ACTION)
                     actionNow {
-                        selectPetData().petEntity?.playAnimation(action, true)
+                        newFrame(action).run<String>().thenApply { s ->
+                            selectPetData().petEntity?.playAnimation(s, true)
+                        }
                     }
                 }
-            }
-        }
-
-        @KetherParser(["distance"])
-        fun parserDis() = scriptParser {
-            val v1 = it.next(ArgTypes.ACTION)
-            it.expect("to")
-            val v2 = it.next(ArgTypes.ACTION)
-            ActionDistance(v1, v2)
-        }
-
-        @KetherParser(["world"])
-        fun parserWorld() = scriptParser {
-            val v1 = it.next(ArgTypes.ACTION)
-            it.mark()
-            when (it.expects("to", "where")) {
-                "to" -> {
-                    val v2 = it.next(ArgTypes.ACTION)
-                    ActionWorld(v1, v2)
-                }
-                "where" -> {
-                    val v2 = it.next(tokenType)
-                    ActionWorldWhere(v1, v2)
-                }
-                "about" -> {
-                    val v2 = it.next(tokenType)
-                    ActionWorldAbout(v1, v2)
-                }
-                else -> error("world x ??")
             }
         }
     }

@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("io.izzel.taboolib") version "1.55"
+    id("io.izzel.taboolib") version "1.56"
     id("org.jetbrains.kotlin.jvm") version "1.5.10"
 }
 
@@ -35,22 +35,21 @@ taboolib {
         }
     }
     classifier = null
-    version = "6.0.10-76"
+    version = "6.0.10-80"
 }
 
 repositories {
     mavenCentral()
-    maven("https://mvn.lumine.io/repository/maven-public/") // model-engine
 }
 
 dependencies {
     compileOnly("public:GermPlugin:4.0.3")
-    compileOnly("com.ticxo.modelengine:api:R3.1.3")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")
+    compileOnly("public:ModelEngine:3.1.2")
     compileOnly(fileTree("libs"))
 }
 

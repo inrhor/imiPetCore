@@ -18,14 +18,17 @@ import taboolib.module.nms.MinecraftVersion
 
 private fun versionAiAdd(action: String, vararg ai: () -> Unit) {
     when (action) {
-        "attack" -> {
+        "animation" -> {
             ai[0].invoke()
         }
-        "walk" -> {
+        "attack" -> {
             ai[1].invoke()
         }
-        else -> {
+        "walk" -> {
             ai[2].invoke()
+        }
+        else -> {
+            ai[3].invoke()
         }
     }
 }

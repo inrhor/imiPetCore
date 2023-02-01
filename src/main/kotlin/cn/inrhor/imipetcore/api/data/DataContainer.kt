@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.api.data
 
+import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.common.database.data.PlayerData
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.IconOption
@@ -42,7 +43,13 @@ object DataContainer {
     /**
      * @return 获得玩家数据
      */
-    fun Player.getData() = playerContainer[uniqueId]?: error("null player playerData")
+    fun Player.getData(): PlayerData {
+        var p = playerContainer[uniqueId]
+        if (p == null) {
+            p = initData()
+        }
+        return p
+    }
 
     /**
      * @return 获得玩家数据
@@ -52,15 +59,17 @@ object DataContainer {
     /**
      * 初始化玩家数据
      */
-    fun Player.initData() {
-        uniqueId.initData()
+    fun Player.initData(): PlayerData {
+        return uniqueId.initData()
     }
 
     /**
      * 初始化玩家数据
      */
-    fun UUID.initData() {
-        playerContainer[this] = PlayerData()
+    fun UUID.initData(): PlayerData {
+        val p = PlayerData()
+        playerContainer[this] = p
+        return p
     }
 
 }
