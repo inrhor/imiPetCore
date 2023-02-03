@@ -6,6 +6,7 @@ import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.api.data.DataContainer.playerData
 import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.database.data.SkillData
 import taboolib.common.io.newFile
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.getObject
@@ -63,5 +64,9 @@ class DatabaseLocal: Database() {
 
     override fun changePetID(uuid: UUID, petData: PetData) {
         updatePet(uuid, petData)
+    }
+
+    override fun createSkillData(uuid: UUID, petData: PetData, skillData: SkillData, load: Boolean) {
+        //
     }
 }

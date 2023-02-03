@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.common.database
 
 import cn.inrhor.imipetcore.api.event.PetChangeEvent
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.database.type.*
 import org.bukkit.event.player.PlayerJoinEvent
 import taboolib.common.platform.event.SubscribeEvent
@@ -40,6 +41,11 @@ abstract class Database {
     abstract fun createPet(uuid: UUID, petData: PetData)
 
     /**
+     * 创建技能数据
+     */
+    abstract fun createSkillData(uuid: UUID, petData: PetData, skillData: SkillData, load: Boolean)
+
+    /**
      * 拉取数据
      * @param uuid
      */
@@ -54,11 +60,6 @@ abstract class Database {
                 DatabaseType.MYSQL -> DatabaseSQL()
                 else -> DatabaseLocal()
             }
-        }
-
-        @SubscribeEvent
-        fun join(ev: PlayerJoinEvent) {
-            database.pull(ev.player.uniqueId)
         }
 
         @SubscribeEvent

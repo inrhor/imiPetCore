@@ -27,6 +27,7 @@ taboolib {
             desc("Minecraft Pet Core")
         }
         dependencies {
+            name("AuthMe").optional(true)
             name("ModelEngine").optional(true)
             name("OrangeEngine").optional(true)
             name("GermEngine").optional(true)
@@ -40,6 +41,7 @@ taboolib {
 
 repositories {
     mavenCentral()
+    maven("https://repo.codemc.org/repository/maven-public/") // authMe
 }
 
 dependencies {
@@ -50,6 +52,7 @@ dependencies {
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")
     compileOnly("public:ModelEngine:3.1.2")
+    compileOnly("fr.xephi:authme:5.6.0-beta2")
     compileOnly(fileTree("libs"))
 }
 

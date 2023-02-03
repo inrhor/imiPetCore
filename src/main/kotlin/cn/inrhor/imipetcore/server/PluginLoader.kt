@@ -24,6 +24,10 @@ import taboolib.module.lang.sendLang
  */
 object PluginLoader {
 
+    val authMeLoad by lazy {
+        Bukkit.getPluginManager().getPlugin("AuthMe") != null
+    }
+
     @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()

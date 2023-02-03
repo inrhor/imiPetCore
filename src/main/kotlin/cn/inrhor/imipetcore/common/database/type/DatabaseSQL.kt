@@ -3,8 +3,10 @@ package cn.inrhor.imipetcore.common.database.type
 import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.api.data.DataContainer.playerData
+import cn.inrhor.imipetcore.api.manager.SkillManager.getAllSkills
 import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.database.data.SkillData
 import taboolib.module.database.ColumnOptionSQL
 import taboolib.module.database.ColumnTypeSQL
 import taboolib.module.database.HostSQL
@@ -93,6 +95,47 @@ class DatabaseSQL: Database() {
         }
     }
 
+    val tablePetSkill = Table(table + "_pet_skill", host) {
+        add("pet") {
+            type(ColumnTypeSQL.INT, 16) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("number") {
+            type(ColumnTypeSQL.INT)
+        }
+        add("point") {
+            type(ColumnTypeSQL.INT)
+        }
+    }
+
+    val tablePetSkillData = Table(table + "_skill", host) {
+        add("pet") {
+            type(ColumnTypeSQL.INT, 16) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("skill_id") {
+            type(ColumnTypeSQL.VARCHAR, 36) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("skill_name") {
+            type(ColumnTypeSQL.VARCHAR, 36) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("cool_down_time") {
+            type(ColumnTypeSQL.INT)
+        }
+        add("point") {
+            type(ColumnTypeSQL.INT)
+        }
+        add("load") {
+            type(ColumnTypeSQL.BOOLEAN)
+        }
+    }
+
     val source: DataSource by lazy {
         host.createDataSource()
     }
@@ -143,6 +186,12 @@ class DatabaseSQL: Database() {
         tablePetAttribute.delete(source) {
             where { "pet" eq petId }
         }
+        tablePetSkill.delete(source) {
+            where { "pet" eq petId }
+        }
+        tablePetSkillData.delete(source) {
+            where { "pet" eq petId }
+        }
     }
 
     override fun createPet(uuid: UUID, petData: PetData) {
@@ -158,6 +207,10 @@ class DatabaseSQL: Database() {
         val att = petData.attribute
         tablePetAttribute.insert(source, "pet", "max_hp", "current_hp", "speed", "attack", "attack_speed") {
             value(petId, att.maxHP, att.currentHP, att.speed, att.attack, att.attack_speed)
+        }
+        val skillSystem = petData.skillSystemData
+        tablePetSkill.insert(source, "pet", "number", "point") {
+            value(petId, skillSystem.number, skillSystem.point)
         }
     }
 
@@ -179,6 +232,29 @@ class DatabaseSQL: Database() {
             set("speed", att.speed)
             set("attack", att.attack)
             set("attack_speed", att.attack_speed)
+        }
+        val skillSystem = petData.skillSystemData
+        tablePetSkill.update(source) {
+            where { "pet" eq petId }
+            set("number", skillSystem.number)
+            set("point", skillSystem.point)
+        }
+        updateSkillData(petId, skillSystem.loadSkill, true)
+        updateSkillData(petId, skillSystem.unloadSkill, false)
+    }
+
+    private fun updateSkillData(petId: Long, skills: List<SkillData>, load: Boolean) {
+        skills.forEach {
+            tablePetSkillData.update(source) {
+                where { and {
+                    "pet" eq petId
+                    "skill_id" eq it.id
+                    "skill_name" eq it.skillName
+                } }
+                set("cool_down_time", it.coolDownTime)
+                set("point", it.point)
+                set("load", load)
+            }
         }
     }
 
@@ -232,6 +308,37 @@ class DatabaseSQL: Database() {
                 att.attack = e.first.second
                 att.attack_speed = e.second
             }
+            val skillSystem = petData.skillSystemData
+            tablePetSkill.select(source) {
+                rows("number", "point")
+                where { "pet" eq pet }
+            }.map {
+                getInt("number") to
+                        getInt("point")
+            }.forEach { e ->
+                skillSystem.number = e.first
+                skillSystem.point = e.second
+            }
+            tablePetSkillData.select(source) {
+                rows("skill_id", "skill_name", "cool_down_time", "point", "load")
+                where { "pet" eq pet }
+            }.map {
+                getString("skill_id") to
+                        getString("skill_name") to
+                        getInt("cool_down_time") to
+                        getString("point") to
+                        getBoolean("load")
+            }.forEach { e ->
+                val skill = SkillData(
+                    e.first.first.first.first,
+                    e.first.first.first.second,
+                    e.first.first.second)
+                if (e.second) {
+                    skillSystem.loadSkill.add(skill)
+                } else {
+                    skillSystem.unloadSkill.add(skill)
+                }
+            }
             pData.petDataList.add(petData)
         }
     }
@@ -255,6 +362,13 @@ class DatabaseSQL: Database() {
                 "name" eq petData.name
             } }
             set("number", petData.id)
+        }
+    }
+
+    override fun createSkillData(uuid: UUID, petData: PetData, skillData: SkillData, load: Boolean) {
+        val petId = petId(userId(uuid), petData.name)
+        tablePetSkillData.insert(source, "pet", "skill_id", "skill_name", "cool_down_time", "point", "load") {
+            value(petId, skillData.id, skillData.skillName, skillData.coolDownTime, skillData.point, load)
         }
     }
 }

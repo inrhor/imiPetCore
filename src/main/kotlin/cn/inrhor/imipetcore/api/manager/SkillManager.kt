@@ -3,6 +3,7 @@ package cn.inrhor.imipetcore.api.manager
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.data.DataContainer.skillOptionMap
 import cn.inrhor.imipetcore.api.event.PetChangeEvent
+import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.option.ItemElement
@@ -40,10 +41,12 @@ object SkillManager {
     fun PetData.addNewSkill(owner: Player, id: String, unload: Boolean = true, slot: Int = 0) {
         val option = id.skillOption()?: return
         val data = SkillData(id, option.name)
+
+        database.createSkillData(owner.uniqueId, this, data, !unload)
+
         if (unload) {
             skillSystemData.unloadSkill.add(data)
         }else loadSkill(owner, data, slot)
-        PetChangeEvent(owner, this).call()
     }
 
     /**
