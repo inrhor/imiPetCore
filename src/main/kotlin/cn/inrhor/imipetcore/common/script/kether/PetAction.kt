@@ -10,6 +10,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
+import cn.inrhor.imipetcore.api.manager.PetManager.hasPassenger
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
@@ -74,12 +75,21 @@ class PetAction {
                     ActionPetLook(en)
                 }
                 case("drive") {
-                    it.expect("type")
-                    val str = it.next(ArgTypes.ACTION)
-                    actionNow {
-                        newFrame(str).run<String>().thenApply { s ->
-                            player().driveRidePet(selectPetData(), s)
+                    when (it.expects("type", "has")) {
+                        "type" -> {
+                            val str = it.next(ArgTypes.ACTION)
+                            actionNow {
+                                newFrame(str).run<String>().thenApply { s ->
+                                    player().driveRidePet(selectPetData(), s)
+                                }
+                            }
                         }
+                        "has" -> {
+                            actionNow {
+                                selectPetData().hasPassenger()
+                            }
+                        }
+                        else -> error("unknown drive ???")
                     }
                 }
                 case("undrive") {

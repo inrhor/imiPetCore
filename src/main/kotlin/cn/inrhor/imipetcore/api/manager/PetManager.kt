@@ -306,4 +306,12 @@ object PetManager {
         PetChangeEvent(this, petData).call()
     }
 
+    /**
+     * @return 宠物是否有乘客
+     */
+    fun PetData.hasPassenger(): Boolean {
+        val entity = petEntity?.entity?: return false
+        return entity.passengers.isNotEmpty()
+    }
+
 }
