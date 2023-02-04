@@ -10,9 +10,9 @@ import taboolib.module.nms.sendPacket
 
 class NMSImpl: NMS() {
 
-    override fun entityRotation(player: Player, entityId: Int, yaw: Float, pitch: Float) {
+    override fun entityRotation(players: Set<Player>, entityId: Int, yaw: Float, pitch: Float) {
         sendPacket(
-            player,
+            players,
             PacketPlayOutEntity.PacketPlayOutEntityLook::class.java.unsafeInstance(),
             "a" to entityId,
             "e" to yaw.rotate().cbyte,
@@ -20,8 +20,9 @@ class NMSImpl: NMS() {
         )
     }
 
-    private fun sendPacket(player: Player, packet: Any, vararg fields: Pair<String, Any>) {
-        player.sendPacket(setFields(packet, *fields))
+    private fun sendPacket(players: Set<Player>, packet: Any, vararg fields: Pair<String, Any>) {
+        val f = setFields(packet, *fields)
+        players.forEach { it.sendPacket(f) }
     }
 
     private fun setFields(any: Any, vararg fields: Pair<String, Any?>): Any {

@@ -8,7 +8,7 @@ abstract class NMS {
     /**
      * 1.13- 旋转实体
      */
-    abstract fun entityRotation(player: Player, entityId: Int, yaw: Float, pitch: Float)
+    abstract fun entityRotation(players: Set<Player>, entityId: Int, yaw: Float, pitch: Float)
 
     companion object {
 

@@ -15,20 +15,23 @@ object PacketUtil {
     /**
      * 发送ProtocolLib数据包
      */
-    fun sendServerPacket(player: Player, packet: PacketContainer) {
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
+    fun sendServerPacket(players: Set<Player>, packet: PacketContainer) {
+        val p = ProtocolLibrary.getProtocolManager()
+        players.forEach {
+            p.sendServerPacket(it, packet)
+        }
     }
 
-    fun Entity.packetRotation(player: Player, yaw: Float, pitch: Float) {
+    fun Entity.packetRotation(players: Set<Player>, yaw: Float, pitch: Float) {
         if (protocolLibLoad) {
             val pc = PacketContainer(PacketType.Play.Server.ENTITY_LOOK)
             pc.integers.write(0, entityId)
             pc.bytes
                 .write(0, yaw.rotate().cbyte)
                 .write(1, pitch.rotate().cbyte)
-            sendServerPacket(player, pc)
+            sendServerPacket(players, pc)
         }else {
-            NMS.INSTANCE.entityRotation(player, entityId, yaw, pitch)
+            NMS.INSTANCE.entityRotation(players, entityId, yaw, pitch)
         }
     }
 
