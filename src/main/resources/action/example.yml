@@ -3,11 +3,13 @@ action:
     taskTime: 80
     shouldExecute: |
       all [ check distance pet entity to pet owner < 2.0
-      check random2 30 is 6 ]
+      check random2 30 is 6
+      check pet drive has == false ]
     startTask: ""
     continueExecute: |
       all [ check distance pet entity to pet owner < 2.0
-      check taskTime > 0 ]
+      check taskTime > 0
+      check pet drive has == false ]
     updateTask: |
       pet look pet owner
     resetTask: ""
