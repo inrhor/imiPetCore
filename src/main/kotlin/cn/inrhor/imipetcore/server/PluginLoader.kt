@@ -28,6 +28,11 @@ object PluginLoader {
         Bukkit.getPluginManager().getPlugin("AuthMe") != null
     }
 
+    val protocolLibLoad by lazy {
+        Bukkit.getPluginManager().getPlugin("ProtocolLib") != null
+                && ConfigRead.nms == "mod"
+    }
+
     @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()

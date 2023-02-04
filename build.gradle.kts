@@ -33,6 +33,7 @@ taboolib {
             name("GermEngine").optional(true)
             name("DragonCore").optional(true)
             name("UiUniverse").optional(true)
+            name("ProtocolLib").optional(true)
         }
     }
     classifier = null
@@ -41,6 +42,7 @@ taboolib {
 
 repositories {
     mavenCentral()
+    maven("https://repo.dmulloy2.net/repository/public/") // ProtocolLib
     maven("https://repo.codemc.org/repository/maven-public/") // authMe
 }
 
@@ -49,10 +51,12 @@ dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
+    compileOnly("ink.ptms.core:v11200:11200")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")
     compileOnly("public:ModelEngine:3.1.2")
     compileOnly("fr.xephi:authme:5.6.0-beta2")
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     compileOnly(fileTree("libs"))
 }
 

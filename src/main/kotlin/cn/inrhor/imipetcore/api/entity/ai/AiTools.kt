@@ -1,6 +1,5 @@
 package cn.inrhor.imipetcore.api.entity.ai
 
-import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.addNmsAi
 import cn.inrhor.imipetcore.api.entity.ai.simple.AttackAi
@@ -12,6 +11,7 @@ import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiHook
 import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiModelAction
 import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAiWalk
 import cn.inrhor.imipetcore.api.manager.OptionManager.getActionOption
+import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
 import org.bukkit.entity.LivingEntity
 import taboolib.module.ai.addGoalAi
 import taboolib.module.nms.MinecraftVersion
@@ -34,7 +34,7 @@ private fun versionAiAdd(action: String, vararg ai: () -> Unit) {
 }
 
 fun LivingEntity.addAi(petEntity: PetEntity, action: String, priority: Int) {
-    if (ImiPetCore.config.getString("nms") == "mod") {
+    if (protocolLibLoad) {
         if (MinecraftVersion.major == 4) {
             versionAiAdd(action, {
                     addNmsAi(UniversalAiModelAction(petEntity), 0)
