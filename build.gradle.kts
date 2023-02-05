@@ -51,7 +51,7 @@ dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11800:11800-minimize:api")
     compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
-    compileOnly("ink.ptms.core:v11200:11200")
+    compileOnly("ink.ptms.core:v11604:11604")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")
     compileOnly("public:ModelEngine:3.1.2")

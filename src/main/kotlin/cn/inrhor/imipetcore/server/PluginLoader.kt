@@ -18,6 +18,7 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.warning
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
+import taboolib.module.nms.MinecraftVersion
 
 /**
  * 插件管理
@@ -45,29 +46,35 @@ object PluginLoader {
         unloadTask()
     }
 
+    private fun yamlLoad(a: () -> Unit) {
+        try {
+            a()
+        } catch (e: Exception) {
+            warning("加载配置文件出错，请检查宠物配置")
+        }
+    }
+
     fun loadTask() {
         val pluginCon = ImiPetCore.plugin.description
         console().sendLang("LOADER_INFO", pluginCon.name, pluginCon.version)
+
+        /*if (MinecraftVersion.major >= 11) {
+            if (MinecraftVersion.minor >= 3) {
+                warning("暂时不支持1.19.3+版本")
+                disable()
+            }
+        }*/
+
         if (ImiPetCore.config.getString("data.type")?.uppercase() == "MYSQL") {
             DatabaseManager.type = DatabaseType.MYSQL
         }
         Database.initDatabase()
         ModelManager.modelLoader.load()
-        try {
-            loadPet()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查宠物配置")
-        }
-        try {
-            loadAction()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查行为配置")
-        }
-        try {
-            loadSkill()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查技能配置")
-        }
+
+        yamlLoad { loadPet() }
+        yamlLoad { loadAction() }
+        yamlLoad { loadSkill() }
+
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
             it.getData().petDataList.forEach { petData ->

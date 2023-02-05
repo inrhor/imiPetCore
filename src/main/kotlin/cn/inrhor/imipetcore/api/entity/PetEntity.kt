@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.api.entity
 
 import cn.inrhor.imipetcore.api.entity.ai.addAi
+import cn.inrhor.imipetcore.api.manager.DisguiseManager.disguise
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager.clearModel
 import cn.inrhor.imipetcore.api.manager.ModelManager.display
@@ -8,10 +9,14 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.model.ModelSelect
+import cn.inrhor.imipetcore.common.nms.NMS
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
+import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submit
 import taboolib.common5.Baffle
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
@@ -35,7 +40,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
     var actionBaffle: Baffle? = null
 
     /**
-     * 释放宠物
+     * 召唤宠物
      */
     fun spawn() {
         if (petData.isDead()) {
@@ -44,12 +49,18 @@ class PetEntity(val owner: Player, val petData: PetData) {
         }
         if (entity != null) return
         petData.following = true
-        entity = owner.world.spawnEntity(owner.location, petData.petOption().entityType) as LivingEntity
+        entity = owner.world.spawnEntity(owner.location, EntityType.WOLF) as LivingEntity
         entity?.setMeta("entity", petData.name)
         entity?.setMeta("owner", owner.uniqueId)
         initAction()
         owner.setMaxHP(petData, effect = true, call = false)
         owner.setCurrentHP(petData, effect = true, call = false)
+        val entityType = petData.petOption().entityType.toString()
+        if (model().select == ModelSelect.COMMON) {
+            submit(delay = 1) {
+                entity?.disguise(entityType)
+            }
+        }
         updateModel(true)
     }
 

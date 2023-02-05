@@ -2,6 +2,7 @@ package cn.inrhor.imipetcore.common.nms
 
 import cn.inrhor.imipetcore.common.nms.DataSerializerUtil.createDataSerializer
 import cn.inrhor.imipetcore.util.PositionUtil.rotate
+import net.minecraft.core.IRegistry
 import net.minecraft.network.PacketDataSerializer
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity
@@ -52,8 +53,8 @@ class NMSImpl: NMS() {
             writeVarInt(entityId)
             writeUUID(uuid)
             when (minor) {
-                0, 1, 2 ->writeVarInt(NMSIRegistry.ENTITY_TYPE.getId(getEntityType(entityType) as EntityTypes<*>))
-//                3 ->
+                0, 1, 2 ->writeVarInt(IRegistry.ENTITY_TYPE.getId(getEntityType(entityType) as EntityTypes<*>))
+//                3 -> 依托答辩1.19.3
             }
             writeDouble(location.x)
             writeDouble(location.y)
