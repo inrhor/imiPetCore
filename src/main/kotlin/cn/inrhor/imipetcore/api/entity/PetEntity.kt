@@ -10,7 +10,6 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
-import cn.inrhor.imipetcore.common.nms.NMS
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.EntityType
@@ -55,7 +54,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         initAction()
         owner.setMaxHP(petData, effect = true, call = false)
         owner.setCurrentHP(petData, effect = true, call = false)
-        val entityType = petData.petOption().entityType.toString()
+        val entityType = petData.petOption().entityType
         if (model().select == ModelSelect.COMMON) {
             submit(delay = 5) {
                 entity?.disguise(entityType)

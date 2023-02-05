@@ -3,7 +3,7 @@ package cn.inrhor.imipetcore.common.listener.pet
 import cn.inrhor.imipetcore.api.manager.MetaManager.getMeta
 import cn.inrhor.imipetcore.api.manager.MetaManager.getPetData
 import cn.inrhor.imipetcore.api.manager.ModelManager
-import cn.inrhor.imipetcore.util.PacketUtil.packetRotation
+import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.packetRotation
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.util.Vector
