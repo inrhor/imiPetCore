@@ -57,7 +57,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
         owner.setCurrentHP(petData, effect = true, call = false)
         val entityType = petData.petOption().entityType.toString()
         if (model().select == ModelSelect.COMMON) {
-            submit(delay = 1) {
+            submit(delay = 5) {
                 entity?.disguise(entityType)
             }
         }

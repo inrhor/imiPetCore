@@ -2,21 +2,20 @@ package cn.inrhor.imipetcore.common.nms
 
 import cn.inrhor.imipetcore.common.nms.DataSerializerUtil.createDataSerializer
 import cn.inrhor.imipetcore.util.PositionUtil.rotate
-import net.minecraft.core.IRegistry
 import net.minecraft.network.PacketDataSerializer
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity
 import net.minecraft.server.v1_9_R2.DataWatcher
 import net.minecraft.world.entity.EntityTypes
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import taboolib.common.reflect.Reflex.Companion.unsafeInstance
 import taboolib.common5.cbyte
 import taboolib.library.reflex.Reflex.Companion.getProperty
+import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.library.reflex.Reflex.Companion.setProperty
+import taboolib.library.reflex.Reflex.Companion.unsafeInstance
 import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.sendPacket
 
@@ -53,8 +52,8 @@ class NMSImpl: NMS() {
             writeVarInt(entityId)
             writeUUID(uuid)
             when (minor) {
-                0, 1, 2 ->writeVarInt(IRegistry.ENTITY_TYPE.getId(getEntityType(entityType) as EntityTypes<*>))
-//                3 -> 依托答辩1.19.3
+                0, 1, 2 -> writeVarInt(Class.forName("net.minecraft.core.IRegistry").getProperty<Any>("ENTITY_TYPE", isStatic = true)!!.invokeMethod<Int>("getId", getEntityType(entityType) as EntityTypes<*>)!!)
+                3 -> writeVarInt(NMS1193.INSTANCE.entityTypeGetId(getEntityType(entityType)))
             }
             writeDouble(location.x)
             writeDouble(location.y)
@@ -81,10 +80,10 @@ class NMSImpl: NMS() {
             }else {
                 sendPacket(
                     players,
-                    PacketPlayOutSpawnEntityLiving::class.java.unsafeInstance(),
+                    Class.forName("net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityLiving").unsafeInstance(),
                     "id" to entityId,
                     "uuid" to uuid,
-                    "type" to IRegistry.ENTITY_TYPE.getId(getEntityType(entityType) as EntityTypes<*>),
+                    "type" to Class.forName("net.minecraft.core.IRegistry").getProperty<Any>("ENTITY_TYPE", isStatic = true)!!.invokeMethod<Int>("getId", getEntityType(entityType) as EntityTypes<*>)!!,
                     "x" to location.x,
                     "y" to location.y,
                     "z" to location.z,
@@ -97,7 +96,6 @@ class NMSImpl: NMS() {
                 )
             }
         }else {
-            // 获取 EntityTypes getProperty path
             sendPacket(
                 players,
                 net.minecraft.server.v1_16_R1.PacketPlayOutSpawnEntityLiving(),

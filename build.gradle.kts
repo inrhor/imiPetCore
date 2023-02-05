@@ -49,8 +49,10 @@ repositories {
 dependencies {
     compileOnly("public:GermPlugin:4.0.3")
     compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("ink.ptms.core:v11800:11800-minimize:api")
-    compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
+    compileOnly("ink.ptms.core:v11903:11903:mapped")
+    compileOnly("ink.ptms.core:v11903:11903:universal")
+//    compileOnly("ink.ptms.core:v11800:11800-minimize:api")
+//    compileOnly("ink.ptms.core:v11800:11800-minimize:mapped")
     compileOnly("ink.ptms.core:v11604:11604")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")

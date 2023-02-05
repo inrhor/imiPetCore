@@ -18,7 +18,6 @@ import taboolib.common.platform.function.console
 import taboolib.common.platform.function.warning
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
-import taboolib.module.nms.MinecraftVersion
 
 /**
  * 插件管理
@@ -57,13 +56,6 @@ object PluginLoader {
     fun loadTask() {
         val pluginCon = ImiPetCore.plugin.description
         console().sendLang("LOADER_INFO", pluginCon.name, pluginCon.version)
-
-        /*if (MinecraftVersion.major >= 11) {
-            if (MinecraftVersion.minor >= 3) {
-                warning("暂时不支持1.19.3+版本")
-                disable()
-            }
-        }*/
 
         if (ImiPetCore.config.getString("data.type")?.uppercase() == "MYSQL") {
             DatabaseManager.type = DatabaseType.MYSQL
