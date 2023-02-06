@@ -1,5 +1,10 @@
 package cn.inrhor.imipetcore.common.hook.protocol
 
+import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap
+import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap1
+import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap2
+import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap3
+import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
 import org.bukkit.entity.EntityType
 import taboolib.module.nms.MinecraftVersion
 
@@ -7,272 +12,25 @@ object ProtocolEntity {
 
     // 1.8-1.12 只需要"typeId
 
-    /**
-     * 1.13-1.16.5 ProtocolLib 实体类型 对应 实体序号
-     *
-     * https://wiki.vg/index.php?title=Entity_metadata&oldid=16539
-     */
-    private val entityMap1 = mapOf(
-        "BAT" to 3,
-        "BEE" to 4,
-        "BLAZE" to 5,
-        "CAT" to 7,
-        "CAVE_SPIDER" to 8,
-        "CHICKEN" to 9,
-        "COD" to 10,
-        "COW" to 11,
-        "CREEPER" to 12,
-        "DOLPHIN" to 13,
-        "DONKEY" to 14,
-        "DROWNED" to 16,
-        "ELDER_GUARDIAN" to 17,
-        "ENDER_DRAGON" to 19,
-        "ENDERMAN" to 20,
-        "ENDERMITE" to 21,
-        "EVOKER" to 22,
-        "EVOKER_FANGS" to 23,
-        "FOX" to 28,
-        "GHAST" to 29,
-        "GIANT" to 30,
-        "GUARDIAN" to 31,
-        "HOGLIN" to 32,
-        "HORSE" to 33,
-        "HUSK" to 34,
-        "ILLUSIONER" to 35,
-        "IRON_GOLEM" to 36,
-        "LLAMA" to 42,
-        "MAGMA_CUBE" to 44,
-        "MULE" to 52,
-        "MUSHROOM_COW" to 53,
-        "OCELOT" to 54,
-        "PANDA" to 56,
-        "PARROT" to 57,
-        "PHANTOM" to 58,
-        "PIG" to 59,
-        "PIGLIN" to 60,
-        "PIGLIN_BRUTE" to 61,
-        "PILLAGER" to 62,
-        "POLAR_BEAR" to 63,
-        "PUFFERFISH" to 65,
-        "RABBIT" to 66,
-        "RAVAGER" to 67,
-        "SALMON" to 68,
-        "SHEEP" to 69,
-        "SHULKER" to 70,
-        "SILVERFISH" to 72,
-        "SKELETON" to 73,
-        "SKELETON_HORSE" to 74,
-        "SLIME" to 75,
-        "SNOWMAN" to 77,
-        "SPIDER" to 80,
-        "SQUID" to 81,
-        "STRAY" to 82,
-        "STRIDER" to 83,
-        "TRADER_LLAMA" to 89,
-        "TROPICAL_FISH" to 90,
-        "TURTLE" to 91,
-        "VEX" to 92,
-        "VILLAGER" to 93,
-        "VINDICATOR" to 94,
-        "WANDERING_TRADER" to 95,
-        "WITCH" to 96,
-        "WITHER" to 97,
-        "WITHER_SKELETON" to 98,
-        "WOLF" to 100,
-        "ZOGLIN" to 101,
-        "ZOMBIE" to 102,
-        "ZOMBIE_HORSE" to 103,
-        "ZOMBIE_VILLAGER" to 104,
-        "ZOMBIFIED_PIGLIN" to 105,
-    )
-
-    /**
-     * 1.18.2 实体类型 对应 实体序号
-     *
-     * https://pokechu22.github.io/Burger/1.18.2.json
-     */
-    private val entityMap2 = mapOf(
-        "AXOLOTL" to 3,
-        "BAT" to 4,
-        "BEE" to 5,
-        "BLAZE" to 6,
-        "BOAT" to 7,
-        "CAT" to 8,
-        "CAVE_SPIDER" to 9,
-        "CHICKEN" to 10,
-        "COD" to 11,
-        "COW" to 12,
-        "CREEPER" to 13,
-        "DOLPHIN" to 14,
-        "DONKEY" to 15,
-        "DRAGON_FIREBALL" to 16,
-        "DROWNED" to 17,
-        "ELDER_GUARDIAN" to 18,
-        "ENDER_DRAGON" to 20,
-        "ENDERMAN" to 21,
-        "ENDERMITE" to 22,
-        "EVOKER" to 23,
-        "EVOKER_FANGS" to 24,
-        "FALLING_BLOCK" to 27,
-        "FOX" to 29,
-        "GHAST" to 30,
-        "GIANT" to 31,
-        "GLOW_SQUID" to 33,
-        "GOAT" to 34,
-        "GUARDIAN" to 35,
-        "HOGLIN" to 36,
-        "HORSE" to 37,
-        "HUSK" to 38,
-        "ILLUSIONER" to 39,
-        "IRON_GOLEM" to 40,
-        "LLAMA" to 46,
-        "LLAMA_SPIT" to 47,
-        "MAGMA_CUBE" to 48,
-        "MUSHROOM_COW" to 58,
-        "MULE" to 57,
-        "OCELOT" to 59,
-        "PANDA" to 61,
-        "PARROT" to 62,
-        "PHANTOM" to 63,
-        "PIG" to 64,
-        "PIGLIN" to 65,
-        "PIGLIN_BRUTE" to 66,
-        "PILLAGER" to 67,
-        "POLAR_BEAR" to 68,
-        "PUFFERFISH" to 70,
-        "RABBIT" to 71,
-        "RAVAGER" to 72,
-        "SALMON" to 73,
-        "SHEEP" to 74,
-        "SHULKER" to 75,
-        "SHULKER_BULLET" to 76,
-        "SILVERFISH" to 78,
-        "SKELETON" to 79,
-        "SKELETON_HORSE" to 80,
-        "SLIME" to 80,
-        "SNOWMAN" to 82,
-        "SPIDER" to 85,
-        "SQUID" to 86,
-        "STRAY" to 87,
-        "STRIDER" to 88,
-        "TRADER_LLAMA" to 94,
-        "TRIDENT" to 93,
-        "TROPICAL_FISH" to 95,
-        "TURTLE" to 96,
-        "VEX" to 97,
-        "VILLAGER" to 98,
-        "VINDICATOR" to 99,
-        "WANDERING_TRADER" to 100,
-        "WITCH" to 101,
-        "WITHER" to 102,
-        "WITHER_SKELETON" to 103,
-        "WITHER_SKULL" to 104,
-        "WOLF" to 105,
-        "ZOGLIN" to 106,
-        "ZOMBIE" to 107,
-        "ZOMBIE_HORSE" to 108,
-        "ZOMBIE_VILLAGER" to 109,
-        "ZOMBIFIED_PIGLIN" to 110,
-    )
-
-
-    /**
-     * 1.19 ProtocolLib 实体类型 对应 实体序号
-     *
-     * https://wiki.vg/Entity_metadata#Mobs
-     */
-    private val entityMap3 = mapOf(
-        "AXOLOTL" to 4,
-        "BAT" to 5,
-        "BEE" to 6,
-        "BLAZE" to 7,
-        "CAT" to 10,
-        "CAVE_SPIDER" to 11,
-        "CHICKEN" to 12,
-        "COD" to 13,
-        "COW" to 14,
-        "CREEPER" to 15,
-        "DOLPHIN" to 16,
-        "DONKEY" to 17,
-        "DROWNED" to 19,
-        "ELDER_GUARDIAN" to 20,
-        "ENDER_DRAGON" to 22,
-        "ENDERMAN" to 23,
-        "ENDERMITE" to 24,
-        "EVOKER" to 25,
-        "EVOKER_FANGS" to 26,
-        "FOX" to 31,
-        "FROG" to 32,
-        "GHAST" to 33,
-        "GIANT" to 34,
-        "GLOW_SQUID" to 36,
-        "GOAT" to 37,
-        "GUARDIAN" to 38,
-        "HOGLIN" to 39,
-        "HORSE" to 40,
-        "HUSK" to 41,
-        "ILLUSIONER" to 42,
-        "IRON_GOLEM" to 43,
-        "LLAMA" to 49,
-        "MAGMA_CUBE" to 51,
-        "MULE" to 60,
-        "MUSHROOM_COW" to 61,
-        "OCELOT" to 62,
-        "PANDA" to 64,
-        "PARROT" to 65,
-        "PHANTOM" to 66,
-        "PIG" to 67,
-        "PIGLIN" to 68,
-        "PIGLIN_BRUTE" to 69,
-        "PILLAGER" to 70,
-        "POLAR_BEAR" to 71,
-        "PUFFERFISH" to 73,
-        "RABBIT" to 74,
-        "RAVAGER" to 75,
-        "SALMON" to 76,
-        "SHEEP" to 77,
-        "SHULKER" to 78,
-        "SILVERFISH" to 80,
-        "SKELETON" to 81,
-        "SKELETON_HORSE" to 82,
-        "SLIME" to 83,
-        "SNOWMAN" to 85,
-        "SPIDER" to 88,
-        "SQUID" to 89,
-        "STRAY" to 90,
-        "STRIDER" to 91,
-        "TADPOLE" to 92,
-        "TRADER_LLAMA" to 98,
-        "TROPICAL_FISH" to 99,
-        "TURTLE" to 100,
-        "VEX" to 101,
-        "VILLAGER" to 102,
-        "VINDICATOR" to 103,
-        "WANDERING_TRADER" to 104,
-        "WARDEN" to 105,
-        "WITCH" to 106,
-        "WITHER" to 107,
-        "WITHER_SKELETON" to 108,
-        "WOLF" to 110,
-        "ZOGLIN" to 111,
-        "ZOMBIE" to 112,
-        "ZOMBIE_HORSE" to 113,
-        "ZOMBIE_VILLAGER" to 114,
-        "ZOMBIFIED_PIGLIN" to 115,
-    )
-
     private val major = MinecraftVersion.major
+
+    var entityMap: EntityMap? = null
+
+    fun initEntityMap() {
+        if (protocolLibLoad) {
+            when {
+                major > 10 -> entityMap = EntityMap3()
+                major > 8 -> entityMap = EntityMap2()
+                major > 4 -> entityMap = EntityMap1()
+            }
+        }
+    }
 
     /**
      * @return ProtocolLib实体序号
      */
     fun EntityType.protocolEntityId(): Int {
-        return when {
-            major > 10 -> entityMap3[name]?: 67
-            major > 8 -> entityMap2[name]?: 64
-            major > 4 -> entityMap1[name]?: 67
-            else -> typeId.toInt()
-        }
+        return entityMap?.getEntityId(this.name)?: typeId.toInt()
     }
 
 }

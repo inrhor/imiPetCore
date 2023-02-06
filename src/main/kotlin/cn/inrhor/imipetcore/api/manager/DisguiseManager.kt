@@ -1,7 +1,7 @@
 package cn.inrhor.imipetcore.api.manager
 
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
-import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
+import cn.inrhor.imipetcore.api.manager.PetManager.followingPetData
 import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.destroyEntity
 import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.spawnEntity
 import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity.protocolEntityId
@@ -35,10 +35,15 @@ object DisguiseManager {
     fun Player.lookDisguise() {
         Bukkit.getOnlinePlayers().forEach {
             if (it != this) {
-                it.followingPet().forEach { pet ->
-                    if (pet.model().select == ModelSelect.COMMON) {
-                        pet.entity?.let { entity ->
-                            NMS.INSTANCE.entityRotation(setOf(this), entity.entityId, entity.location.yaw, entity.location.pitch)
+                it.followingPetData().forEach { data ->
+                    val pet = data.petEntity
+                    if (pet != null) {
+                        if (pet.model().select == ModelSelect.COMMON) {
+                            pet.entity?.let { entity ->
+                                val loc = entity.location
+                                destroyEntity(setOf(this))
+                                spawnEntity(setOf(this), entity.type.protocolEntityId())
+                            }
                         }
                     }
                 }

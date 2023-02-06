@@ -11,6 +11,7 @@ import cn.inrhor.imipetcore.common.database.type.DatabaseType
 import cn.inrhor.imipetcore.common.file.loadAction
 import cn.inrhor.imipetcore.common.file.loadPet
 import cn.inrhor.imipetcore.common.file.loadSkill
+import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -45,11 +46,11 @@ object PluginLoader {
         unloadTask()
     }
 
-    private fun yamlLoad(a: () -> Unit) {
+    private fun yamlLoad(yaml: String, a: () -> Unit) {
         try {
             a()
         } catch (e: Exception) {
-            warning("加载配置文件出错，请检查宠物配置")
+            warning("加载配置文件出错，请检查${yaml}配置")
         }
     }
 
@@ -61,11 +62,12 @@ object PluginLoader {
             DatabaseManager.type = DatabaseType.MYSQL
         }
         Database.initDatabase()
+        ProtocolEntity.initEntityMap()
         ModelManager.modelLoader.load()
 
-        yamlLoad { loadPet() }
-        yamlLoad { loadAction() }
-        yamlLoad { loadSkill() }
+        yamlLoad("宠物") { loadPet() }
+        yamlLoad("行为") { loadAction() }
+        yamlLoad("技能") { loadSkill() }
 
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
