@@ -35,20 +35,18 @@ private fun versionAiAdd(action: String, vararg ai: () -> Unit) {
 
 fun LivingEntity.addAi(petEntity: PetEntity, action: String, priority: Int) {
     if (protocolLibLoad) {
-        if (MinecraftVersion.major == 4) {
-            versionAiAdd(action, {
-                    addNmsAi(UniversalAiModelAction(petEntity), 0)
-                },{
-                addNmsAi(UniversalAiAttack(petEntity), priority)
-            }, {
-                addNmsAi(UniversalAiWalk(petEntity), priority)
-            }, {
-                val actionOption = action.getActionOption()
-                if (actionOption != null) {
-                    addNmsAi(UniversalAiHook(actionOption, petEntity), priority)
-                }
-            })
-        }
+        versionAiAdd(action, {
+            addNmsAi(UniversalAiModelAction(petEntity), 0)
+        },{
+            addNmsAi(UniversalAiAttack(petEntity), priority)
+        }, {
+            addNmsAi(UniversalAiWalk(petEntity), priority)
+        }, {
+            val actionOption = action.getActionOption()
+            if (actionOption != null) {
+                addNmsAi(UniversalAiHook(actionOption, petEntity), priority)
+            }
+        })
     }else {
         versionAiAdd(action, {
             addGoalAi(ModelActionAi(petEntity), 0)

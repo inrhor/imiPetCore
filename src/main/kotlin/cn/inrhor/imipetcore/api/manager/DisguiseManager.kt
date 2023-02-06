@@ -4,6 +4,7 @@ import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.destroyEntity
 import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.spawnEntity
+import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity.protocolEntityId
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.nms.NMS
 import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
@@ -19,16 +20,13 @@ object DisguiseManager {
      */
     fun Entity.disguise(entityType: EntityType) {
         val players = Bukkit.getOnlinePlayers().toSet()
-        destroyEntity(players)
-        spawnEntity(players, entityType.typeId.toInt())
-//        spawnEntity(players, entityType.toInt())
-        /*if (protocolLibLoad) {
+        if (protocolLibLoad) {
             destroyEntity(players)
-            spawnEntity(players, entityType)
+            spawnEntity(players, entityType.protocolEntityId())
         }else {
             NMS.INSTANCE.destroyEntity(players, entityId)
-            NMS.INSTANCE.spawnEntityLiving(players, this, entityType)
-        }*/
+            NMS.INSTANCE.spawnEntityLiving(players, this, entityType.name)
+        }
     }
 
     /**

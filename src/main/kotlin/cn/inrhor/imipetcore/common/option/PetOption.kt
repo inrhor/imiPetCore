@@ -17,7 +17,6 @@ import taboolib.platform.util.buildItem
  */
 class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(),
                 val entityType: EntityType = EntityType.PIG,
-                val entityTypeId: Int = 67,
                 val model: ModelOption = ModelOption(),
                 val action: MutableList<ActionAiOption> = mutableListOf(),
                 val item: ItemElement = ItemElement(),
