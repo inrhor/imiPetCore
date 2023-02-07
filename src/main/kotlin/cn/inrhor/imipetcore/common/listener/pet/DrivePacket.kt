@@ -4,12 +4,13 @@ import cn.inrhor.imipetcore.api.manager.MetaManager.getMeta
 import cn.inrhor.imipetcore.api.manager.MetaManager.getPetData
 import cn.inrhor.imipetcore.api.manager.ModelManager
 import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.packetRotation
+import cn.inrhor.imipetcore.server.ReadManager.isUniversal
+import cn.inrhor.imipetcore.server.ReadManager.major
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.util.Vector
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common5.Coerce
-import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.PacketReceiveEvent
 
 
@@ -23,7 +24,7 @@ object DrivePacket {
         val vehicle = p.vehicle?: return
         val actionType = vehicle.getMeta("drive")?: return
         // 1.16.5及以下分别是a  b c
-        val list = if (MinecraftVersion.isUniversal) listOf("c", "d", "e") else listOf("a", "b", "c")
+        val list = if (isUniversal) listOf("c", "d", "e") else listOf("a", "b", "c")
         var swSpeed = ev.packet.read<Float>(list[0])?: return // 前进速度
         var adSpeed = ev.packet.read<Float>(list[1])?: return // 横向速度
         val att = vehicle.getPetData(p)?.attribute?: return
@@ -32,7 +33,7 @@ object DrivePacket {
         adSpeed = if (adSpeed > 0.0f) sp else if (adSpeed < 0.0f) -sp else adSpeed
         val jumping = ev.packet.read<Boolean>(list[2])?: return
         val pLoc = p.location
-        if (MinecraftVersion.major > 5) {
+        if (major > 5) {
             vehicle.setRotation(pLoc.yaw, pLoc.pitch)
         }else {
             // 获取附近玩家包括自己

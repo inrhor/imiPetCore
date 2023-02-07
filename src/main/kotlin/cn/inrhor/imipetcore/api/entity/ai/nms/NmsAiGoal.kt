@@ -1,39 +1,43 @@
 package cn.inrhor.imipetcore.api.entity.ai.nms
 
 import cn.inrhor.imipetcore.api.entity.ai.universal.UniversalAi
+import cn.inrhor.imipetcore.server.ReadManager.isUniversal
+import cn.inrhor.imipetcore.server.ReadManager.major
+import cn.inrhor.imipetcore.server.ReadManager.minor
 import org.bukkit.entity.LivingEntity
-import taboolib.module.nms.MinecraftVersion
 
 object NmsAiGoal {
 
-    private val isUniversal = MinecraftVersion.isUniversal
-
-    private val major = MinecraftVersion.major
-
-    private val minor = MinecraftVersion.minor
-
-    fun LivingEntity.addNmsAi(nmsAi: UniversalAi, priority: Int) {
+    /**
+     * 添加AI
+     */
+    fun LivingEntity.addAi(ai: Any, priority: Int) {
         try {
             val nmsEntity = this::class.java.getMethod("getHandle").invoke(this)
             val version = versionPack
             val versionAi = if (isUniversal)  "$version.ai.goal" else version
-
             val pathSelector = Class.forName("$versionAi.PathfinderGoalSelector")
             val pathGoal = Class.forName("$versionAi.PathfinderGoal")
             val entityInsentient = Class.forName("$version.EntityInsentient")
             val method = pathSelector.getDeclaredMethod("a", Int::class.javaPrimitiveType, pathGoal)
             val field = entityInsentient.getDeclaredField(goalSelector)
-            field.isAccessible = true
             val obj = field.get(nmsEntity)
-            val ai: Any = when (major) {
-                4 -> Nms112R1Ai(nmsAi)
-                8 -> Nms116R3Ai(nmsAi)
-                else -> NmsNetAi(nmsAi)
-            }
             method.invoke(obj, priority, ai)
         }catch (ex: Exception) {
             ex.printStackTrace()
         }
+    }
+
+    /**
+     * 添加跨版本的AI
+     */
+    fun LivingEntity.addNmsAi(nmsAi: UniversalAi, priority: Int) {
+        val ai: Any = when (major) {
+            4 -> Nms112R1Ai(nmsAi)
+            8 -> Nms116R3Ai(nmsAi)
+            else -> NmsNetAi(nmsAi)
+        }
+        addAi(ai, priority)
     }
 
     /**
@@ -47,7 +51,7 @@ object NmsAiGoal {
         else -> "goalSelector"
     }
 
-    private val versionPack =
+    val versionPack =
         if (isUniversal) {
             "net.minecraft.world.entity"
         }else {

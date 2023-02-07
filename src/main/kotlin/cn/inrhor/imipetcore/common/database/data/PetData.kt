@@ -35,7 +35,8 @@ data class PetData(
 /**
  * 属性数据
  */
-data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0, var speed: Double = 1.0, var attack: Double = 0.0, var attack_speed: Int = 2)
+data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0, var speed: Double = 1.0,
+                         var attack: Double = 0.0)
 
 /**
  * 技能系统数据

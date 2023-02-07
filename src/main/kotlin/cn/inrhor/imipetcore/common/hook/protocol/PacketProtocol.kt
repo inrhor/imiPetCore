@@ -2,18 +2,15 @@ package cn.inrhor.imipetcore.common.hook.protocol
 
 import cn.inrhor.imipetcore.common.nms.NMS
 import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
+import cn.inrhor.imipetcore.server.ReadManager.major
+import cn.inrhor.imipetcore.server.ReadManager.minor
 import cn.inrhor.imipetcore.util.PositionUtil.rotate
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
 import com.comphenix.protocol.events.PacketContainer
-import org.bukkit.Location
 import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
-import taboolib.common5.Coerce
 import taboolib.common5.cbyte
-import taboolib.module.nms.MinecraftVersion
-import java.util.*
 
 object PacketProtocol {
 
@@ -42,10 +39,6 @@ object PacketProtocol {
             NMS.INSTANCE.entityRotation(players, entityId, yaw, pitch)
         }
     }
-
-    private val major = MinecraftVersion.major
-
-    private val minor = MinecraftVersion.minor
 
     fun Entity.spawnEntity(players: Set<Player>, entityTypeId: Int) {
         val packet = if (major > 10) PacketContainer(PacketType.Play.Server.SPAWN_ENTITY) else PacketContainer(PacketType.Play.Server.SPAWN_ENTITY_LIVING)

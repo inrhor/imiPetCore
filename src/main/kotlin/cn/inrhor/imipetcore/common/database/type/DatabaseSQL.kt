@@ -3,7 +3,6 @@ package cn.inrhor.imipetcore.common.database.type
 import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.api.data.DataContainer.playerData
-import cn.inrhor.imipetcore.api.manager.SkillManager.getAllSkills
 import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
@@ -89,9 +88,6 @@ class DatabaseSQL: Database() {
         }
         add("attack") {
             type(ColumnTypeSQL.DOUBLE)
-        }
-        add("attack_speed") {
-            type(ColumnTypeSQL.INT)
         }
     }
 
@@ -205,8 +201,8 @@ class DatabaseSQL: Database() {
             value(petId, petData.currentExp, petData.maxExp, petData.level, petData.following)
         }
         val att = petData.attribute
-        tablePetAttribute.insert(source, "pet", "max_hp", "current_hp", "speed", "attack", "attack_speed") {
-            value(petId, att.maxHP, att.currentHP, att.speed, att.attack, att.attack_speed)
+        tablePetAttribute.insert(source, "pet", "max_hp", "current_hp", "speed", "attack") {
+            value(petId, att.maxHP, att.currentHP, att.speed, att.attack)
         }
         val skillSystem = petData.skillSystemData
         tablePetSkill.insert(source, "pet", "number", "point") {
@@ -231,7 +227,6 @@ class DatabaseSQL: Database() {
             set("current_hp", att.currentHP)
             set("speed", att.speed)
             set("attack", att.attack)
-            set("attack_speed", att.attack_speed)
         }
         val skillSystem = petData.skillSystemData
         tablePetSkill.update(source) {
@@ -292,21 +287,19 @@ class DatabaseSQL: Database() {
                 petData.following = e.second
             }
             tablePetAttribute.select(source) {
-                rows("max_hp", "current_hp", "speed", "attack", "attack_speed")
+                rows("max_hp", "current_hp", "speed", "attack")
                 where { "pet" eq pet }
             }.map {
                 getDouble("max_hp") to
                         getDouble("current_hp") to
                         getDouble("speed") to
-                        getDouble("attack") to
-                        getInt("attack_speed")
+                        getDouble("attack")
             }.forEach { e ->
                 val att = petData.attribute
-                att.maxHP = e.first.first.first.first
-                att.currentHP = e.first.first.first.second
-                att.speed = e.first.first.second
-                att.attack = e.first.second
-                att.attack_speed = e.second
+                att.maxHP = e.first.first.first
+                att.currentHP = e.first.first.second
+                att.speed = e.first.second
+                att.attack = e.second
             }
             val skillSystem = petData.skillSystemData
             tablePetSkill.select(source) {

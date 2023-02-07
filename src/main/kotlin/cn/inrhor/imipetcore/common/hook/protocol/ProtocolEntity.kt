@@ -5,14 +5,12 @@ import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap1
 import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap2
 import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap3
 import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
+import cn.inrhor.imipetcore.server.ReadManager.major
 import org.bukkit.entity.EntityType
-import taboolib.module.nms.MinecraftVersion
 
 object ProtocolEntity {
 
     // 1.8-1.12 只需要"typeId
-
-    private val major = MinecraftVersion.major
 
     var entityMap: EntityMap? = null
 

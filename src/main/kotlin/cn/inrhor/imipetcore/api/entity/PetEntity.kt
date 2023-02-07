@@ -8,6 +8,8 @@ import cn.inrhor.imipetcore.api.manager.ModelManager.display
 import cn.inrhor.imipetcore.api.manager.OptionManager.model
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
+import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
+import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.StateOption
@@ -15,6 +17,7 @@ import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import taboolib.common.platform.function.submit
 import taboolib.common5.Baffle
 import taboolib.module.ai.*
@@ -50,10 +53,10 @@ class PetEntity(val owner: Player, val petData: PetData) {
         petData.following = true
         entity = owner.world.spawnEntity(owner.location, EntityType.WOLF) as LivingEntity
         entity?.setMeta("entity", petData.name)
-        entity?.setMeta("owner", owner.uniqueId)
+        val wolf = entity as Wolf
+        wolf.owner = owner
         initAction()
-        owner.setMaxHP(petData, effect = true, call = false)
-        owner.setCurrentHP(petData, effect = true, call = false)
+        initAttribute()
         val entityType = petData.petOption().entityType
         if (model().select == ModelSelect.COMMON) {
             submit(delay = 5L) {
@@ -61,6 +64,16 @@ class PetEntity(val owner: Player, val petData: PetData) {
             }
         }
         updateModel(true)
+    }
+
+    /**
+     * 初始化属性
+     */
+    fun initAttribute() {
+        owner.setMaxHP(petData, call = false)
+        owner.setCurrentHP(petData, call = false)
+        owner.setPetSpeed(petData, call = false)
+        owner.setPetAttack(petData, call = false)
     }
 
     /**

@@ -1,8 +1,8 @@
 package cn.inrhor.imipetcore.common.listener.player
 
+import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
-import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import taboolib.common.platform.event.EventPriority
@@ -23,7 +23,7 @@ object OwnerAttack {
             return
         }
         player.followingPet().forEach {
-            it.entity?.setMeta("target", target)
+            it.entity?.attackEntity(target)
         }
     }
 

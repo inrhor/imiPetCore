@@ -6,7 +6,6 @@ pet:
       health: 20.22
       speed: 1.0
       attack: 0.3
-      attack_speed: 2
     exp: 30
     # 等级上限
     level: 66

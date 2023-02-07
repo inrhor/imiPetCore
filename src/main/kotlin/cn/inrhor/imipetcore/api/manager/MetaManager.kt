@@ -6,6 +6,7 @@ import cn.inrhor.imipetcore.common.database.data.PetData
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import org.bukkit.metadata.FixedMetadataValue
 import java.util.*
 
@@ -34,8 +35,8 @@ object MetaManager {
      * @return 主人
      */
     fun Entity.getOwner(): Player? {
-        val get = getMeta("owner")?: return null
-        return Bukkit.getPlayer(UUID.fromString(get.toString()))
+        if (this !is Wolf) return null
+        return owner as Player
     }
 
     /**

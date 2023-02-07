@@ -1,22 +1,30 @@
 package cn.inrhor.imipetcore.common.nms
 
+import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.addAi
+import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.versionPack
 import cn.inrhor.imipetcore.common.nms.DataSerializerUtil.createDataSerializer
+import cn.inrhor.imipetcore.server.ConfigRead.nms
+import cn.inrhor.imipetcore.server.ReadManager.isUniversal
+import cn.inrhor.imipetcore.server.ReadManager.major
+import cn.inrhor.imipetcore.server.ReadManager.minor
 import cn.inrhor.imipetcore.util.PositionUtil.rotate
 import net.minecraft.network.PacketDataSerializer
 import net.minecraft.network.protocol.game.PacketPlayOutEntityDestroy
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntity
-import net.minecraft.server.v1_9_R2.DataWatcher
+import net.minecraft.server.v1_9_R2.*
 import net.minecraft.world.entity.EntityTypes
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftEntity
+import org.bukkit.craftbukkit.v1_9_R2.entity.CraftLivingEntity
+import org.bukkit.entity.*
 import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Player
+import org.bukkit.event.entity.EntityTargetEvent
 import taboolib.common5.cbyte
 import taboolib.library.reflex.Reflex.Companion.getProperty
+import taboolib.library.reflex.Reflex.Companion.invokeConstructor
 import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.library.reflex.Reflex.Companion.unsafeInstance
-import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.sendPacket
 
 class NMSImpl: NMS() {
@@ -33,12 +41,6 @@ class NMSImpl: NMS() {
             "f" to pitch.rotate().cbyte
         )
     }
-
-    private val isUniversal = MinecraftVersion.isUniversal
-
-    private val major = MinecraftVersion.major
-
-    private val minor = MinecraftVersion.minor
 
     override fun spawnEntity(players: Set<Player>, entity: Entity, entityType: String) {
         val entityId = entity.entityId
@@ -141,6 +143,55 @@ class NMSImpl: NMS() {
                 players,
                 net.minecraft.server.v1_16_R1.PacketPlayOutEntityDestroy(entityId)
             )
+        }
+    }
+
+    private fun addCommonAi(livingEntity: LivingEntity, priority: Int, pathfinderGoal: Any) {
+        if (nms == "mod") {
+            val entityCreature = livingEntity.getProperty<Any>("entity")!!
+            val pathfinderGoalMeleeAttack = Class.forName(
+                "$versionPack.$pathfinderGoal").invokeConstructor(
+                entityCreature, 15.0, true)
+            livingEntity.addAi(pathfinderGoalMeleeAttack, priority)
+        }else {
+            val nmsEntity = (livingEntity as CraftEntity).handle
+            val entityInsentient = nmsEntity as EntityInsentient
+            val goalSelector = entityInsentient.goalSelector
+            val entityCreature = entityInsentient as EntityCreature
+            goalSelector.a(priority, PathfinderGoalMeleeAttack(entityCreature, 15.0, true))
+        }
+    }
+
+    override fun addAiAttack(livingEntity: LivingEntity, priority: Int) {
+        if (nms == "mod") {
+            val entityCreature = livingEntity.getProperty<Any>("entity")!!
+            val pathfinderGoalMeleeAttack = Class.forName(
+                "$versionPack.PathfinderGoalMeleeAttack").invokeConstructor(
+                entityCreature, 15.0, true)
+            livingEntity.addAi(pathfinderGoalMeleeAttack, priority)
+        }else {
+            val nmsEntity = (livingEntity as CraftEntity).handle
+            val entityInsentient = nmsEntity as EntityInsentient
+            val goalSelector = entityInsentient.goalSelector
+            val entityCreature = entityInsentient as EntityCreature
+            goalSelector.a(priority, PathfinderGoalMeleeAttack(entityCreature, 15.0, true))
+        }
+    }
+
+    /**
+     * 攻击实体
+     */
+    override fun attack(livingEntity: LivingEntity, entity: Entity) {
+        val reason = EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET
+        if (nms == "mod") {
+            val entityCreature = livingEntity.getProperty<Any>("entity")!!
+            val nmsTarget = entity.getProperty<Any>("entity")!!
+            entityCreature.invokeMethod<Any>("setGoalTarget", nmsTarget, reason, true)
+        }else {
+            val nmsEntity = (livingEntity as CraftEntity).handle
+            val entityInsentient = nmsEntity as EntityInsentient
+            val nmsTarget = (entity as CraftLivingEntity).handle
+            entityInsentient.setGoalTarget(nmsTarget, reason, true)
         }
     }
 

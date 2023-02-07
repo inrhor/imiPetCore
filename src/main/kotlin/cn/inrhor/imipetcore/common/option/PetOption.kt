@@ -62,8 +62,7 @@ class DefaultOption(val displayName: String = "", val attribute: OptionAttribute
  * option.default.attribute
  */
 class OptionAttribute(val health: Double = 20.0, val speed: Double = 1.0,
-                      val attack: Double = 0.0,
-                      val attack_speed: Int = 2)
+                      val attack: Double = 0.0)
 
 /**
  * 宠物配置model
@@ -88,7 +87,6 @@ class TriggerOption(val type: Type = Type.LEVEL_UP, val script: String = "") {
             rootFrame().variables()["@PetData"] = petData
             rootFrame().variables()["pet_level"] = petData.level
             rootFrame().variables()["pet_attack"] = att.attack
-            rootFrame().variables()["pet_attack_speed"] = att.attack_speed
             rootFrame().variables()["pet_speed"] = att.speed
             rootFrame().variables()["pet_current_exp"] = petData.currentExp
             rootFrame().variables()["pet_max_exp"] = petData.maxExp

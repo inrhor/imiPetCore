@@ -39,7 +39,7 @@ object PetManager {
         val a = def.attribute
         val p = a.health
         val petData = PetData(name, id, following,
-            AttributeData(p, p, a.speed, a.attack, a.attack_speed), 0, def.exp,
+            AttributeData(p, p, a.speed, a.attack), 0, def.exp,
             skillSystemData = SkillSystemData(opt.skill.number))
         addPet(petData)
         if (following) callPet(name)
@@ -224,48 +224,44 @@ object PetManager {
     /**
      * 设置宠物当前血量
      */
-    fun Player.setCurrentHP(petData: PetData, value: Double = petData.attribute.currentHP, effect: Boolean = false, call: Boolean = true) {
+    fun Player.setCurrentHP(petData: PetData, value: Double = petData.attribute.currentHP, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.currentHP = value
-        if (effect) petData.petEntity?.entity?.health = value
+        petData.petEntity?.entity?.health = value
         if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物最大血量
      */
-    fun Player.setMaxHP(petData: PetData, value: Double = petData.attribute.maxHP, effect: Boolean = false, call: Boolean = true) {
+    fun Player.setMaxHP(petData: PetData, value: Double = petData.attribute.maxHP, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.maxHP = value
-        if (effect) petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = value
+        petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = value
         if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物攻击属性
      */
-    fun Player.setPetAttack(petData: PetData,attack: Double) {
+    fun Player.setPetAttack(petData: PetData, attack: Double = petData.attribute.attack, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.attack = attack
-        PetChangeEvent(this, petData).call()
+        petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue = attack
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物行走速度
      */
-    fun Player.setPetSpeed(petData: PetData,speed: Double) {
+    fun Player.setPetSpeed(petData: PetData, speed: Double = petData.attribute.speed, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.speed = speed
-        PetChangeEvent(this, petData).call()
-    }
-
-    /**
-     * 设置宠物攻击速度
-     */
-    fun Player.setPetAttackSpeed(petData: PetData,attack_speed: Int) {
-        val attribute = petData.attribute
-        attribute.attack_speed = attack_speed
-        PetChangeEvent(this, petData).call()
+        val entity = petData.petEntity?.entity
+        val sp = speed/100
+        entity?.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = sp
+        entity?.getAttribute(Attribute.GENERIC_FLYING_SPEED)?.baseValue = sp
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**

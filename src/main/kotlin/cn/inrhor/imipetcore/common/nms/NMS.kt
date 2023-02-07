@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.common.nms
 
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.module.nms.nmsProxy
 
@@ -21,7 +22,25 @@ abstract class NMS {
      */
     abstract fun spawnEntity(players: Set<Player>, entity: Entity, entityType: String)
 
+    /**
+     * 销毁实体
+     */
     abstract fun destroyEntity(players: Set<Player>, entityId: Int)
+
+    /**
+     * 添加攻击行为
+     */
+    abstract fun addAiAttack(livingEntity: LivingEntity, priority: Int)
+
+    /**
+     * 实体攻击目标
+     */
+    abstract fun attack(livingEntity: LivingEntity, entity: Entity)
+
+    /**
+     * 实体跟随主人行为
+     */
+    abstract fun addAiFollow(livingEntity: LivingEntity)
 
     companion object {
 

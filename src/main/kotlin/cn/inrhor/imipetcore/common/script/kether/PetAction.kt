@@ -18,7 +18,6 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setLevel
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxExp
 import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
-import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttackSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
 import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
@@ -228,23 +227,6 @@ class PetAction {
                                 it.reset()
                                 actionNow {
                                     selectPetData().attribute.speed
-                                }
-                            }
-                        }
-                        "attack_speed" -> {
-                            try {
-                                it.mark()
-                                it.expect("set")
-                                val s = it.next(ArgTypes.ACTION)
-                                actionNow {
-                                    newFrame(s).run<Any>().thenAccept { a ->
-                                        player().setPetAttackSpeed(selectPetData(), Coerce.toInteger(a))
-                                    }
-                                }
-                            } catch (ex: Throwable) {
-                                it.reset()
-                                actionNow {
-                                    selectPetData().attribute.attack_speed
                                 }
                             }
                         }
