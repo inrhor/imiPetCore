@@ -16,6 +16,7 @@ import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.info
 
 /**
  * 宠物管理器
@@ -258,9 +259,8 @@ object PetManager {
         val attribute = petData.attribute
         attribute.speed = speed
         val entity = petData.petEntity?.entity
-        val sp = speed/100
-        entity?.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = sp
-        entity?.getAttribute(Attribute.GENERIC_FLYING_SPEED)?.baseValue = sp
+        entity?.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = speed
+        entity?.getAttribute(Attribute.GENERIC_FLYING_SPEED)?.baseValue = speed
         if (call) PetChangeEvent(this, petData).call()
     }
 

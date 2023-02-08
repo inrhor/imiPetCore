@@ -16,19 +16,16 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
     }
 
     /**
-     * 执行任务
-     */
-    override fun startTask() {
-        universal.startTask()
-    }
-
-    /**
      * 是否继续执行
      * false，终止并执行resetTask
      * true执行updateTask
      */
     override fun continueExecute(): Boolean {
-        return false
+        return universal.continueExecute()
+    }
+
+    override fun updateTask() {
+        universal.updateTask()
     }
 
 }

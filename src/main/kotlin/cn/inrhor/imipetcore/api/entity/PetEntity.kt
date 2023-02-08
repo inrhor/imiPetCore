@@ -54,9 +54,10 @@ class PetEntity(val owner: Player, val petData: PetData) {
         entity = owner.world.spawnEntity(owner.location, EntityType.WOLF) as LivingEntity
         entity?.setMeta("entity", petData.name)
         val wolf = entity as Wolf
+        wolf.isTamed = true
         wolf.owner = owner
-        initAction()
         initAttribute()
+        initAction()
         val entityType = petData.petOption().entityType
         if (model().select == ModelSelect.COMMON) {
             submit(delay = 5L) {

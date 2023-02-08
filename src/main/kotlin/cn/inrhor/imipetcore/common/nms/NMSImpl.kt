@@ -15,10 +15,8 @@ import net.minecraft.server.v1_12_R1.PacketPlayOutEntity
 import net.minecraft.server.v1_9_R2.*
 import net.minecraft.world.entity.EntityTypes
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftEntity
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftLivingEntity
 import org.bukkit.entity.*
 import org.bukkit.entity.Entity
-import org.bukkit.event.entity.EntityTargetEvent
 import taboolib.common5.cbyte
 import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.library.reflex.Reflex.Companion.invokeConstructor
@@ -146,35 +144,19 @@ class NMSImpl: NMS() {
         }
     }
 
-    private fun addCommonAi(livingEntity: LivingEntity, priority: Int, pathfinderGoal: Any) {
-        if (nms == "mod") {
-            val entityCreature = livingEntity.getProperty<Any>("entity")!!
-            val pathfinderGoalMeleeAttack = Class.forName(
-                "$versionPack.$pathfinderGoal").invokeConstructor(
-                entityCreature, 15.0, true)
-            livingEntity.addAi(pathfinderGoalMeleeAttack, priority)
-        }else {
-            val nmsEntity = (livingEntity as CraftEntity).handle
-            val entityInsentient = nmsEntity as EntityInsentient
-            val goalSelector = entityInsentient.goalSelector
-            val entityCreature = entityInsentient as EntityCreature
-            goalSelector.a(priority, PathfinderGoalMeleeAttack(entityCreature, 15.0, true))
-        }
-    }
-
     override fun addAiAttack(livingEntity: LivingEntity, priority: Int) {
         if (nms == "mod") {
-            val entityCreature = livingEntity.getProperty<Any>("entity")!!
-            val pathfinderGoalMeleeAttack = Class.forName(
-                "$versionPack.PathfinderGoalMeleeAttack").invokeConstructor(
-                entityCreature, 15.0, true)
-            livingEntity.addAi(pathfinderGoalMeleeAttack, priority)
+            val en = livingEntity.getProperty<Any>("entity")!!
+            val pathfinderGoal = Class.forName(
+                "$versionPack.PathfinderGoalMeleeAttack").invokeConstructor(en, 1.0, false)
+            livingEntity.addAi(pathfinderGoal, priority)
         }else {
             val nmsEntity = (livingEntity as CraftEntity).handle
             val entityInsentient = nmsEntity as EntityInsentient
             val goalSelector = entityInsentient.goalSelector
-            val entityCreature = entityInsentient as EntityCreature
-            goalSelector.a(priority, PathfinderGoalMeleeAttack(entityCreature, 15.0, true))
+            val en = entityInsentient as EntityCreature
+            // 1.0 为移速倍率
+            goalSelector.a(priority, PathfinderGoalMeleeAttack(en, 1.0, false))
         }
     }
 
@@ -182,17 +164,8 @@ class NMSImpl: NMS() {
      * 攻击实体
      */
     override fun attack(livingEntity: LivingEntity, entity: Entity) {
-        val reason = EntityTargetEvent.TargetReason.OWNER_ATTACKED_TARGET
-        if (nms == "mod") {
-            val entityCreature = livingEntity.getProperty<Any>("entity")!!
-            val nmsTarget = entity.getProperty<Any>("entity")!!
-            entityCreature.invokeMethod<Any>("setGoalTarget", nmsTarget, reason, true)
-        }else {
-            val nmsEntity = (livingEntity as CraftEntity).handle
-            val entityInsentient = nmsEntity as EntityInsentient
-            val nmsTarget = (entity as CraftLivingEntity).handle
-            entityInsentient.setGoalTarget(nmsTarget, reason, true)
-        }
+        val wolf = livingEntity as Wolf
+        wolf.target = entity as LivingEntity
     }
 
     private fun sendPacket(players: Set<Player>, packet: Any, vararg fields: Pair<String, Any?>) {

@@ -3,7 +3,9 @@ package cn.inrhor.imipetcore.common.listener.player
 import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import taboolib.common.platform.event.EventPriority
 import taboolib.common.platform.event.SubscribeEvent

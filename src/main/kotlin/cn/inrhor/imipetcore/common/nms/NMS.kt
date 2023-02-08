@@ -37,11 +37,6 @@ abstract class NMS {
      */
     abstract fun attack(livingEntity: LivingEntity, entity: Entity)
 
-    /**
-     * 实体跟随主人行为
-     */
-    abstract fun addAiFollow(livingEntity: LivingEntity)
-
     companion object {
 
         val INSTANCE by lazy {
