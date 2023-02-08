@@ -1,27 +1,24 @@
 package cn.inrhor.imipetcore.api.entity.ai.universal
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
+import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.common.location.distanceLoc
-import org.bukkit.entity.Wolf
 import taboolib.module.ai.navigationMove
 
 class UniversalAiWalk(val petEntity: PetEntity): UniversalAi() {
 
-    override fun shouldExecute(): Boolean {
-        val owner = petEntity.owner
-        return !petEntity.petData.isDead() && owner.isOnline && !owner.isDead &&
-                (petEntity.entity?.distanceLoc(owner)?: 0.0) > 6.0
-    }
+    val owner = petEntity.owner
+    val petData = petEntity.petData
+    val pet = petEntity.entity
 
-    override fun continueExecute(): Boolean {
-        return false
+    override fun shouldExecute(): Boolean {
+        return !petData.isDead() && owner.isOnline && !owner.isDead &&
+                (pet?.distanceLoc(owner)?: 0.0) > 6.0
     }
 
     override fun updateTask() {
-        val pet = petEntity.entity?: return
-        val owner = petEntity.owner
-        val wolf = pet as Wolf
-        wolf.target = null
+        pet?: return
+        pet.attackEntity(null)
         if (pet.distanceLoc(owner) > 16.0) {
             pet.teleport(owner)
         }else {

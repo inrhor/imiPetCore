@@ -32,11 +32,6 @@ abstract class NMS {
      */
     abstract fun addAiAttack(livingEntity: LivingEntity, priority: Int)
 
-    /**
-     * 实体攻击目标
-     */
-    abstract fun attack(livingEntity: LivingEntity, entity: Entity)
-
     companion object {
 
         val INSTANCE by lazy {

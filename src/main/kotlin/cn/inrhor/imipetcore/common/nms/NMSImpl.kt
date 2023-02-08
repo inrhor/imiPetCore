@@ -160,14 +160,6 @@ class NMSImpl: NMS() {
         }
     }
 
-    /**
-     * 攻击实体
-     */
-    override fun attack(livingEntity: LivingEntity, entity: Entity) {
-        val wolf = livingEntity as Wolf
-        wolf.target = entity as LivingEntity
-    }
-
     private fun sendPacket(players: Set<Player>, packet: Any, vararg fields: Pair<String, Any?>) {
         val f = setFields(packet, *fields)
         players.forEach { it.sendPacket(f) }

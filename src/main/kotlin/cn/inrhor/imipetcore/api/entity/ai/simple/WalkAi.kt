@@ -15,15 +15,6 @@ class WalkAi(val petEntity: PetEntity): SimpleAi() {
         return universal.shouldExecute()
     }
 
-    /**
-     * 是否继续执行
-     * false，终止并执行resetTask
-     * true执行updateTask
-     */
-    override fun continueExecute(): Boolean {
-        return universal.continueExecute()
-    }
-
     override fun updateTask() {
         universal.updateTask()
     }

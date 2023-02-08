@@ -40,7 +40,6 @@ fun LivingEntity.addAi(petEntity: PetEntity, action: String, priority: Int) {
             NMS.INSTANCE.addAiAttack(livingEntity, priority)
         }, {
             addNmsAi(UniversalAiWalk(petEntity), priority)
-//           NMS.INSTANCE.addAiFollow(livingEntity, priority)
         }, {
             val actionOption = action.getActionOption()
             if (actionOption != null) {
@@ -54,7 +53,6 @@ fun LivingEntity.addAi(petEntity: PetEntity, action: String, priority: Int) {
             NMS.INSTANCE.addAiAttack(livingEntity, priority)
         }, {
             addGoalAi(WalkAi(petEntity), priority)
-//            NMS.INSTANCE.addAiFollow(livingEntity, priority)
         }, {
             val actionOption = action.getActionOption()
             if (actionOption != null) {
