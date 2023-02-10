@@ -4,14 +4,13 @@ import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
+import cn.inrhor.imipetcore.api.manager.AttributeManager.loadAttributeData
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager.delDriveRide
 import cn.inrhor.imipetcore.api.manager.ModelManager.driveRide
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
-import cn.inrhor.imipetcore.common.database.data.AttributeData
-import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.common.database.data.SkillSystemData
+import cn.inrhor.imipetcore.common.database.data.*
 import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
@@ -307,6 +306,36 @@ object PetManager {
     fun PetData.hasPassenger(): Boolean {
         val entity = petEntity?.entity?: return false
         return entity.passengers.isNotEmpty()
+    }
+
+    /**
+     * 操作宠物挂钩属性数据
+     *
+     * @param effect 是否影响实体本身
+     */
+    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String, effect: Boolean = true) {
+        when (type) {
+            HookAttribute.ATTRIBUTE_PLUS -> {
+                when (operateType) {
+                    OperateType.REMOVE -> {
+                        attribute.hook.removeIf { it.type == type && it.key == key }
+                    }
+                    OperateType.SET -> {
+                        attribute.hook.removeIf { it.type == type && it.key == key }
+                        attribute.hook.add(AttributeHookData(type, key, value))
+                    }
+                    else -> {}
+                }
+                if (effect) {
+                    petEntity?.entity?.loadAttributeData(this)
+                }
+                PetChangeEvent(player, this).call()
+            }
+        }
+    }
+
+    enum class OperateType {
+        SET, REMOVE, GET
     }
 
 }

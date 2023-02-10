@@ -6,6 +6,10 @@ pet:
       health: 20.22
       speed: 2.0
       attack: 0.3
+      hook:
+        - type: ATTRIBUTE_PLUS
+          key: 物理防御
+          value: 2.1
     exp: 30
     # 等级上限
     level: 66

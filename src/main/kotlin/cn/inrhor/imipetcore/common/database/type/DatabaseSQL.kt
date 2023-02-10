@@ -4,6 +4,8 @@ import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer.initData
 import cn.inrhor.imipetcore.api.data.DataContainer.playerData
 import cn.inrhor.imipetcore.common.database.Database
+import cn.inrhor.imipetcore.common.database.data.AttributeHookData
+import cn.inrhor.imipetcore.common.database.data.HookAttribute
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
 import taboolib.module.database.ColumnOptionSQL
@@ -132,6 +134,27 @@ class DatabaseSQL: Database() {
         }
     }
 
+    val tableHookAttribute = Table(table + "_hook_attribute", host) {
+        add("pet") {
+            type(ColumnTypeSQL.INT, 16) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("key") {
+            type(ColumnTypeSQL.VARCHAR, 36) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("type") {
+            type(ColumnTypeSQL.INT, 16) {
+                options(ColumnOptionSQL.KEY)
+            }
+        }
+        add("value") {
+            type(ColumnTypeSQL.VARCHAR, 36)
+        }
+    }
+
     val source: DataSource by lazy {
         host.createDataSource()
     }
@@ -141,6 +164,9 @@ class DatabaseSQL: Database() {
         tablePet.workspace(source) { createTable() }.run()
         tablePetData.workspace(source) { createTable() }.run()
         tablePetAttribute.workspace(source) { createTable() }.run()
+        tableHookAttribute.workspace(source) { createTable() }.run()
+        tablePetSkill.workspace(source) { createTable() }.run()
+        tablePetSkillData.workspace(source) { createTable() }.run()
     }
 
     companion object {
@@ -188,6 +214,9 @@ class DatabaseSQL: Database() {
         tablePetSkillData.delete(source) {
             where { "pet" eq petId }
         }
+        tableHookAttribute.delete(source) {
+            where { "pet" eq petId }
+        }
     }
 
     override fun createPet(uuid: UUID, petData: PetData) {
@@ -207,6 +236,11 @@ class DatabaseSQL: Database() {
         val skillSystem = petData.skillSystemData
         tablePetSkill.insert(source, "pet", "number", "point") {
             value(petId, skillSystem.number, skillSystem.point)
+        }
+        att.hook.forEach {
+            tableHookAttribute.insert(source, "pet", "key", "type", "value") {
+                value(petId, it.key, it.type.int, it.value)
+            }
         }
     }
 
@@ -228,6 +262,9 @@ class DatabaseSQL: Database() {
             set("speed", att.speed)
             set("attack", att.attack)
         }
+        att.hook.forEach {
+            updateHookAttribute(uuid, petData, it)
+        }
         val skillSystem = petData.skillSystemData
         tablePetSkill.update(source) {
             where { "pet" eq petId }
@@ -236,6 +273,31 @@ class DatabaseSQL: Database() {
         }
         updateSkillData(petId, skillSystem.loadSkill, true)
         updateSkillData(petId, skillSystem.unloadSkill, false)
+    }
+
+    private fun updateHookAttribute(uuid: UUID, petData: PetData, attributeHookData: AttributeHookData) {
+        val petId = petId(userId(uuid), petData.name)
+        // tableHookAttribute如果不存在就插入，否则更新
+        if (tableHookAttribute.find(source) {
+                where { and {
+                    "pet" eq petId
+                    "key" eq attributeHookData.key
+                    "type" eq attributeHookData.type.int
+                } }
+            }) {
+            tableHookAttribute.update(source) {
+                where { and {
+                    "pet" eq petId
+                    "key" eq attributeHookData.key
+                    "type" eq attributeHookData.type.int
+                } }
+                set("value", attributeHookData.value)
+            }
+        }else {
+            tableHookAttribute.insert(source, "pet", "key", "type", "value") {
+                value(petId, attributeHookData.key, attributeHookData.type.int, attributeHookData.value)
+            }
+        }
     }
 
     private fun updateSkillData(petId: Long, skills: List<SkillData>, load: Boolean) {
@@ -331,6 +393,17 @@ class DatabaseSQL: Database() {
                 } else {
                     skillSystem.unloadSkill.add(skill)
                 }
+            }
+            tableHookAttribute.select(source) {
+                rows("key", "type", "value")
+                where { "pet" eq pet }
+            }.map {
+                getString("key") to
+                        getInt("type") to
+                        getString("value")
+            }.forEach { e ->
+                val hook = AttributeHookData(HookAttribute.values()[e.first.second], e.first.first, e.second)
+                petData.attribute.hook.add(hook)
             }
             pData.petDataList.add(petData)
         }

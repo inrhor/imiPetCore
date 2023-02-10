@@ -34,10 +34,11 @@ taboolib {
             name("DragonCore").optional(true)
             name("UiUniverse").optional(true)
             name("ProtocolLib").optional(true)
+            name("MMOItems").optional(true)
         }
     }
     classifier = null
-    version = "6.0.10-80"
+    version = "6.0.10-86"
 }
 
 repositories {

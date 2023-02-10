@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.api.entity
 
 import cn.inrhor.imipetcore.api.entity.ai.addAi
+import cn.inrhor.imipetcore.api.manager.AttributeManager.loadAttributeData
 import cn.inrhor.imipetcore.api.manager.DisguiseManager.disguise
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager.clearModel
@@ -55,6 +56,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         entity?.setMeta("entity", petData.name)
         val wolf = entity as Wolf
         wolf.isTamed = true
+        // 静音
+        wolf.isSilent = false
         wolf.owner = owner
         initAttribute()
         initAction()
@@ -75,6 +78,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         owner.setCurrentHP(petData, call = false)
         owner.setPetSpeed(petData, call = false)
         owner.setPetAttack(petData, call = false)
+
+        entity?.loadAttributeData(petData)
     }
 
     /**

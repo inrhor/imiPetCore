@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.option
 
+import cn.inrhor.imipetcore.common.database.data.AttributeHookData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.script.kether.evalString
@@ -62,7 +63,7 @@ class DefaultOption(val displayName: String = "", val attribute: OptionAttribute
  * option.default.attribute
  */
 class OptionAttribute(val health: Double = 20.0, val speed: Double = 1.0,
-                      val attack: Double = 0.0)
+                      val attack: Double = 0.0, val hook: MutableList<AttributeHookData> = mutableListOf())
 
 /**
  * 宠物配置model

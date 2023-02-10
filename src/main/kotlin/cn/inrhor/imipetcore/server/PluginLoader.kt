@@ -25,6 +25,10 @@ import taboolib.module.lang.sendLang
  */
 object PluginLoader {
 
+    val attributePlus by lazy {
+        Bukkit.getPluginManager().getPlugin("AttributePlus") != null
+    }
+
     val authMeLoad by lazy {
         Bukkit.getPluginManager().getPlugin("AuthMe") != null
     }
