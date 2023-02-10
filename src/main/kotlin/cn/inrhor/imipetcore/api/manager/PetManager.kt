@@ -314,28 +314,24 @@ object PetManager {
      * @param effect 是否影响实体本身
      */
     fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String, effect: Boolean = true): String {
-        when (type) {
-            HookAttribute.ATTRIBUTE_PLUS -> {
-                when (operateType) {
-                    OperateType.REMOVE -> {
-                        attribute.hook.removeIf { it.type == type && it.key == key }
-                    }
-                    OperateType.SET -> {
-                        attribute.hook.removeIf { it.type == type && it.key == key }
-                        attribute.hook.add(AttributeHookData(type, key, value))
-                    }
-                    else -> {
-                        val hook = attribute.hook.firstOrNull { it.type == type && it.key == key }
-                        return hook?.value ?: "0"
-                    }
-                }
-                if (effect) {
-                    petEntity?.entity?.loadAttributeData(this)
-                }
-                PetChangeEvent(player, this).call()
+        when (operateType) {
+            OperateType.REMOVE -> {
+                attribute.hook.removeIf { it.type == type && it.key == key }
+            }
+            OperateType.SET -> {
+                attribute.hook.removeIf { it.type == type && it.key == key }
+                attribute.hook.add(AttributeHookData(type, key, value))
+            }
+            OperateType.GET -> {
+                val hook = attribute.hook.firstOrNull { it.type == type && it.key == key }
+                return hook?.value ?: ""
             }
         }
-        return "0"
+        if (effect) {
+            petEntity?.entity?.loadAttributeData(this)
+        }
+        PetChangeEvent(player, this).call()
+        return ""
     }
 
     enum class OperateType {

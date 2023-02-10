@@ -41,7 +41,7 @@ data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0,
 /**
  * 其它属性系统数据
  */
-class AttributeHookData(var type: HookAttribute = HookAttribute.ATTRIBUTE_PLUS,
+class AttributeHookData(var type: HookAttribute = HookAttribute.STORAGE,
                         var key: String = "", var value: String = "")
 
 /**
@@ -50,7 +50,8 @@ class AttributeHookData(var type: HookAttribute = HookAttribute.ATTRIBUTE_PLUS,
  * @param int 数据库索引
  */
 enum class HookAttribute(val int: Int) {
-    ATTRIBUTE_PLUS(0)
+    STORAGE(0),
+    ATTRIBUTE_PLUS(1),
 }
 
 /**

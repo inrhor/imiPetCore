@@ -7,6 +7,8 @@ pet:
       speed: 2.0
       attack: 0.3
       hook:
+        - key: 存储1
+          value: "Hello World"
         - type: ATTRIBUTE_PLUS
           key: 物理防御
           value: 2.1
