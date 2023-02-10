@@ -1,5 +1,6 @@
-package cn.inrhor.imipetcore.common.script.kether
+package cn.inrhor.imipetcore.common.script.kether.action
 
+import cn.inrhor.imipetcore.common.script.kether.player
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.module.kether.KetherParser
@@ -13,7 +14,7 @@ import taboolib.platform.compat.withdrawBalance
 class EconomyAction {
 
     companion object {
-        @KetherParser(["economy"], shared = true)
+        @KetherParser(["economy"])
         fun parser() = scriptParser {
             it.switch {
                 case("get") {

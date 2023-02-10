@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.script.kether
+package cn.inrhor.imipetcore.common.script.kether.action
 
 import cn.inrhor.imipetcore.api.manager.SkillManager.addCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.addSkillPoint
@@ -16,6 +16,8 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.skillOption
 import cn.inrhor.imipetcore.api.manager.SkillManager.unloadSkill
 import cn.inrhor.imipetcore.api.manager.SkillSelect
 import cn.inrhor.imipetcore.api.manager.SkillType
+import cn.inrhor.imipetcore.common.script.kether.*
+import cn.inrhor.imipetcore.common.script.kether.player
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.module.kether.*

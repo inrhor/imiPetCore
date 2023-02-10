@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.script.kether
+package cn.inrhor.imipetcore.common.script.kether.action
 
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import org.bukkit.Location

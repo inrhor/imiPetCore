@@ -313,7 +313,7 @@ object PetManager {
      *
      * @param effect 是否影响实体本身
      */
-    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String, effect: Boolean = true) {
+    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String, effect: Boolean = true): String {
         when (type) {
             HookAttribute.ATTRIBUTE_PLUS -> {
                 when (operateType) {
@@ -324,7 +324,10 @@ object PetManager {
                         attribute.hook.removeIf { it.type == type && it.key == key }
                         attribute.hook.add(AttributeHookData(type, key, value))
                     }
-                    else -> {}
+                    else -> {
+                        val hook = attribute.hook.firstOrNull { it.type == type && it.key == key }
+                        return hook?.value ?: "0"
+                    }
                 }
                 if (effect) {
                     petEntity?.entity?.loadAttributeData(this)
@@ -332,6 +335,7 @@ object PetManager {
                 PetChangeEvent(player, this).call()
             }
         }
+        return "0"
     }
 
     enum class OperateType {

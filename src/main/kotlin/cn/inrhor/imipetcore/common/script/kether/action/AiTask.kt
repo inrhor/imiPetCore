@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.script.kether
+package cn.inrhor.imipetcore.common.script.kether.action
 
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.actionNow

@@ -1,7 +1,8 @@
-package cn.inrhor.imipetcore.common.script.kether
+package cn.inrhor.imipetcore.common.script.kether.action
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
+import cn.inrhor.imipetcore.api.manager.PetManager
 import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
@@ -11,6 +12,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.hasPassenger
+import cn.inrhor.imipetcore.api.manager.PetManager.hookAttribute
 import cn.inrhor.imipetcore.api.manager.PetManager.renamePet
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentExp
 import cn.inrhor.imipetcore.api.manager.PetManager.setCurrentHP
@@ -24,6 +26,9 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.addPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.delPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
+import cn.inrhor.imipetcore.common.database.data.HookAttribute
+import cn.inrhor.imipetcore.common.script.kether.player
+import cn.inrhor.imipetcore.common.script.kether.selectPetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import taboolib.common5.Coerce
@@ -55,6 +60,20 @@ class PetAction {
                 frame.selectPetData().petEntity?.entity?.controllerLookAt(it)
             }
             return CompletableFuture.completedFuture(null)
+        }
+    }
+
+    class ActionAttributeHook(val operate: String, val type: String, val key: ParsedAction<*>, val value: ParsedAction<*>): ScriptAction<String>() {
+        override fun run(frame: ScriptFrame): CompletableFuture<String> {
+            val future = CompletableFuture<String>()
+            frame.newFrame(key).run<String>().thenApply { k ->
+                frame.newFrame(value).run<String>().thenApply { v ->
+                    val ot = PetManager.OperateType.valueOf(operate.uppercase())
+                    val at = HookAttribute.valueOf(type.uppercase())
+                    future.complete(frame.selectPetData().hookAttribute(frame.player(), ot, at, k, v))
+                }
+            }
+            return future
         }
     }
 
@@ -282,6 +301,16 @@ class PetAction {
                                 actionNow {
                                     selectPetData().attribute.maxHP
                                 }
+                            }
+                        }
+                        "hook" -> {
+                            val opera = it.nextToken()
+                            val hookType = it.nextToken()
+                            val key = it.next(ArgTypes.ACTION)
+                            val value = it.next(ArgTypes.ACTION)
+                            actionNow {
+                                // pet attribute hook set/remove/get <hook> <key> <value>
+                                ActionAttributeHook(opera, hookType, key, value)
                             }
                         }
                         else -> error("pet attribute ?")
