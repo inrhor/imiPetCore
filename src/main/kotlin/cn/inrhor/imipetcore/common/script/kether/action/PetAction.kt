@@ -27,10 +27,13 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.addPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.delPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.common.database.data.HookAttribute
+import cn.inrhor.imipetcore.common.script.kether.attributeHookKey
+import cn.inrhor.imipetcore.common.script.kether.attributeHookSelect
 import cn.inrhor.imipetcore.common.script.kether.player
 import cn.inrhor.imipetcore.common.script.kether.selectPetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
+import taboolib.common.platform.function.info
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
@@ -60,20 +63,6 @@ class PetAction {
                 frame.selectPetData().petEntity?.entity?.controllerLookAt(it)
             }
             return CompletableFuture.completedFuture(null)
-        }
-    }
-
-    class ActionAttributeHook(val operate: String, val type: String, val key: ParsedAction<*>, val value: ParsedAction<*>): ScriptAction<String>() {
-        override fun run(frame: ScriptFrame): CompletableFuture<String> {
-            val future = CompletableFuture<String>()
-            frame.newFrame(key).run<String>().thenApply { k ->
-                frame.newFrame(value).run<String>().thenApply { v ->
-                    val ot = PetManager.OperateType.valueOf(operate.uppercase())
-                    val at = HookAttribute.valueOf(type.uppercase())
-                    future.complete(frame.selectPetData().hookAttribute(frame.player(), ot, at, k, v))
-                }
-            }
-            return future
         }
     }
 
@@ -304,16 +293,48 @@ class PetAction {
                             }
                         }
                         "hook" -> {
-                            val opera = it.nextToken()
-                            val hookType = it.nextToken()
-                            val key = it.next(ArgTypes.ACTION)
-                            val value = it.next(ArgTypes.ACTION)
-                            actionNow {
-                                // pet attribute hook set/remove/get <hook> <key> <value>
-                                ActionAttributeHook(opera, hookType, key, value)
+                            when (it.expects("select", "key", "get", "set", "remove")) {
+                                "select" -> { // 选择挂钩
+                                    val a = it.nextToken()
+                                    actionNow {
+                                        variables().set("@AttributeHook", a)
+                                    }
+                                }
+                                "key" -> { // 选择键
+                                    val a = it.nextToken()
+                                    actionNow {
+                                        variables().set("@AttributeHookKey", a)
+                                    }
+                                }
+                                "get" -> {
+                                    actionNow {
+                                        selectPetData().hookAttribute(player(),
+                                            PetManager.OperateType.GET, HookAttribute.valueOf(attributeHookSelect().uppercase()),
+                                            attributeHookKey())
+                                    }
+                                }
+                                "remove" -> {
+                                    actionNow {
+                                        selectPetData().hookAttribute(player(),
+                                            PetManager.OperateType.REMOVE, HookAttribute.valueOf(attributeHookSelect().uppercase()),
+                                            attributeHookKey())
+                                    }
+                                }
+                                "set" -> {
+                                    val a = it.next(ArgTypes.ACTION)
+                                    actionNow {
+                                        newFrame(a).run<String>().thenAccept { b ->
+                                            selectPetData().hookAttribute(player(),
+                                                PetManager.OperateType.SET,
+                                                HookAttribute.valueOf(attributeHookSelect().uppercase()),
+                                                attributeHookKey(), b)
+                                        }
+                                    }
+                                }
+                                else -> error("pet attribute hook ?")
                             }
                         }
-                        else -> error("pet attribute ?")
+                        else -> error("pet attribute ?  (1.2.0+移除了attack_speed)")
                     }
                 }
                 case("current_exp") {

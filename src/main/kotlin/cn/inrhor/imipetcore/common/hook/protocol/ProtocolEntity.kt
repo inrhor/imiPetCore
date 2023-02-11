@@ -4,7 +4,7 @@ import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap
 import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap1
 import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap2
 import cn.inrhor.imipetcore.common.hook.protocol.version.EntityMap3
-import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
+import cn.inrhor.imipetcore.server.ReadManager.protocolLibLoad
 import cn.inrhor.imipetcore.server.ReadManager.major
 import org.bukkit.entity.EntityType
 

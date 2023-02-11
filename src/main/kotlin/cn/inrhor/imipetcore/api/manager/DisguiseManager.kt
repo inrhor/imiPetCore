@@ -7,7 +7,7 @@ import cn.inrhor.imipetcore.common.hook.protocol.PacketProtocol.spawnEntity
 import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity.protocolEntityId
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.nms.NMS
-import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
+import cn.inrhor.imipetcore.server.ReadManager.protocolLibLoad
 import org.bukkit.Bukkit
 import org.bukkit.entity.Entity
 import org.bukkit.entity.EntityType

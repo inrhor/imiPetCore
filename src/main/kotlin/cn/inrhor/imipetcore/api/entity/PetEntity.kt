@@ -13,8 +13,14 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
+import cn.inrhor.imipetcore.common.option.AddonSelect
+import cn.inrhor.imipetcore.common.option.AddonType
 import cn.inrhor.imipetcore.common.option.StateOption
 import cn.inrhor.imipetcore.common.script.kether.evalStrPetData
+import cn.inrhor.imipetcore.server.ReadManager.adyeshachLoad
+import cn.inrhor.imipetcore.server.ReadManager.decentHologramsLoad
+import eu.decentsoftware.holograms.api.DHAPI
+import ink.ptms.adyeshach.api.AdyeshachAPI
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -61,13 +67,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         wolf.owner = owner
         initAttribute()
         initAction()
-        val entityType = petData.petOption().entityType
-        if (model().select == ModelSelect.COMMON) {
-            submit(delay = 5L) {
-                entity?.disguise(entityType)
-            }
-        }
         updateModel(true)
+        initAddon()
     }
 
     /**
@@ -107,14 +108,64 @@ class PetEntity(val owner: Player, val petData: PetData) {
     }
 
     /**
+     * 初始化加载Addon组件
+     */
+    fun initAddon() {
+        entity?: return
+        val petOption = petData.petOption()
+        petOption.addon.forEach {
+            when (it.type) {
+                AddonType.NAME -> {
+                    val list = owner.evalStrPetData(it.lines, petData)
+                    val loc = entity!!.location.clone().add(0.0, it.height, 0.0)
+                    when (it.select) {
+                        AddonSelect.ADYESHACH -> {
+                            if (!adyeshachLoad) return
+                            val holo = AdyeshachAPI.createHologram(loc, list)
+                            submit(async = true, period = 1L) {
+                                if (entity?.isDead == true || entity == null) {
+                                    holo.delete()
+                                    cancel()
+                                    return@submit
+                                }else {
+                                    holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
+                                }
+                            }
+                        }
+                        AddonSelect.DECENT_HOLOGRAMS -> {
+                            if (!decentHologramsLoad) return
+                            val holo = DHAPI.createHologram(entity!!.uniqueId.toString(), loc, list)
+                            submit(async = true, period = 1L) {
+                                if (entity?.isDead == true || entity == null) {
+                                    holo.destroy()
+                                    cancel()
+                                    return@submit
+                                }else {
+                                    DHAPI.moveHologram(holo, entity!!.location.clone().add(0.0, it.height, 0.0))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * 更新宠物模型
      */
     fun updateModel(init: Boolean = false) {
-        val name = owner.evalStrPetData(petData.petOption().default.displayName, petData)
-        val model = model()
-        val modelID = model.id
-        if (!petData.isFollow()) return
-        entity?.display(modelID, init, name, model.select)
+        val entityType = petData.petOption().entityType
+        if (model().select == ModelSelect.COMMON) {
+            submit(delay = 5L) {
+                entity?.disguise(entityType)
+            }
+        }else {
+            val model = model()
+            val modelID = model.id
+            if (!petData.isFollow()) return
+            entity?.display(modelID, init, model.select)
+        }
     }
 
     /**

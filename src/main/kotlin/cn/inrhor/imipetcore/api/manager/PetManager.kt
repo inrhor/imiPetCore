@@ -38,8 +38,8 @@ object PetManager {
         val a = def.attribute
         val p = a.health
         val petData = PetData(name, id, following,
-            AttributeData(p, p, a.speed, a.attack), 0, def.exp,
-            skillSystemData = SkillSystemData(opt.skill.number))
+            AttributeData(p, p, a.speed, a.attack, a.hook), 0, def.exp,
+            skillSystemData = SkillSystemData(number = opt.skill.number))
         addPet(petData)
         if (following) callPet(name)
     }
@@ -313,7 +313,7 @@ object PetManager {
      *
      * @param effect 是否影响实体本身
      */
-    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String, effect: Boolean = true): String {
+    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String = "", effect: Boolean = true): String {
         when (operateType) {
             OperateType.REMOVE -> {
                 attribute.hook.removeIf { it.type == type && it.key == key }

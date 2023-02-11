@@ -10,6 +10,7 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.getAllSkills
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.common.script.kether.eval
+import cn.inrhor.imipetcore.server.ConfigRead
 import cn.inrhor.imipetcore.server.PluginLoader.loadTask
 import cn.inrhor.imipetcore.server.PluginLoader.logo
 import cn.inrhor.imipetcore.server.PluginLoader.unloadTask
@@ -39,13 +40,18 @@ object Command {
             dynamic("id") {
                 suggestion<CommandSender> { _, _ -> petOptionMap.keys.map { it } }
                 dynamic("name") {
-                    execute<CommandSender> { _, context, argument ->
-                        val player = Bukkit.getPlayer(context.argument(-2))?: return@execute run {
-                            // lang
+                    execute<CommandSender> { sender, context, argument ->
+                        val playerName = context["player"]
+                        val player = Bukkit.getPlayer(playerName)?: return@execute run {
+                            if (ConfigRead.debug) {
+                                sender.sendLang("PLAYER_NOT_ONLINE", playerName)
+                            }
                         }
                         val args = argument.split(" ")
-                        player.addPet(args[0], context.argument(-1))
-                        // lang
+                        player.addPet(args[0], context["id"])
+                        if (ConfigRead.debug) {
+                            sender.sendLang("SEND_PET_TO_PLAYER", playerName, args[0])
+                        }
                     }
                 }
             }
@@ -58,10 +64,10 @@ object Command {
             suggestion<CommandSender> { _, _ -> Bukkit.getOnlinePlayers().map { it.name } }
             dynamic("name") {
                 suggestion<CommandSender> { _, context ->
-                    Bukkit.getPlayer(context.argument(-1))?.getData()?.petDataList?.map { it.name }
+                    Bukkit.getPlayer(context["player"])?.getData()?.petDataList?.map { it.name }
                 }
                 execute<CommandSender> { _, context, argument ->
-                    val player = Bukkit.getPlayer(context.argument(-1))?: return@execute run {
+                    val player = Bukkit.getPlayer(context["player"])?: return@execute run {
                         // lang
                     }
                     val args = argument.split(" ")
@@ -78,31 +84,31 @@ object Command {
             suggestion<CommandSender> { _, _ -> Bukkit.getOnlinePlayers().map { it.name } }
             dynamic("name") {
                 suggestion<CommandSender> { _, context ->
-                    Bukkit.getPlayer(context.argument(-1))?.getData()?.petDataList?.map { it.name }
+                    Bukkit.getPlayer(context["player"])?.getData()?.petDataList?.map { it.name }
                 }
                 literal("add") {
                     dynamic("skill") {
                         suggestion<CommandSender> { _, _ -> skillOptionMap.keys.map { it } }
                         execute<CommandSender> { _, context, argument ->
-                            val player = Bukkit.getPlayer(context.argument(-3))?: return@execute run {
+                            val player = Bukkit.getPlayer(context["player"])?: return@execute run {
                                 // lang
                             }
                             val args = argument.split(" ")
-                            player.getPet(context.argument(-2)).addNewSkill(player, args[0])
+                            player.getPet(context["name"]).addNewSkill(player, args[0])
                         }
                     }
                 }
                 literal("remove") {
                     dynamic("skill") {
                         suggestion<CommandSender> { _, context ->
-                            Bukkit.getPlayer(context.argument(-3))?.getPet(context.argument(-2))?.getAllSkills()?.map { it.id }
+                            Bukkit.getPlayer(context["player"])?.getPet(context["name"])?.getAllSkills()?.map { it.id }
                         }
                         execute<CommandSender> { _, context, argument ->
-                            val player = Bukkit.getPlayer(context.argument(-3))?: return@execute run {
+                            val player = Bukkit.getPlayer(context["player"])?: return@execute run {
                                 // lang
                             }
                             val args = argument.split(" ")
-                            player.getPet(context.argument(-2)).removeSkill(player, args[0])
+                            player.getPet(context["name"]).removeSkill(player, args[0])
                         }
                     }
                 }

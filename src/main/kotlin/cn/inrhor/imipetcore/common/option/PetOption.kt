@@ -22,8 +22,18 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
                 val action: MutableList<ActionAiOption> = mutableListOf(),
                 val item: ItemElement = ItemElement(),
                 val trigger: MutableList<TriggerOption> = mutableListOf(),
-                val skill: SkillDataOption = SkillDataOption()
-)
+                val skill: SkillDataOption = SkillDataOption(), val addon: MutableList<Addon> = mutableListOf())
+
+class Addon(val type: AddonType = AddonType.NAME, val select: AddonSelect = AddonSelect.ADYESHACH,
+            val height: Double = 2.0, val lines: List<String> = listOf())
+
+enum class AddonType {
+    NAME
+}
+
+enum class AddonSelect {
+    ADYESHACH, DECENT_HOLOGRAMS
+}
 
 class SkillDataOption(val number: Int = 3)
 
@@ -55,7 +65,7 @@ class ActionAiOption(val id: String = "null", val priority: Int = 10)
 /**
  * option.default
  */
-class DefaultOption(val displayName: String = "", val attribute: OptionAttribute = OptionAttribute(),
+class DefaultOption(val attribute: OptionAttribute = OptionAttribute(),
                     val exp: Int = 100, val level: Int = 100
 )
 

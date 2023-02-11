@@ -2,7 +2,7 @@ package cn.inrhor.imipetcore.api.manager
 
 import cn.inrhor.imipetcore.common.database.data.HookAttribute
 import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.server.PluginLoader.attributePlus
+import cn.inrhor.imipetcore.server.ReadManager.attributePlus
 import org.bukkit.entity.LivingEntity
 import org.serverct.ersha.api.AttributeAPI
 import org.serverct.ersha.attribute.data.AttributeData

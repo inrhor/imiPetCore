@@ -5,7 +5,7 @@ import cn.inrhor.imipetcore.api.manager.DisguiseManager.lookDisguise
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.common.database.Database
-import cn.inrhor.imipetcore.server.PluginLoader.authMeLoad
+import cn.inrhor.imipetcore.server.ReadManager.authMeLoad
 import fr.xephi.authme.events.LoginEvent
 import fr.xephi.authme.events.RegisterEvent
 import org.bukkit.entity.Player

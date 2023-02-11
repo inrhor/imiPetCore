@@ -35,6 +35,8 @@ taboolib {
             name("UiUniverse").optional(true)
             name("ProtocolLib").optional(true)
             name("MMOItems").optional(true)
+            name("Adyeshach").optional(true)
+            name("DecentHolograms").optional(true)
         }
     }
     classifier = null
@@ -45,6 +47,7 @@ repositories {
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/") // ProtocolLib
     maven("https://repo.codemc.org/repository/maven-public/") // authMe
+    maven("https://jitpack.io") // DecentHolograms
 }
 
 dependencies {
@@ -58,6 +61,8 @@ dependencies {
     compileOnly("public:ModelEngine:3.1.2")
     compileOnly("fr.xephi:authme:5.6.0-beta2")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
+    compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-4")
+    compileOnly("com.github.decentsoftware-eu:decentholograms:2.7.11")
     compileOnly(fileTree("libs"))
 }
 

@@ -1,7 +1,7 @@
 package cn.inrhor.imipetcore.common.hook.protocol
 
 import cn.inrhor.imipetcore.common.nms.NMS
-import cn.inrhor.imipetcore.server.PluginLoader.protocolLibLoad
+import cn.inrhor.imipetcore.server.ReadManager.protocolLibLoad
 import cn.inrhor.imipetcore.server.ReadManager.major
 import cn.inrhor.imipetcore.server.ReadManager.minor
 import cn.inrhor.imipetcore.util.PositionUtil.rotate

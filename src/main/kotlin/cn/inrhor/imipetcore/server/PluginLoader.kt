@@ -25,19 +25,6 @@ import taboolib.module.lang.sendLang
  */
 object PluginLoader {
 
-    val attributePlus by lazy {
-        Bukkit.getPluginManager().getPlugin("AttributePlus") != null
-    }
-
-    val authMeLoad by lazy {
-        Bukkit.getPluginManager().getPlugin("AuthMe") != null
-    }
-
-    val protocolLibLoad by lazy {
-        Bukkit.getPluginManager().getPlugin("ProtocolLib") != null
-                && ConfigRead.nms == "mod"
-    }
-
     @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()
@@ -55,6 +42,7 @@ object PluginLoader {
             a()
         } catch (e: Exception) {
             warning("加载配置文件出错，请检查${yaml}配置")
+            error(e.localizedMessage)
         }
     }
 
