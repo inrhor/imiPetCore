@@ -1,6 +1,7 @@
 package cn.inrhor.imipetcore.common.database
 
 import cn.inrhor.imipetcore.api.event.PetChangeEvent
+import cn.inrhor.imipetcore.common.database.data.AttributeHookData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.database.type.*

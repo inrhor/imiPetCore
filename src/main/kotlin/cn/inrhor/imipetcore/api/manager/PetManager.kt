@@ -4,14 +4,13 @@ import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
 import cn.inrhor.imipetcore.api.entity.PetEntity
 import cn.inrhor.imipetcore.api.event.*
+import cn.inrhor.imipetcore.api.manager.AttributeManager.loadAttributeData
 import cn.inrhor.imipetcore.api.manager.MetaManager.setMeta
 import cn.inrhor.imipetcore.api.manager.ModelManager.delDriveRide
 import cn.inrhor.imipetcore.api.manager.ModelManager.driveRide
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
-import cn.inrhor.imipetcore.common.database.data.AttributeData
-import cn.inrhor.imipetcore.common.database.data.PetData
-import cn.inrhor.imipetcore.common.database.data.SkillSystemData
+import cn.inrhor.imipetcore.common.database.data.*
 import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
@@ -39,8 +38,8 @@ object PetManager {
         val a = def.attribute
         val p = a.health
         val petData = PetData(name, id, following,
-            AttributeData(p, p, a.speed, a.attack, a.attack_speed), 0, def.exp,
-            skillSystemData = SkillSystemData(opt.skill.number))
+            AttributeData(p, p, a.speed, a.attack, a.hook), 0, def.exp,
+            skillSystemData = SkillSystemData(number = opt.skill.number))
         addPet(petData)
         if (following) callPet(name)
     }
@@ -224,48 +223,43 @@ object PetManager {
     /**
      * 设置宠物当前血量
      */
-    fun Player.setCurrentHP(petData: PetData, value: Double = petData.attribute.currentHP, effect: Boolean = false, call: Boolean = true) {
+    fun Player.setCurrentHP(petData: PetData, value: Double = petData.attribute.currentHP, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.currentHP = value
-        if (effect) petData.petEntity?.entity?.health = value
+        petData.petEntity?.entity?.health = value
         if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物最大血量
      */
-    fun Player.setMaxHP(petData: PetData, value: Double = petData.attribute.maxHP, effect: Boolean = false, call: Boolean = true) {
+    fun Player.setMaxHP(petData: PetData, value: Double = petData.attribute.maxHP, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.maxHP = value
-        if (effect) petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = value
+        petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue = value
         if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物攻击属性
      */
-    fun Player.setPetAttack(petData: PetData,attack: Double) {
+    fun Player.setPetAttack(petData: PetData, attack: Double = petData.attribute.attack, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.attack = attack
-        PetChangeEvent(this, petData).call()
+        petData.petEntity?.entity?.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue = attack
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
      * 设置宠物行走速度
      */
-    fun Player.setPetSpeed(petData: PetData,speed: Double) {
+    fun Player.setPetSpeed(petData: PetData, speed: Double = petData.attribute.speed, call: Boolean = true) {
         val attribute = petData.attribute
         attribute.speed = speed
-        PetChangeEvent(this, petData).call()
-    }
-
-    /**
-     * 设置宠物攻击速度
-     */
-    fun Player.setPetAttackSpeed(petData: PetData,attack_speed: Int) {
-        val attribute = petData.attribute
-        attribute.attack_speed = attack_speed
-        PetChangeEvent(this, petData).call()
+        val entity = petData.petEntity?.entity
+        entity?.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue = speed/10
+        entity?.getAttribute(Attribute.GENERIC_FLYING_SPEED)?.baseValue = speed/10
+        if (call) PetChangeEvent(this, petData).call()
     }
 
     /**
@@ -312,6 +306,36 @@ object PetManager {
     fun PetData.hasPassenger(): Boolean {
         val entity = petEntity?.entity?: return false
         return entity.passengers.isNotEmpty()
+    }
+
+    /**
+     * 操作宠物挂钩属性数据
+     *
+     * @param effect 是否影响实体本身
+     */
+    fun PetData.hookAttribute(player: Player, operateType: OperateType, type: HookAttribute, key: String, value: String = "", effect: Boolean = true): String {
+        when (operateType) {
+            OperateType.REMOVE -> {
+                attribute.hook.removeIf { it.type == type && it.key == key }
+            }
+            OperateType.SET -> {
+                attribute.hook.removeIf { it.type == type && it.key == key }
+                attribute.hook.add(AttributeHookData(type, key, value))
+            }
+            OperateType.GET -> {
+                val hook = attribute.hook.firstOrNull { it.type == type && it.key == key }
+                return hook?.value ?: ""
+            }
+        }
+        if (effect) {
+            petEntity?.entity?.loadAttributeData(this)
+        }
+        PetChangeEvent(player, this).call()
+        return ""
+    }
+
+    enum class OperateType {
+        SET, REMOVE, GET
     }
 
 }

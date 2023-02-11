@@ -31,9 +31,9 @@ object ModelManager {
     val modelLoader = ModelLoader()
 
     /**
-     * 显示模型，名称
+     * 显示模型
      */
-    fun Entity.display(modelID: String, init: Boolean = false, name: String = "", select: ModelSelect = ModelSelect.MODEL_ENGINE) {
+    fun Entity.display(modelID: String, init: Boolean = false, select: ModelSelect = ModelSelect.MODEL_ENGINE) {
         when (select) {
             ModelSelect.MODEL_ENGINE -> {
                 if (modelLoader.modelEngine) {
@@ -42,37 +42,30 @@ object ModelManager {
                         if (init) ModelEngineAPI.createModeledEntity(this) else ModelEngineAPI.getModeledEntity(uniqueId)
                     modelEntity?.addModel(active, true)
                     modelEntity?.isBaseEntityVisible = false
-                    if (name.isNotEmpty()) {
-                        val nameHandle = active?.nametagHandler?.bones?.get("name")
-                        nameHandle?.customName = name // 标签 tag_name
-                        nameHandle?.isCustomNameVisible = true
-                    }
-                    return
                 }
             }
             ModelSelect.ORANGE_ENGINE -> {
-                submit(delay = 10L) {
-                    if (modelLoader.orangeEngine) {
-                        val manager = OrangeEngineAPI.getModelManager()?: return@submit
+                if (modelLoader.orangeEngine) {
+                    val manager = OrangeEngineAPI.getModelManager()
+                    if (manager != null) {
                         manager.addNewModelEntity(uniqueId, modelID)
+                    }else {
+                        error("OrangeEngineAPI 不可使用")
                     }
                 }
             }
             ModelSelect.GERM_ENGINE -> {
                 if (modelLoader.germEngine) {
                     customName = modelID
-                    return
                 }
             }
             ModelSelect.DRAGON_CORE -> {
                 if (modelLoader.dragonCore) {
                     ModelAPI.setEntityModel(uniqueId, modelID)
-                    return
                 }
             }
+            else -> {}
         }
-        customName = name
-        isCustomNameVisible = true
     }
 
     /**

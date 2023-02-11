@@ -1,24 +1,28 @@
 package cn.inrhor.imipetcore.api.entity.ai.universal
 
 import cn.inrhor.imipetcore.api.entity.PetEntity
+import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.common.location.distanceLoc
 import taboolib.module.ai.navigationMove
 
 class UniversalAiWalk(val petEntity: PetEntity): UniversalAi() {
 
+    val owner = petEntity.owner
+    val petData = petEntity.petData
+    val pet = petEntity.entity
+
     override fun shouldExecute(): Boolean {
-        val owner = petEntity.owner
-        return !petEntity.petData.isDead() && owner.isOnline && !owner.isDead &&
-                (petEntity.entity?.distanceLoc(owner)?: 0.0) > 6.0
+        return !petData.isDead() && owner.isOnline && !owner.isDead &&
+                (pet?.distanceLoc(owner)?: 0.0) > 6.0
     }
 
-    override fun startTask() {
-        val pet = petEntity.entity?: return
-        val owner = petEntity.owner
+    override fun updateTask() {
+        pet?: return
+        pet.attackEntity(null)
         if (pet.distanceLoc(owner) > 16.0) {
             pet.teleport(owner)
         }else {
-            pet.navigationMove(owner.location, petEntity.petData.attribute.speed)
+            pet.navigationMove(owner.location, 1.2)
         }
     }
 

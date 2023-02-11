@@ -5,6 +5,11 @@ import taboolib.module.configuration.ConfigNode
 object ConfigRead {
 
     @ConfigNode("nms")
-    val nms = "taboolib"
+    var nms = "taboolib"
+        private set
+
+    @ConfigNode("debug")
+    var debug = false
+        private set
 
 }

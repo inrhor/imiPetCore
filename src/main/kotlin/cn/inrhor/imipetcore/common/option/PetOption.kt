@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.option
 
+import cn.inrhor.imipetcore.common.database.data.AttributeHookData
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.script.kether.evalString
@@ -21,8 +22,18 @@ class PetOption(val id: String = "", val default: DefaultOption = DefaultOption(
                 val action: MutableList<ActionAiOption> = mutableListOf(),
                 val item: ItemElement = ItemElement(),
                 val trigger: MutableList<TriggerOption> = mutableListOf(),
-                val skill: SkillDataOption = SkillDataOption()
-)
+                val skill: SkillDataOption = SkillDataOption(), val addon: MutableList<Addon> = mutableListOf())
+
+class Addon(val type: AddonType = AddonType.NAME, val select: AddonSelect = AddonSelect.ADYESHACH,
+            val height: Double = 2.0, val lines: List<String> = listOf())
+
+enum class AddonType {
+    NAME
+}
+
+enum class AddonSelect {
+    ADYESHACH, DECENT_HOLOGRAMS
+}
 
 class SkillDataOption(val number: Int = 3)
 
@@ -54,7 +65,7 @@ class ActionAiOption(val id: String = "null", val priority: Int = 10)
 /**
  * option.default
  */
-class DefaultOption(val displayName: String = "", val attribute: OptionAttribute = OptionAttribute(),
+class DefaultOption(val attribute: OptionAttribute = OptionAttribute(),
                     val exp: Int = 100, val level: Int = 100
 )
 
@@ -62,8 +73,7 @@ class DefaultOption(val displayName: String = "", val attribute: OptionAttribute
  * option.default.attribute
  */
 class OptionAttribute(val health: Double = 20.0, val speed: Double = 1.0,
-                      val attack: Double = 0.0,
-                      val attack_speed: Int = 2)
+                      val attack: Double = 0.0, val hook: MutableList<AttributeHookData> = mutableListOf())
 
 /**
  * 宠物配置model
@@ -88,7 +98,6 @@ class TriggerOption(val type: Type = Type.LEVEL_UP, val script: String = "") {
             rootFrame().variables()["@PetData"] = petData
             rootFrame().variables()["pet_level"] = petData.level
             rootFrame().variables()["pet_attack"] = att.attack
-            rootFrame().variables()["pet_attack_speed"] = att.attack_speed
             rootFrame().variables()["pet_speed"] = att.speed
             rootFrame().variables()["pet_current_exp"] = petData.currentExp
             rootFrame().variables()["pet_max_exp"] = petData.maxExp

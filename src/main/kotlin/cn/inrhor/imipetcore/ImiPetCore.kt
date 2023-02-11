@@ -11,7 +11,7 @@ import taboolib.platform.BukkitPlugin
  */
 object ImiPetCore : Plugin() {
 
-    @Config(migrate = true)
+    @Config(migrate = true, autoReload = true)
     lateinit var config: Configuration
         private set
 

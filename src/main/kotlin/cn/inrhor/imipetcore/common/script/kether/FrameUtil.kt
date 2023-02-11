@@ -16,6 +16,12 @@ fun ScriptFrame.selectSkillData() = variables().get<SkillData>("@PetSkillData")
 fun ScriptFrame.selectIdSkill() = variables().get<String>("@IdSkill")
     .orElse(null)?: error("unknown @IdSkill")
 
+fun ScriptFrame.attributeHookSelect() = variables().get<String>("@AttributeHook")
+    .orElse(null)?: error("please select attribute hook")
+
+fun ScriptFrame.attributeHookKey() = variables().get<String>("@AttributeHookKey")
+    .orElse(null)?: error("please select attribute hook key")
+
 fun ScriptFrame.selectIndex() = variables().get<Int>("@Index")
     .orElse(null)?: 0
 

@@ -1,12 +1,16 @@
 pet:
   id: test
   default:
-    displayName: "{{pet name}}"
     attribute:
       health: 20.22
-      speed: 1.0
+      speed: 2.0
       attack: 0.3
-      attack_speed: 2
+      hook:
+        - key: 存储1
+          value: "Hello World"
+        - type: ATTRIBUTE_PLUS
+          key: 物理防御
+          value: "2.1"
     exp: 30
     # 等级上限
     level: 66
@@ -16,6 +20,13 @@ pet:
         pet max_exp set "$ 30*(pet_level*pet_level*pet_level+5*pet_level)-10"
         pet attribute attack set pet_attack+0.3*pet_level
   entityType: PIG
+  addon:
+    - type: NAME
+      select: ADYESHACH
+      height: 2.0
+      lines:
+        - "{{pet name}}"
+        - "Lv.{{pet level}}"
   action:
     - id: attack
       priority: 11

@@ -5,6 +5,9 @@ LOADER_INFO:
   - "&7[ &ci &7]&r  ┝  &3正在加载插件  &f{0}"
   - "&7[ &ci &7]&r  ┝  &3当前插件版本  &f{1}"
 
+PLAYER_NOT_ONLINE: "&c玩家 &f{0} &c不在线"
+SEND_PET_TO_PLAYER: "&6已发给玩家 &f{0} &6宠物 &f{1}"
+
 COMMAND_RELOAD: "&7&l[ &c&li &7&l]&f 已重载 &3&lImiPetCore &f插件"
 
 PET_IS_DEAD:

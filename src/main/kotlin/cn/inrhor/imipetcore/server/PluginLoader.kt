@@ -11,6 +11,7 @@ import cn.inrhor.imipetcore.common.database.type.DatabaseType
 import cn.inrhor.imipetcore.common.file.loadAction
 import cn.inrhor.imipetcore.common.file.loadPet
 import cn.inrhor.imipetcore.common.file.loadSkill
+import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity
 import org.bukkit.Bukkit
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -24,15 +25,6 @@ import taboolib.module.lang.sendLang
  */
 object PluginLoader {
 
-    val authMeLoad by lazy {
-        Bukkit.getPluginManager().getPlugin("AuthMe") != null
-    }
-
-    val protocolLibLoad by lazy {
-        Bukkit.getPluginManager().getPlugin("ProtocolLib") != null
-                && ConfigRead.nms == "mod"
-    }
-
     @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()
@@ -45,29 +37,30 @@ object PluginLoader {
         unloadTask()
     }
 
+    private fun yamlLoad(yaml: String, a: () -> Unit) {
+        try {
+            a()
+        } catch (e: Exception) {
+            warning("加载配置文件出错，请检查${yaml}配置")
+            error(e.localizedMessage)
+        }
+    }
+
     fun loadTask() {
         val pluginCon = ImiPetCore.plugin.description
         console().sendLang("LOADER_INFO", pluginCon.name, pluginCon.version)
+
         if (ImiPetCore.config.getString("data.type")?.uppercase() == "MYSQL") {
             DatabaseManager.type = DatabaseType.MYSQL
         }
         Database.initDatabase()
+        ProtocolEntity.initEntityMap()
         ModelManager.modelLoader.load()
-        try {
-            loadPet()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查宠物配置")
-        }
-        try {
-            loadAction()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查行为配置")
-        }
-        try {
-            loadSkill()
-        }catch (ex: Exception) {
-            warning("加载配置文件出错，请检查技能配置")
-        }
+
+        yamlLoad("宠物") { loadPet() }
+        yamlLoad("行为") { loadAction() }
+        yamlLoad("技能") { loadSkill() }
+
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)
             it.getData().petDataList.forEach { petData ->

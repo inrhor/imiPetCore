@@ -19,8 +19,7 @@ fun String.eval(variable: (ScriptContext) -> Unit, get: (Any?) -> Any, def: Any)
             get(it)
         }.getNow(def)
     }catch (ex: LocalizedException) {
-        ex.printStackTrace()
-        def
+        error(ex.localizedMessage)
     }
 }
 
@@ -32,8 +31,7 @@ fun Player.eval(script: String, variable: (ScriptContext) -> Unit, get: (Any?) -
             get(it)
         }.getNow(def)
     }catch (ex: LocalizedException) {
-        ex.printStackTrace()
-        def
+        error(ex.localizedMessage)
     }
 }
 
@@ -42,6 +40,14 @@ fun Player.eval(script: String) {
 }
 
 class UiVariable(val name: String = "", val default: Any)
+
+fun Player.evalStrPetData(scripts: List<String>, petData: PetData, vararg variable: UiVariable): List<String> {
+    val list = mutableListOf<String>()
+    scripts.forEach {
+        list.add(evalStrPetData(it, petData, *variable))
+    }
+    return list
+}
 
 fun Player.evalStrPetData(script: String, petData: PetData, vararg variable: UiVariable): String {
     var text = script

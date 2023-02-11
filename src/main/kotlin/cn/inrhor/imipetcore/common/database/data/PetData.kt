@@ -35,7 +35,24 @@ data class PetData(
 /**
  * 属性数据
  */
-data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0, var speed: Double = 1.0, var attack: Double = 0.0, var attack_speed: Int = 2)
+data class AttributeData(var currentHP: Double = 20.0, var maxHP: Double = 20.0, var speed: Double = 1.0,
+                         var attack: Double = 0.0, val hook: MutableList<AttributeHookData> = mutableListOf())
+
+/**
+ * 其它属性系统数据
+ */
+class AttributeHookData(var type: HookAttribute = HookAttribute.STORAGE,
+                        var key: String = "", var value: String = "")
+
+/**
+ * 挂钩属性枚举类
+ *
+ * @param int 数据库索引
+ */
+enum class HookAttribute(val int: Int) {
+    STORAGE(0),
+    ATTRIBUTE_PLUS(1),
+}
 
 /**
  * 技能系统数据

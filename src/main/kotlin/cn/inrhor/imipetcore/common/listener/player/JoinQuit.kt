@@ -1,10 +1,11 @@
 package cn.inrhor.imipetcore.common.listener.player
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.api.manager.DisguiseManager.lookDisguise
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.common.database.Database
-import cn.inrhor.imipetcore.server.PluginLoader.authMeLoad
+import cn.inrhor.imipetcore.server.ReadManager.authMeLoad
 import fr.xephi.authme.events.LoginEvent
 import fr.xephi.authme.events.RegisterEvent
 import org.bukkit.entity.Player
@@ -28,6 +29,7 @@ object JoinQuit {
 
     private fun spawnPet(player: Player) {
         Database.database.pull(player.uniqueId)
+        player.lookDisguise()
         submit(delay = 10L) {
             player.getData().petDataList.forEach {
                 if (it.isFollow()) player.callPet(it.name)

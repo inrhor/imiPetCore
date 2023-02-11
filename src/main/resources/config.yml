@@ -10,3 +10,6 @@ data:
   table: imipetcore_table
 
 nms: taboolib
+
+# 调式信息模式
+debug: false
