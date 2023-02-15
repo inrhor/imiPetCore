@@ -40,7 +40,7 @@ taboolib {
         }
     }
     classifier = null
-    version = "6.0.10-86"
+    version = "6.0.10-91"
 }
 
 repositories {

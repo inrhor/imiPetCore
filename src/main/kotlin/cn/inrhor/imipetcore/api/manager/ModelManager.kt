@@ -48,7 +48,16 @@ object ModelManager {
                 if (modelLoader.orangeEngine) {
                     val manager = OrangeEngineAPI.getModelManager()
                     if (manager != null) {
-                        manager.addNewModelEntity(uniqueId, modelID)
+                        val m = manager.getModelEntity(uniqueId)
+                        if (m != null) {
+                            if (!m.modelData.equals(modelID)) {
+                                m.setModel(modelID)
+                            }
+                            m.overwriteBoundingBox(true).setVisible(true)
+                        }else {
+                            manager.addNewModelEntity(uniqueId, modelID)
+                                .overwriteBoundingBox(true).setVisible(true)
+                        }
                     }else {
                         error("OrangeEngineAPI 不可使用")
                     }

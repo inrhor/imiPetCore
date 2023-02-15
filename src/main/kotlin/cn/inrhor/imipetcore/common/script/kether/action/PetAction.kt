@@ -1,14 +1,17 @@
 package cn.inrhor.imipetcore.common.script.kether.action
 
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.api.manager.ModelManager.playAnimation
 import cn.inrhor.imipetcore.api.manager.PetManager
 import cn.inrhor.imipetcore.api.manager.PetManager.addCurrentHP
+import cn.inrhor.imipetcore.api.manager.PetManager.allPetsName
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.changePetId
 import cn.inrhor.imipetcore.api.manager.PetManager.delCurrentHP
 import cn.inrhor.imipetcore.api.manager.PetManager.deletePet
 import cn.inrhor.imipetcore.api.manager.PetManager.driveRidePet
+import cn.inrhor.imipetcore.api.manager.PetManager.followPetsName
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.PetManager.getPet
 import cn.inrhor.imipetcore.api.manager.PetManager.hasPassenger
@@ -33,7 +36,6 @@ import cn.inrhor.imipetcore.common.script.kether.player
 import cn.inrhor.imipetcore.common.script.kether.selectPetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
-import taboolib.common.platform.function.info
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
@@ -80,6 +82,14 @@ class PetAction {
                 case("look") {
                     val en = it.next(ArgTypes.ACTION)
                     ActionPetLook(en)
+                }
+                case("attack") {
+                    val en = it.next(ArgTypes.ACTION)
+                    actionNow {
+                        newFrame(en).run<Entity>().thenApply { e ->
+                            selectPetData().petEntity?.entity?.attackEntity(e)
+                        }
+                    }
                 }
                 case("drive") {
                     when (it.expects("type", "has")) {
@@ -130,7 +140,7 @@ class PetAction {
                 case("follow") {
                     try {
                         it.mark()
-                        when (it.expects("set", "lang")) {
+                        when (it.expects("set", "lang", "list")) {
                             "set" -> {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
@@ -144,6 +154,11 @@ class PetAction {
                                     player().asLangText("PET_FOLLOW_" + selectPetData().isFollow().toString().uppercase())
                                 }
                             }
+                            "list" -> {
+                                actionNow {
+                                    player().followPetsName()
+                                }
+                            }
                             else -> error("pet follow ?")
                         }
                     }catch (ex: Exception) {
@@ -151,6 +166,11 @@ class PetAction {
                         actionNow {
                             selectPetData().isFollow()
                         }
+                    }
+                }
+                case("list") {
+                    actionNow {
+                        player().allPetsName()
                     }
                 }
                 case("name") {

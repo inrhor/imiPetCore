@@ -334,6 +334,20 @@ object PetManager {
         return ""
     }
 
+    /**
+     * @return 获取玩家的跟随宠物名称列表
+     */
+    fun Player.followPetsName(): List<String> {
+        return followingPetData().map { it.name }
+    }
+
+    /**
+     * @return 获取玩家所有宠物的名称列表
+     */
+    fun Player.allPetsName(): List<String> {
+        return getData().petDataList.map { it.name }
+    }
+
     enum class OperateType {
         SET, REMOVE, GET
     }
