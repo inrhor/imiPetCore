@@ -131,6 +131,13 @@ object SkillManager {
     }
 
     /**
+     * @return 获得宠物技能点
+     */
+    fun PetData.getPoint(): Int {
+        return skillSystemData.point
+    }
+
+    /**
      * 为宠物技能添加技能点
      *
      * @param del 是否扣除宠物技能点

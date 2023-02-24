@@ -102,6 +102,7 @@ object ModelManager {
                     ModelAPI.removeEntityModel(uniqueId)
                 }
             }
+            else -> {}
         }
     }
 
@@ -156,6 +157,7 @@ object ModelManager {
                     ModelAPI.setEntityAnimation(this, action, state.time)
                 }
             }
+            else -> {}
         }
     }
 

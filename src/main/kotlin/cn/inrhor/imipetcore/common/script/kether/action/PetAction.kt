@@ -28,6 +28,7 @@ import cn.inrhor.imipetcore.api.manager.PetManager.unDriveRidePet
 import cn.inrhor.imipetcore.api.manager.SkillManager.addNewSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.addPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.delPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.getPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.removeSkill
 import cn.inrhor.imipetcore.common.database.data.HookAttribute
 import cn.inrhor.imipetcore.common.script.kether.attributeHookKey
@@ -36,6 +37,7 @@ import cn.inrhor.imipetcore.common.script.kether.player
 import cn.inrhor.imipetcore.common.script.kether.selectPetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
+import taboolib.common.platform.function.submit
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
 import taboolib.library.kether.ParsedAction
@@ -132,9 +134,11 @@ class PetAction {
                     }
                 }
                 case("select") {
-                    val next = it.nextToken()
+                    val a = it.next(ArgTypes.ACTION)
                     actionNow {
-                        variables().set("@PetData", player().getPet(next))
+                        newFrame(a).run<String>().thenApply { e ->
+                            variables().set("@PetData", player().getPet(e))
+                        }
                     }
                 }
                 case("follow") {
@@ -145,7 +149,9 @@ class PetAction {
                                 val a = it.next(ArgTypes.ACTION)
                                 actionNow {
                                     newFrame(a).run<Any>().thenAccept { e ->
-                                        player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                                        submit {
+                                            player().callPet(selectPetData().name, Coerce.toBoolean(e))
+                                        }
                                     }
                                 }
                             }
@@ -219,7 +225,9 @@ class PetAction {
                 }
                 case("release") {
                     actionNow {
-                        player().deletePet(selectPetData().name)
+                        submit {
+                            player().deletePet(selectPetData().name)
+                        }
                     }
                 }
                 case("attribute") {
@@ -427,7 +435,7 @@ class PetAction {
                         }
                         "point" -> {
                             it.mark()
-                            when (it.expects("add", "del")) {
+                            when (it.expects("add", "del", "get")) {
                                 "add" -> {
                                     val a = it.next(ArgTypes.ACTION)
                                     actionNow {
@@ -442,6 +450,11 @@ class PetAction {
                                         newFrame(a).run<Any>().thenAccept { e ->
                                             selectPetData().delPoint(player(), Coerce.toInteger(e))
                                         }
+                                    }
+                                }
+                                "get" -> {
+                                    actionNow {
+                                        selectPetData().getPoint()
                                     }
                                 }
                                 else -> error("unknown skill point ???")

@@ -9,6 +9,7 @@ import cn.inrhor.imipetcore.common.database.Database
 import cn.inrhor.imipetcore.common.database.type.DatabaseManager
 import cn.inrhor.imipetcore.common.database.type.DatabaseType
 import cn.inrhor.imipetcore.common.file.loadAction
+import cn.inrhor.imipetcore.common.file.loadInvero
 import cn.inrhor.imipetcore.common.file.loadPet
 import cn.inrhor.imipetcore.common.file.loadSkill
 import cn.inrhor.imipetcore.common.hook.protocol.ProtocolEntity
@@ -60,6 +61,8 @@ object PluginLoader {
         yamlLoad("宠物") { loadPet() }
         yamlLoad("行为") { loadAction() }
         yamlLoad("技能") { loadSkill() }
+
+        loadInvero()
 
         Bukkit.getOnlinePlayers().forEach {
             Database.database.pull(it.uniqueId)

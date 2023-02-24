@@ -20,7 +20,9 @@ import cn.inrhor.imipetcore.common.script.kether.*
 import cn.inrhor.imipetcore.common.script.kether.player
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
+import taboolib.library.xseries.XMaterial
 import taboolib.module.kether.*
+import taboolib.platform.util.buildItem
 
 class SkillAction {
 
@@ -30,9 +32,11 @@ class SkillAction {
         fun parserSkill() = scriptParser {
             it.switch {
                 case("select") {
-                    val id = it.nextToken()
+                    val a = it.next(ArgTypes.ACTION)
                     actionNow {
-                        variables().set("@IdSkill", id)
+                        newFrame(a).run<String>().thenApply { e ->
+                            variables().set("@IdSkill", e)
+                        }
                     }
                 }
                 case("coolDown") {
@@ -51,9 +55,11 @@ class SkillAction {
         fun parserPetSkill() = scriptParser {
             it.switch {
                 case("select") {
-                    val id = it.nextToken()
+                    val a = it.next(ArgTypes.ACTION)
                     actionNow {
-                        variables().set("@PetSkillData", id.skillData(selectPetData()))
+                        newFrame(a).run<String>().thenApply { e ->
+                            variables().set("@PetSkillData", e.skillData(selectPetData()))
+                        }
                     }
                 }
                 case("id") {

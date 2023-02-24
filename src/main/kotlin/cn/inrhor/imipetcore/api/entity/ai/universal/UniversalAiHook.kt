@@ -12,7 +12,7 @@ class UniversalAiHook(val actionOption: ActionOption, val petEntity: PetEntity, 
 
     private fun eval(script: String): CompletableFuture<Any?> {
         val owner = petEntity.owner
-        return KetherShell.eval("all [ $script ]", sender = adaptPlayer(owner)) {
+        return KetherShell.eval(script, sender = adaptPlayer(owner)) {
             rootFrame().variables()["@PetData"] = petEntity.petData
             rootFrame().variables()["@TaskTime"] = time
         }

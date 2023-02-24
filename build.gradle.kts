@@ -2,7 +2,7 @@ plugins {
     `java-library`
     `maven-publish`
     id("io.izzel.taboolib") version "1.56"
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    id("org.jetbrains.kotlin.jvm") version "1.8.0"
 }
 
 taboolib {
@@ -37,6 +37,7 @@ taboolib {
             name("MMOItems").optional(true)
             name("Adyeshach").optional(true)
             name("DecentHolograms").optional(true)
+            name("Invero").optional(true)
         }
     }
     classifier = null
@@ -63,6 +64,10 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-4")
     compileOnly("com.github.decentsoftware-eu:decentholograms:2.7.11")
+    compileOnly("cc.trixey.invero:framework-common:1.0.0-canary-6")
+    compileOnly("cc.trixey.invero:framework-bukkit:1.0.0-canary-6")
+    compileOnly("cc.trixey.invero:module-common:1.0.0-canary-6")
+    compileOnly("cc.trixey.invero:module-core:1.0.0-canary-6")
     compileOnly(fileTree("libs"))
 }
 
@@ -101,16 +106,4 @@ publishing {
             groupId = project.group.toString()
         }
     }
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir("src/main")
-        }
-    }
-}
-
-java {
-    withSourcesJar()
 }

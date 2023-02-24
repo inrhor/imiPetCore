@@ -45,6 +45,11 @@ object PetManager {
     }
 
     /**
+     * @return 获得玩家所有宠物
+     */
+    fun Player.getPets() = getData().petDataList
+
+    /**
      * 添加宠物数据
      *
      * @param petData

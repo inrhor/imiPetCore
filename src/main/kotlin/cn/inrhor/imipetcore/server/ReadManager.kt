@@ -41,4 +41,8 @@ object ReadManager {
         Bukkit.getPluginManager().getPlugin("DecentHolograms") != null
     }
 
+    val inveroLoad by lazy {
+        Bukkit.getPluginManager().getPlugin("Invero") != null
+    }
+
 }

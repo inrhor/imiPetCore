@@ -38,9 +38,9 @@ enum class AddonSelect {
 class SkillDataOption(val number: Int = 3)
 
 class ItemElement(
-    val material: String = "ZOMBIE_HEAD",
-    val name: String = "", val lore: List<String> = listOf(),
-    val modelData: Int = 0) {
+    var material: String = "ZOMBIE_HEAD",
+    var name: String = "", var lore: List<String> = listOf(),
+    var modelData: Int = 0) {
 
     fun itemStack(player: Player, variable: (ScriptContext) -> Unit): ItemStack = buildItem(XMaterial.valueOf(material)) {
         val a = this@ItemElement

@@ -1,4 +1,4 @@
-package cn.inrhor.imipetcore.common.hook
+package cn.inrhor.imipetcore.common.hook.protocol
 
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer

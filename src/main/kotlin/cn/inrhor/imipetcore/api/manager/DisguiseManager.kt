@@ -40,7 +40,6 @@ object DisguiseManager {
                     if (pet != null) {
                         if (pet.model().select == ModelSelect.COMMON) {
                             pet.entity?.let { entity ->
-                                val loc = entity.location
                                 destroyEntity(setOf(this))
                                 spawnEntity(setOf(this), entity.type.protocolEntityId())
                             }
