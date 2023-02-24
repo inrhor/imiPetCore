@@ -1,10 +1,14 @@
 package cn.inrhor.imipetcore.common.file
 
+import cc.trixey.invero.common.Invero
 import cn.inrhor.imipetcore.api.manager.OptionManager.save
+import cn.inrhor.imipetcore.common.hook.invero.PetGenerator
+import cn.inrhor.imipetcore.common.hook.invero.UiType
 import cn.inrhor.imipetcore.common.option.ActionOption
 import cn.inrhor.imipetcore.common.option.IconOption
 import cn.inrhor.imipetcore.common.option.PetOption
 import cn.inrhor.imipetcore.common.option.SkillOption
+import cn.inrhor.imipetcore.server.ReadManager.inveroLoad
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Configuration.Companion.getObject
 
@@ -51,5 +55,14 @@ fun loadSkill() {
             option.id = e
             option.save()
         }
+    }
+}
+
+/**
+ * 加载Invero Generator
+ */
+fun loadInvero() {
+    if (inveroLoad) {
+        Invero.API.registerElementGenerator("pets", PetGenerator(UiType.ALL_PET))
     }
 }
