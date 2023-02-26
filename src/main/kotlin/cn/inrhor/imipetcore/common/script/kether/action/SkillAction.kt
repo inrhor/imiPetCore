@@ -5,6 +5,7 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.addSkillPoint
 import cn.inrhor.imipetcore.api.manager.SkillManager.coolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.delCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.delSkillPoint
+import cn.inrhor.imipetcore.api.manager.SkillManager.getLoadSkills
 import cn.inrhor.imipetcore.api.manager.SkillManager.isCoolDown
 import cn.inrhor.imipetcore.api.manager.SkillManager.launchSkill
 import cn.inrhor.imipetcore.api.manager.SkillManager.loadSkill
@@ -152,6 +153,21 @@ class SkillAction {
                 case("load") {
                     actionNow {
                         selectPetData().loadSkill(player(), selectSkillData(), selectIndex())
+                    }
+                }
+                case("number") {
+                    when (it.expects("load", "data")) {
+                        "load" -> {
+                            actionNow {
+                                selectPetData().getLoadSkills().size
+                            }
+                        }
+                        "data" -> {
+                            actionNow {
+                                selectPetData().skillSystemData.number
+                            }
+                        }
+                        else -> error("unknown number ???")
                     }
                 }
                 case("unload") {

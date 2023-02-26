@@ -9,12 +9,11 @@ import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.option.ItemElement
 import cn.inrhor.imipetcore.common.option.SkillOption
 import cn.inrhor.imipetcore.common.script.kether.eval
+import cn.inrhor.imipetcore.server.ReadManager.mythicLoad
 import ink.ptms.um.Mythic
 import org.bukkit.entity.Player
-import taboolib.common5.Baffle
 import taboolib.common5.Coerce
 import taboolib.platform.util.sendLang
-import java.util.concurrent.TimeUnit
 
 /**
  * 宠物技能管理器
@@ -353,6 +352,9 @@ object SkillManager {
      */
     fun PetData.launchSkill(skillType: SkillType, skill: String, skillSelect: SkillSelect, skillData: SkillData) {
        fun launchMythicSkill() {
+           if (!mythicLoad) {
+               error("MythicMobs未安装")
+           }
            val entity = petEntity?.entity?: return
             when (skillSelect) {
                 SkillSelect.SELECT_TARGET -> {

@@ -48,7 +48,10 @@ repositories {
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/") // ProtocolLib
     maven("https://repo.codemc.org/repository/maven-public/") // authMe
-    maven("https://jitpack.io") // DecentHolograms
+    maven {
+        url = uri("http://106.13.64.5:8081/repository/maven-public/")
+        isAllowInsecureProtocol = true
+    }
 }
 
 dependencies {
@@ -63,11 +66,14 @@ dependencies {
     compileOnly("fr.xephi:authme:5.6.0-beta2")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-4")
-    compileOnly("com.github.decentsoftware-eu:decentholograms:2.7.11")
-    compileOnly("cc.trixey.invero:framework-common:1.0.0-canary-6")
-    compileOnly("cc.trixey.invero:framework-bukkit:1.0.0-canary-6")
-    compileOnly("cc.trixey.invero:module-common:1.0.0-canary-6")
-    compileOnly("cc.trixey.invero:module-core:1.0.0-canary-6")
+    compileOnly("cc.trixey.invero:framework-common:1.0.0-snapshot-1")
+    compileOnly("cc.trixey.invero:framework-bukkit:1.0.0-snapshot-1")
+    compileOnly("cc.trixey.invero:module-common:1.0.0-snapshot-1")
+    compileOnly("cc.trixey.invero:module-core:1.0.0-snapshot-1")
+    compileOnly("hiusers:attributeplus:3.3.0.6")
+    compileOnly("hiusers:DecentHolograms:2.7.11")
+    compileOnly("hiusers:DragonCore:2.5.6.6")
+    compileOnly("api:orangeengine:1.0.3")
     compileOnly(fileTree("libs"))
 }
 

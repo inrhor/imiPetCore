@@ -5,11 +5,10 @@ import cn.inrhor.imipetcore.api.manager.SkillManager.skillOption
 import cn.inrhor.imipetcore.common.database.data.PetData
 import cn.inrhor.imipetcore.common.database.data.SkillData
 import cn.inrhor.imipetcore.common.option.ItemElement
+import cn.inrhor.imipetcore.common.option.SkillOption
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import taboolib.library.xseries.XMaterial
 import taboolib.module.kether.ScriptContext
-import taboolib.platform.util.buildItem
 
 object IconManager {
 
@@ -24,6 +23,13 @@ object IconManager {
 
     fun SkillData.petVar(it: ScriptContext, petData: PetData) {
         it.rootFrame().variables()["@IdSkill"] = id
+        it.rootFrame().variables()["@PetData"] = petData
+        it.rootFrame().variables()["@PetSkillData"] = this
+    }
+
+    private fun SkillData.skillOptionDataVar(it: ScriptContext, petData: PetData, skillOption:
+    SkillOption) {
+        it.rootFrame().variables()["@IdSkill"] = skillOption.id
         it.rootFrame().variables()["@PetData"] = petData
         it.rootFrame().variables()["@PetSkillData"] = this
     }
@@ -59,6 +65,27 @@ object IconManager {
         }
         return item.itemStack(player) {
             petVar(it, petData)
+        }
+    }
+
+    /**
+     * @return 获取技能配置图标物品
+     */
+    fun SkillData.iconItem(player: Player, petData: PetData, skillOption: SkillOption): ItemStack {
+        val icon = skillOption.icon
+        val item = ItemElement(icon.material, modelData = icon.modelData)
+        if (icon.name.isNotEmpty()) {
+            item.name = icon.name
+        } else {
+            item.name = icon.name
+        }
+        if (icon.lore.isNotEmpty()) {
+            item.lore = icon.lore
+        } else {
+            item.lore = icon.lore
+        }
+        return item.itemStack(player) {
+            skillOptionDataVar(it, petData, skillOption)
         }
     }
 

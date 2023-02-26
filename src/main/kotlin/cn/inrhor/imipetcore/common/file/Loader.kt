@@ -62,15 +62,16 @@ fun loadSkill() {
  */
 fun loadInvero() {
     if (inveroLoad) {
-        UiTypePet.values().forEach { uiType ->
-            val g = PetGenerator()
-            g.uiType = uiType
-            Invero.API.registerElementGenerator(uiType.uiName(), g)
-        }
-        UiTypeSkill.values().forEach { uiType ->
-            val g = SkillGenerator()
-            g.uiType = uiType
-            Invero.API.registerElementGenerator(uiType.uiName(), g)
-        }
+        val api = Invero.API.getRegistry()
+        val a = "imiPetCore"
+        api.registerElementGenerator(a, UiTypePet.ALL_PET.uiName(), AllPetGenerator())
+        api.registerElementGenerator(a, UiTypePet.FOLLOW_PET.uiName(), FollowPetGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.LOAD.uiName(), LoadSkillGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.UNLOAD.uiName(), UnloadSkillGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.UPDATE.uiName(), UpdateSkillGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.POINT.uiName(), PointSkillGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.LOAD_SLOT.uiName(), LoadSkillGenerator())
+        api.registerElementGenerator(a, UiTypeSkill.UPDATE_SELECT.uiName(),
+            UpdateSelectSkillGenerator())
     }
 }

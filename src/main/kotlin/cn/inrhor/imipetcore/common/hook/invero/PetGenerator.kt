@@ -1,27 +1,23 @@
 package cn.inrhor.imipetcore.common.hook.invero
 
-import cc.trixey.invero.common.supplier.sourceObject
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.geneartor.ContextGenerator
 
 /**
  * 玩家的所有宠物容器
  */
-class PetGenerator: ContextGenerator() {
-
-    var uiType = UiTypePet.ALL_PET
+class AllPetGenerator: ContextGenerator() {
 
     override fun generate(context: Context) {
-        val player = context.player
+        generated = InvGenerator.petGenerate(context, UiTypePet.ALL_PET)
+    }
 
-        generated = uiType.list(player).map {
-            sourceObject {
-                // https://invero.trixey.cc/docs/advance/basic/context
-                // context set pet_data to element self_pet
-                put("self_pet", it) // 目的传递给下一个菜单
-                put("name", it.name)
-            }
-        }
+}
+
+class FollowPetGenerator: ContextGenerator() {
+
+    override fun generate(context: Context) {
+        generated = InvGenerator.petGenerate(context, UiTypePet.FOLLOW_PET)
     }
 
 }

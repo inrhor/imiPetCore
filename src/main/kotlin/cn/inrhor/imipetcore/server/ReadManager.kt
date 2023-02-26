@@ -45,4 +45,8 @@ object ReadManager {
         Bukkit.getPluginManager().getPlugin("Invero") != null
     }
 
+    val mythicLoad by lazy {
+        Bukkit.getPluginManager().getPlugin("MythicMobs") != null
+    }
+
 }
