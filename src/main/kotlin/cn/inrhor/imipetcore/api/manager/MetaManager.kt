@@ -40,6 +40,11 @@ object MetaManager {
     }
 
     /**
+     * 是否是宠物
+     */
+    fun Entity.isPet(): Boolean = getOwner() != null
+
+    /**
      * @return 宠物数据
      */
     fun Entity.getPetData(owner: Player): PetData? {

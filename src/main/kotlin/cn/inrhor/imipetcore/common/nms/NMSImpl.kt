@@ -2,7 +2,6 @@ package cn.inrhor.imipetcore.common.nms
 
 import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.addAi
 import cn.inrhor.imipetcore.api.entity.ai.nms.NmsAiGoal.versionPack
-import cn.inrhor.imipetcore.common.nms.DataSerializerUtil.createDataSerializer
 import cn.inrhor.imipetcore.server.ConfigRead.nms
 import cn.inrhor.imipetcore.server.ReadManager.isUniversal
 import cn.inrhor.imipetcore.server.ReadManager.major
@@ -23,6 +22,7 @@ import taboolib.library.reflex.Reflex.Companion.invokeConstructor
 import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.library.reflex.Reflex.Companion.unsafeInstance
+import taboolib.module.nms.dataSerializerBuilder
 import taboolib.module.nms.sendPacket
 
 class NMSImpl: NMS() {
@@ -48,7 +48,7 @@ class NMSImpl: NMS() {
         val pitch = (location.pitch * 256.0f / 360.0f).toInt().toByte()
         sendPacket(
             players,
-            PacketPlayOutSpawnEntity(createDataSerializer {
+            PacketPlayOutSpawnEntity(dataSerializerBuilder {
             writeVarInt(entityId)
             writeUUID(uuid)
             when (minor) {

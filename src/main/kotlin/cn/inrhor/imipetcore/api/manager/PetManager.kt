@@ -11,6 +11,8 @@ import cn.inrhor.imipetcore.api.manager.ModelManager.driveRide
 import cn.inrhor.imipetcore.api.manager.OptionManager.petOption
 import cn.inrhor.imipetcore.common.database.Database.Companion.database
 import cn.inrhor.imipetcore.common.database.data.*
+import cn.inrhor.imipetcore.common.option.AddonSelect
+import cn.inrhor.imipetcore.common.option.AddonType
 import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
@@ -203,6 +205,13 @@ object PetManager {
         submit(async = true, delay = 100L) {
             hurtEntity = null
         }
+    }
+
+    /**
+     * 宠物是否免疫玩家伤害
+     */
+    fun PetData.isInvulnerablePlayer(): Boolean {
+        return petOption().addon.find { it.type == AddonType.INVINCIBLE && it.select == AddonSelect.PLAYER } != null
     }
 
 

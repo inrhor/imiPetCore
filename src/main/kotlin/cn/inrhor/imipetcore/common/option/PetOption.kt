@@ -28,11 +28,11 @@ class Addon(val type: AddonType = AddonType.NAME, val select: AddonSelect = Addo
             val height: Double = 2.0, val lines: List<String> = listOf())
 
 enum class AddonType {
-    NAME
+    NAME, INVINCIBLE
 }
 
 enum class AddonSelect {
-    ADYESHACH, DECENT_HOLOGRAMS
+    ADYESHACH, DECENT_HOLOGRAMS, PLAYER
 }
 
 class SkillDataOption(val number: Int = 3)

@@ -1,7 +1,7 @@
 package cn.inrhor.imipetcore.common.listener.player
 
-import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
+import cn.inrhor.imipetcore.server.ReadManager.major
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChangedWorldEvent
@@ -19,6 +19,7 @@ object OwnerChangeWorld {
 
     @SubscribeEvent
     fun tp(ev: PlayerTeleportEvent) {
+        if (major <= 4) return
         val p = ev.player
         resetFollow(p)
     }

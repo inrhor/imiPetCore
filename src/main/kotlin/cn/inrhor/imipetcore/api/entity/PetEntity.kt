@@ -147,8 +147,10 @@ class PetEntity(val owner: Player, val petData: PetData) {
                                 }
                             }
                         }
+                        else -> {}
                     }
                 }
+                else -> {}
             }
         }
     }

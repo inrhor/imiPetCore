@@ -27,6 +27,8 @@ pet:
       lines:
         - "{{pet name}}"
         - "Lv.{{pet level}}"
+    - type: INVINCIBLE
+      select: PLAYER
   action:
     - id: attack
       priority: 11

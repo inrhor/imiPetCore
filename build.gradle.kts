@@ -41,13 +41,14 @@ taboolib {
         }
     }
     classifier = null
-    version = "6.0.10-119"
+    version = "6.0.12-15"
 }
 
 repositories {
     mavenCentral()
     maven("https://repo.dmulloy2.net/repository/public/") // ProtocolLib
     maven("https://repo.codemc.org/repository/maven-public/") // authMe
+    maven("https://mvnrepository.com/artifact/com.promcteam/proskillapi") // ProSkillAPI
     maven {
         url = uri("http://106.13.64.5:8081/repository/maven-public/")
         isAllowInsecureProtocol = true
@@ -74,6 +75,7 @@ dependencies {
     compileOnly("hiusers:DecentHolograms:2.7.11")
     compileOnly("hiusers:DragonCore:2.5.6.6")
     compileOnly("api:orangeengine:1.0.3")
+    compileOnly("hiusers:proskillapi:1.1.8")
     compileOnly(fileTree("libs"))
 }
 

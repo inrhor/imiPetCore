@@ -37,6 +37,7 @@ import cn.inrhor.imipetcore.common.script.kether.player
 import cn.inrhor.imipetcore.common.script.kether.selectPetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
+import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 import taboolib.common5.Coerce
 import taboolib.library.kether.ArgTypes
@@ -94,8 +95,17 @@ class PetAction {
                     }
                 }
                 case("byHurtEntity") {
-                    actionNow {
-                        selectPetData().petEntity?.hurtEntity?: false
+                    try {
+                        it.mark()
+                        it.expect("isPlayer")
+                        actionNow {
+                            selectPetData().petEntity?.hurtEntity is Player
+                        }
+                    }catch (ex: Throwable) {
+                        it.reset()
+                        actionNow {
+                            selectPetData().petEntity?.hurtEntity?: false
+                        }
                     }
                 }
                 case("drive") {
