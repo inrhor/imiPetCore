@@ -129,22 +129,30 @@ class PetEntity(val owner: Player, val petData: PetData) {
                                     holo.delete()
                                     cancel()
                                     return@submit
-                                }else {
-                                    holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
                                 }
+                                if (entity?.hasMetadata("imipetcore_drive") == true) {
+                                    holo.update(emptyList())
+                                    return@submit
+                                }
+                                holo.update(list)
+                                holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
                             }
                         }
                         AddonSelect.DECENT_HOLOGRAMS -> {
                             if (!decentHologramsLoad) return
-                            val holo = DHAPI.createHologram(entity!!.uniqueId.toString(), loc, list)
+                            val dha = DHAPI.createHologram(entity!!.uniqueId.toString(), loc, list)
                             submit(async = true, period = 1L) {
                                 if (entity?.isDead == true || entity == null) {
-                                    holo.destroy()
+                                    dha.destroy()
                                     cancel()
                                     return@submit
-                                }else {
-                                    DHAPI.moveHologram(holo, entity!!.location.clone().add(0.0, it.height, 0.0))
                                 }
+                                if (entity?.hasMetadata("imipetcore_drive") == true) {
+                                    DHAPI.setHologramLines(dha, emptyList())
+                                    return@submit
+                                }
+                                DHAPI.setHologramLines(dha, list)
+                                DHAPI.moveHologram(dha, entity!!.location.clone().add(0.0, it.height, 0.0))
                             }
                         }
                         else -> {}

@@ -221,6 +221,7 @@ object PetManager {
     fun Player.driveRidePet(petData: PetData, actionType: ModelManager.ActionType) {
         val select = petData.petOption().model.select
         petData.petEntity?.entity?.driveRide(this, select, actionType)
+        DrivePetEvent(this, petData).call()
     }
 
     /**
@@ -235,6 +236,7 @@ object PetManager {
      */
     fun Player.unDriveRidePet(petData: PetData) {
         val select = petData.petOption().model.select
+        UnDriveRidePet(this, petData).call()
         petData.petEntity?.entity?.delDriveRide(select)
     }
 

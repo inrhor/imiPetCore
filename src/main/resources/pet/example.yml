@@ -17,7 +17,7 @@ pet:
   trigger:
     - type: LEVEL_UP
       script: |
-        pet max_exp set "$ 30*(pet_level*pet_level*pet_level+5*pet_level)-10"
+        pet max_exp set $ "30*(pet_level*pet_level*pet_level+5*pet_level)-10"
         pet attribute attack set pet_attack+0.3*pet_level
   entityType: PIG
   addon:

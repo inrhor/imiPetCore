@@ -38,6 +38,7 @@ taboolib {
             name("Adyeshach").optional(true)
             name("DecentHolograms").optional(true)
             name("Invero").optional(true)
+            name("Vault").optional(true)
         }
     }
     classifier = null
