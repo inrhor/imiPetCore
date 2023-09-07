@@ -40,6 +40,9 @@ class NMSImpl: NMS() {
         )
     }
 
+    /**
+     * 1.19+
+     */
     override fun spawnEntity(players: Set<Player>, entity: Entity, entityType: String) {
         val entityId = entity.entityId
         val uuid = entity.uniqueId
@@ -49,23 +52,33 @@ class NMSImpl: NMS() {
         sendPacket(
             players,
             PacketPlayOutSpawnEntity(dataSerializerBuilder {
-            writeVarInt(entityId)
-            writeUUID(uuid)
-            when (minor) {
-                0, 1, 2 -> writeVarInt(Class.forName("net.minecraft.core.IRegistry").getProperty<Any>("ENTITY_TYPE", isStatic = true)!!.invokeMethod<Int>("getId", getEntityType(entityType) as EntityTypes<*>)!!)
-                3 -> writeVarInt(NMS1193.INSTANCE.entityTypeGetId(getEntityType(entityType)))
-            }
-            writeDouble(location.x)
-            writeDouble(location.y)
-            writeDouble(location.z)
-            writeByte(pitch)
-            writeByte(yaw)
-            writeByte(yaw)
-            writeVarInt(0)
-            writeShort(0)
-            writeShort(0)
-            writeShort(0)
-        }.build() as PacketDataSerializer))
+                writeVarInt(entityId)
+                writeUUID(uuid)
+                if (major >= 12) {
+                    // 1.20.+
+                    writeVarInt(NMS1193.INSTANCE.entityTypeGetId(getEntityType(entityType)))
+                }else {
+                    // 1.19.X
+                    when (minor) {
+                        0, 1, 2 -> writeVarInt(
+                            Class.forName("net.minecraft.core.IRegistry").getProperty<Any>("ENTITY_TYPE", isStatic = true)!!
+                                .invokeMethod<Int>("getId", getEntityType(entityType) as EntityTypes<*>)!!
+                        )
+                        else -> writeVarInt(NMS1193.INSTANCE.entityTypeGetId(getEntityType(entityType)))
+                    }
+                }
+                writeDouble(location.x)
+                writeDouble(location.y)
+                writeDouble(location.z)
+                writeByte(pitch)
+                writeByte(yaw)
+                writeByte(yaw)
+                writeVarInt(0)
+                writeShort(0)
+                writeShort(0)
+                writeShort(0)
+            }.build() as PacketDataSerializer)
+        )
     }
 
     override fun spawnEntityLiving(players: Set<Player>, entity: Entity, entityType: String) {
