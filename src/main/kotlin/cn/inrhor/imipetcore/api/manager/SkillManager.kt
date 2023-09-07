@@ -377,6 +377,14 @@ object SkillManager {
     }
 
     /**
+     * 只需选择宠物，无需选择技能数据，直接发动技能
+     */
+    fun PetData.launchSkill(skill: String) {
+        val entity = petEntity?.entity?: return
+        Mythic.API.castSkill(entity, skill)
+    }
+
+    /**
      * 使用技能后设置冷却时调用技能配置进行冷却算法
      *
      * @return 技能冷却算法

@@ -3,6 +3,7 @@ package cn.inrhor.imipetcore.common.listener.player
 import cn.inrhor.imipetcore.api.entity.ai.Controller.attackEntity
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
+import cn.inrhor.imipetcore.api.manager.OwnerManager.setDamageByEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import taboolib.common.platform.event.EventPriority
@@ -22,8 +23,9 @@ object OwnerAttack {
             ev.isCancelled = true
             return
         }
+        player.setDamageByEntity(target)
         player.followingPet().forEach {
-            it.entity?.attackEntity(target)
+            it.entity?.attackEntity(target, false)
         }
     }
 

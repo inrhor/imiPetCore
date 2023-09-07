@@ -379,6 +379,13 @@ object PetManager {
         return getData().petDataList.map { it.name }
     }
 
+    /**
+     * 检查宠物是否有某种行为
+     */
+    fun PetEntity.hasAction(action: String): Boolean {
+        return petData.petOption().action.find { it.id == action } != null
+    }
+
     enum class OperateType {
         SET, REMOVE, GET
     }

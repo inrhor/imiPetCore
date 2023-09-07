@@ -196,6 +196,12 @@ class SkillAction {
                                     selectPetData().launchSkill(SkillType.MYTHIC_MOBS, skill, SkillSelect.valueOf(type.uppercase()), selectSkillData())
                                 }
                             }
+                            "castmm" -> {
+                                val skill = it.nextToken()
+                                actionNow {
+                                    selectPetData().launchSkill(skill)
+                                }
+                            }
                             else -> error("unknown launch ???")
                         }
                     }catch (ex: Exception) {
