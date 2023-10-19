@@ -19,7 +19,7 @@ fun getFile(child: String, outStr: String, mkdirs: Boolean, vararg example: Stri
             console().sendLang(outStr)
         }
         example.forEach {
-            ImiPetCore.resource.releaseResourceFile("$child/$it.yml", true)
+            ImiPetCore.resource.releaseResourceFile("$child/$it.yml", replace = true)
         }
     }
     return file

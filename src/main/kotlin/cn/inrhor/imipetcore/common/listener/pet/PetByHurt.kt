@@ -8,7 +8,9 @@ import cn.inrhor.imipetcore.api.manager.PetManager.isInvulnerablePlayer
 import cn.inrhor.imipetcore.api.manager.PetManager.setByHurtEntity
 import com.sucy.skill.api.event.SkillDamageEvent
 import org.bukkit.entity.Player
+import org.bukkit.entity.Projectile
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import taboolib.common.platform.event.OptionalEvent
 import taboolib.common.platform.event.SubscribeEvent
 
@@ -17,19 +19,43 @@ import taboolib.common.platform.event.SubscribeEvent
  */
 object PetByHurt {
 
+    /**
+     * 受到攻击
+     */
     @SubscribeEvent
-    fun e(ev: EntityDamageByEntityEvent) {
+    fun damage(ev: EntityDamageByEntityEvent) {
         val entity = ev.entity
-        val d = ev.damager
+        val damager = ev.damager
         val owner = entity.getOwner()?: return
-        if (d is Player && owner == d) return
         val petData = entity.getPetData(owner)?: return
-        if (petData.isInvulnerablePlayer()) {
-            ev.isCancelled = true
-            return
+        if (damager is Player) {
+            // 攻击者不能是主人
+            if (damager == owner) {
+                ev.isCancelled = true
+                return
+            }
+            // 免疫玩家伤害组件
+            if (petData.isInvulnerablePlayer()) {
+                ev.isCancelled = true
+                return
+            }
+        }
+        // 抛物攻击
+        if (ev.cause == EntityDamageEvent.DamageCause.PROJECTILE) {
+            val shooter = (ev.damager as Projectile).shooter
+            if (shooter is Player) {
+                if (shooter == owner) {
+                    ev.isCancelled = true
+                    return
+                }
+                if (petData.isInvulnerablePlayer()) {
+                    ev.isCancelled = true
+                    return
+                }
+            }
         }
         owner.delCurrentHP(petData, ev.damage)
-        petData.petEntity?.setByHurtEntity(d)
+        petData.petEntity?.setByHurtEntity(damager)
     }
 
     @SubscribeEvent(bind = "com.sucy.skill.api.event.SkillDamageEvent")

@@ -16,9 +16,11 @@ object OwnerAttack {
 
     @SubscribeEvent(EventPriority.HIGH)
     fun e(ev: EntityDamageByEntityEvent) {
+        // 攻击者是玩家
         if (ev.damager !is Player) return
         val player = ev.damager as Player
         val target = ev.entity
+        // 目标不能是宠物
         if (target.getOwner() == player) {
             ev.isCancelled = true
             return
