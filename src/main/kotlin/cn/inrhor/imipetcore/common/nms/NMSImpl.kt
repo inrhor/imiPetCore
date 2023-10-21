@@ -24,6 +24,8 @@ import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.library.reflex.Reflex.Companion.unsafeInstance
 import taboolib.module.nms.dataSerializerBuilder
 import taboolib.module.nms.sendPacket
+import java.io.File
+import java.io.IOException
 
 class NMSImpl: NMS() {
 
@@ -157,11 +159,47 @@ class NMSImpl: NMS() {
         }
     }
 
+    fun findClassBySimpleName(simpleName: String): List<String> {
+        val classNames = mutableListOf<String>()
+
+        val packages = Package.getPackages()
+        for (pkg in packages) {
+            try {
+                val packageName = pkg.name
+                val packagePath = packageName.replace('.', '/')
+                val classLoader = Thread.currentThread().contextClassLoader
+                val resources = classLoader.getResources(packagePath)
+
+                while (resources.hasMoreElements()) {
+                    val resource = resources.nextElement()
+                    if (resource.protocol == "file") {
+                        val file = File(resource.file)
+                        if (file.isDirectory) {
+                            val files = file.listFiles { _, name -> name.endsWith(".class") }
+                            files?.forEach { classFile ->
+                                val className = packageName + "." + classFile.nameWithoutExtension
+                                if (className.endsWith(simpleName)) {
+                                    classNames.add(className)
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
+        return classNames
+    }
+
     override fun addAiAttack(livingEntity: LivingEntity, priority: Int) {
         if (nms == "mod") {
             val en = livingEntity.getProperty<Any>("entity")!!
+            val version = versionPack
+            val versionAi = if (isUniversal)  "$version.ai.goal" else version
             val pathfinderGoal = Class.forName(
-                "$versionPack.PathfinderGoalMeleeAttack").invokeConstructor(en, 1.0, false)
+                "$versionAi.PathfinderGoalMeleeAttack").invokeConstructor(en, 1.0, false)
             livingEntity.addAi(pathfinderGoal, priority)
         }else {
             val nmsEntity = (livingEntity as CraftEntity).handle

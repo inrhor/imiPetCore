@@ -48,6 +48,7 @@ object NmsAiGoal {
     private val goalSelector = when(major) {
         10 -> "bQ" // 1.18.2
         11 -> "bS" // 1.19.X
+        12 -> "bO" // 1.20.X
         else -> "goalSelector"
     }
 
@@ -58,7 +59,7 @@ object NmsAiGoal {
             val v = when {
                 major == 4 -> "v1_12_R1"
                 major == 8 && minor == 4 -> "v1_16_R3"
-                else -> error("Unsupported version -> imiPetCore ProtocolLib: 1.12.2 1.16.5 1.18.2")
+                else -> error("Unsupported version -> imiPetCore ProtocolLib: 1.12.2 1.16.5 1.17+")
             }
             "net.minecraft.server.$v"
         }
