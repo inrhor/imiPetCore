@@ -18,7 +18,7 @@ object PetDamage {
     fun suffocation(ev: EntityDamageEvent) {
         if (ev.isCancelled) return
         val entity = ev.entity
-        if (ev.cause == EntityDamageEvent.DamageCause.SUFFOCATION) {
+        if (ev.cause == EntityDamageEvent.DamageCause.SUFFOCATION || ev.cause == EntityDamageEvent.DamageCause.FALL) {
             if (entity.hasMetadata("imipetcore_entity")) {
                 ev.isCancelled = true
             }

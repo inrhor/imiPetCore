@@ -67,6 +67,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         // 静音
         wolf.isSilent = true
         wolf.owner = owner
+        // 远离玩家后不消失
+        wolf.removeWhenFarAway = false
         initAttribute()
         initAction()
         updateModel(true)

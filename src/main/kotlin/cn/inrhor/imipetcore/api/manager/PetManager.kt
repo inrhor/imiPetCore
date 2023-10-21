@@ -17,7 +17,9 @@ import cn.inrhor.imipetcore.common.option.TriggerOption
 import cn.inrhor.imipetcore.common.option.trigger
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import org.bukkit.entity.Wolf
 import taboolib.common.platform.function.submit
 
 /**
@@ -384,6 +386,15 @@ object PetManager {
      */
     fun PetEntity.hasAction(action: String): Boolean {
         return petData.petOption().action.find { it.id == action } != null
+    }
+
+    /**
+     * 查看宠物是否有攻击目标
+     */
+    fun PetEntity.hasTarget(): Boolean {
+        entity?: return false
+        val target = (entity as Wolf).target?: return false
+        return !target.isDead
     }
 
     enum class OperateType {
