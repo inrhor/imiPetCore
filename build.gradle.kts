@@ -50,21 +50,16 @@ repositories {
     maven("https://repo.dmulloy2.net/repository/public/") // ProtocolLib
     maven("https://repo.codemc.org/repository/maven-public/") // authMe
     maven("https://mvnrepository.com/artifact/com.promcteam/proskillapi") // ProSkillAPI
-    maven {
-        url = uri("http://106.13.64.5:8081/repository/maven-public/")
-        isAllowInsecureProtocol = true
-    }
+    maven("https://repo.hiusers.com/artifactory/libs_release/")
 }
 
 dependencies {
-    compileOnly("public:GermPlugin:4.0.3")
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11903:11903:mapped")
     compileOnly("ink.ptms.core:v11903:11903:universal")
     compileOnly("ink.ptms.core:v11604:11604")
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:1.6.0")
     taboo("ink.ptms:um:1.0.0-beta-20")
-    compileOnly("public:ModelEngine:3.1.2")
     compileOnly("fr.xephi:authme:5.6.0-beta2")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-4")
@@ -72,11 +67,10 @@ dependencies {
     compileOnly("cc.trixey.invero:framework-bukkit:1.0.0-snapshot-1")
     compileOnly("cc.trixey.invero:module-common:1.0.0-snapshot-1")
     compileOnly("cc.trixey.invero:module-core:1.0.0-snapshot-1")
-    compileOnly("hiusers:attributeplus:3.3.0.6")
-    compileOnly("hiusers:DecentHolograms:2.7.11")
-    compileOnly("hiusers:DragonCore:2.5.6.6")
-    compileOnly("api:orangeengine:1.0.3")
-    compileOnly("hiusers:proskillapi:1.1.8")
+    compileOnly("public:ModelEngine:3.1.2")
+    compileOnly("api:AttributePlus:3.3.1.2")
+    compileOnly("api:DecentHolograms:2.8.4")
+    compileOnly("api:OrangeEngine-API:1.0.5-Beta")
     compileOnly(fileTree("libs"))
 }
 
