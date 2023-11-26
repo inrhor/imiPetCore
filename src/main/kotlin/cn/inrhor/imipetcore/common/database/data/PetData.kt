@@ -23,7 +23,7 @@ data class PetData(
      * @return 宠物死亡
      */
     fun isDead(): Boolean {
-        return petEntity?.entity?.isDead?: (attribute.currentHP <= 0)
+        return attribute.currentHP <= 0
     }
 
     fun isFollow(): Boolean {
