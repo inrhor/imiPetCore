@@ -13,9 +13,10 @@ object OwnerChangeWorld {
     @SubscribeEvent
     fun e(ev: PlayerChangedWorldEvent) {
         val p = ev.player
-        submit(delay = 10L) {
-            resetFollow(p)
-        }
+//        submit(delay = 10L) {
+//            resetFollow(p)
+//        }
+        resetFollow(p)
     }
 
     @SubscribeEvent
@@ -28,9 +29,14 @@ object OwnerChangeWorld {
     }
 
     private fun resetFollow(p: Player) {
-        p.followingPet().forEach {
+        val list = p.followingPet()
+        list.forEach {
             it.back()
-            it.spawn()
+        }
+        submit(delay = 15L) {
+            list.forEach {
+                it.spawn()
+            }
         }
     }
 
