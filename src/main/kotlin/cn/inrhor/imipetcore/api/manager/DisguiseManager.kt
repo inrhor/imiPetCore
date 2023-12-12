@@ -39,10 +39,8 @@ object DisguiseManager {
                     val pet = data.petEntity
                     if (pet != null) {
                         if (pet.model().select == ModelSelect.COMMON) {
-                            pet.entity?.let { entity ->
-                                destroyEntity(setOf(this))
-                                spawnEntity(setOf(this), entity.type.protocolEntityId())
-                            }
+                            val entityType = pet.petData.petOption().entityType
+                            pet.entity?.disguise(entityType)
                         }
                     }
                 }

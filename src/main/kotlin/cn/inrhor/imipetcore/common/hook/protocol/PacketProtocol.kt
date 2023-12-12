@@ -62,7 +62,7 @@ object PacketProtocol {
 
     fun Entity.destroyEntity(players: Set<Player>) {
         val packet = PacketContainer(PacketType.Play.Server.ENTITY_DESTROY)
-        if (major >= 9 && minor == 0) {
+        if (major >= 9) {
             if (minor == 0) {
                 packet.integers.writeSafely(0, entityId)
             }else {

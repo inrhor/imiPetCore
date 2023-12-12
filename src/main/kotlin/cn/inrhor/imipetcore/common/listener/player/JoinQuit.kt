@@ -29,11 +29,11 @@ object JoinQuit {
 
     private fun spawnPet(player: Player) {
         Database.database.pull(player.uniqueId)
-        player.lookDisguise()
-        submit(delay = 10L) {
-            player.getData().petDataList.forEach {
-                if (it.isFollow()) player.callPet(it.name)
-            }
+        player.getData().petDataList.forEach {
+            if (it.isFollow()) player.callPet(it.name)
+        }
+        submit(delay = 1L) {
+            player.lookDisguise()
         }
     }
 

@@ -1,9 +1,11 @@
 package cn.inrhor.imipetcore.common.listener.player
 
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
+import cn.inrhor.imipetcore.server.ReadManager
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerTeleportEvent
 import org.bukkit.event.world.ChunkUnloadEvent
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
@@ -13,10 +15,22 @@ object OwnerChangeWorld {
     @SubscribeEvent
     fun e(ev: PlayerChangedWorldEvent) {
         val p = ev.player
-//        submit(delay = 10L) {
-//            resetFollow(p)
-//        }
         resetFollow(p)
+    }
+
+    @SubscribeEvent
+    fun tp(ev: PlayerTeleportEvent) {
+        if (ReadManager.major > 4) return
+        val p = ev.player
+        submit(delay = 10L) {
+            val list = p.followingPet()
+            list.forEach {
+                it.back()
+            }
+            list.forEach {
+                it.spawn()
+            }
+        }
     }
 
     @SubscribeEvent

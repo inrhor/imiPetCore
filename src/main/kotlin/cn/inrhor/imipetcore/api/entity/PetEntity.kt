@@ -105,7 +105,6 @@ class PetEntity(val owner: Player, val petData: PetData) {
      */
     fun back(update: Boolean = true) {
         if (update) petData.following = false
-        if (petData.isDead()) return
         entity?.clearModel(model().select)
         entity?.remove()
         entity = null
@@ -137,7 +136,12 @@ class PetEntity(val owner: Player, val petData: PetData) {
                                     return@submit
                                 }
                                 holo.update(list)
-                                holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
+                                if (entity != null) {
+                                    holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
+                                }else {
+                                    holo.delete()
+                                    cancel()
+                                }
                             }
                         }
                         AddonSelect.DECENT_HOLOGRAMS -> {
@@ -154,7 +158,12 @@ class PetEntity(val owner: Player, val petData: PetData) {
                                     return@submit
                                 }
                                 DHAPI.setHologramLines(dha, list)
-                                DHAPI.moveHologram(dha, entity!!.location.clone().add(0.0, it.height, 0.0))
+                                if (entity != null) {
+                                    DHAPI.moveHologram(dha, entity!!.location.clone().add(0.0, it.height, 0.0))
+                                }else {
+                                    dha.destroy()
+                                    cancel()
+                                }
                             }
                         }
                         else -> {}
