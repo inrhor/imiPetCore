@@ -12,6 +12,8 @@ import cn.inrhor.imipetcore.api.manager.PetManager.setMaxHP
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetAttack
 import cn.inrhor.imipetcore.api.manager.PetManager.setPetSpeed
 import cn.inrhor.imipetcore.common.database.data.PetData
+import cn.inrhor.imipetcore.common.hook.hologram.HologramProvider
+import cn.inrhor.imipetcore.common.hook.hologram.NameHologram
 import cn.inrhor.imipetcore.common.model.ModelSelect
 import cn.inrhor.imipetcore.common.option.AddonSelect
 import cn.inrhor.imipetcore.common.option.AddonType
@@ -23,6 +25,7 @@ import eu.decentsoftware.holograms.api.DHAPI
 import ink.ptms.adyeshach.api.AdyeshachAPI
 import org.bukkit.entity.*
 import taboolib.common.platform.function.submit
+import taboolib.common.platform.service.PlatformExecutor
 import taboolib.common5.Baffle
 import taboolib.module.ai.*
 import taboolib.platform.util.sendLang
@@ -49,6 +52,11 @@ class PetEntity(val owner: Player, val petData: PetData) {
      * 受到实体伤害
      */
     var hurtEntity: Entity? = null
+
+    /**
+     * 全息名称
+     */
+    var nameHologram: NameHologram? = null
 
     /**
      * 召唤宠物
@@ -83,7 +91,6 @@ class PetEntity(val owner: Player, val petData: PetData) {
         owner.setCurrentHP(petData, call = false)
         owner.setPetSpeed(petData, call = false)
         owner.setPetAttack(petData, call = false)
-
         entity?.loadAttributeData(petData)
     }
 
@@ -105,6 +112,7 @@ class PetEntity(val owner: Player, val petData: PetData) {
      */
     fun back(update: Boolean = true) {
         if (update) petData.following = false
+        nameHologram?.destroy()
         entity?.clearModel(model().select)
         entity?.remove()
         entity = null
@@ -119,55 +127,8 @@ class PetEntity(val owner: Player, val petData: PetData) {
         petOption.addon.forEach {
             when (it.type) {
                 AddonType.NAME -> {
-                    val list = owner.evalStrPetData(it.lines, petData)
-                    val loc = entity!!.location.clone().add(0.0, it.height, 0.0)
-                    when (it.select) {
-                        AddonSelect.ADYESHACH -> {
-                            if (!adyeshachLoad) return
-                            val holo = AdyeshachAPI.createHologram(loc, list)
-                            submit(async = true, period = 1L) {
-                                if (entity?.isDead == true || entity == null) {
-                                    holo.delete()
-                                    cancel()
-                                    return@submit
-                                }
-                                if (entity?.hasMetadata("imipetcore_drive") == true) {
-                                    holo.update(emptyList())
-                                    return@submit
-                                }
-                                holo.update(list)
-                                if (entity != null) {
-                                    holo.teleport(entity!!.location.clone().add(0.0, it.height, 0.0))
-                                }else {
-                                    holo.delete()
-                                    cancel()
-                                }
-                            }
-                        }
-                        AddonSelect.DECENT_HOLOGRAMS -> {
-                            if (!decentHologramsLoad) return
-                            val dha = DHAPI.createHologram(entity!!.uniqueId.toString(), loc, list)
-                            submit(async = true, period = 1L) {
-                                if (entity?.isDead == true || entity == null) {
-                                    dha.destroy()
-                                    cancel()
-                                    return@submit
-                                }
-                                if (entity?.hasMetadata("imipetcore_drive") == true) {
-                                    DHAPI.setHologramLines(dha, emptyList())
-                                    return@submit
-                                }
-                                DHAPI.setHologramLines(dha, list)
-                                if (entity != null) {
-                                    DHAPI.moveHologram(dha, entity!!.location.clone().add(0.0, it.height, 0.0))
-                                }else {
-                                    dha.destroy()
-                                    cancel()
-                                }
-                            }
-                        }
-                        else -> {}
-                    }
+                    nameHologram = NameHologram(this, it)
+                    nameHologram?.display()
                 }
                 else -> {}
             }
@@ -180,14 +141,16 @@ class PetEntity(val owner: Player, val petData: PetData) {
     fun updateModel(init: Boolean = false) {
         val entityType = petData.petOption().entityType
         if (model().select == ModelSelect.COMMON) {
-            submit(delay = 5L) {
+            submit(delay = 20L) {
                 entity?.disguise(entityType)
             }
         }else {
             val model = model()
             val modelID = model.id
             if (!petData.isFollow()) return
-            entity?.display(modelID, init, model.select)
+            submit(delay = 10L) {
+                entity?.display(modelID, init, model.select)
+            }
         }
     }
 

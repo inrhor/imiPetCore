@@ -34,7 +34,7 @@ object DisguiseManager {
      */
     fun Player.lookDisguise() {
         Bukkit.getOnlinePlayers().forEach {
-            if (it != this) {
+            if (it.uniqueId != uniqueId) {
                 it.followingPetData().forEach { data ->
                     val pet = data.petEntity
                     if (pet != null) {
