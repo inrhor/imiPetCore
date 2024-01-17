@@ -13,3 +13,9 @@ nms: taboolib
 
 # 调式信息模式
 debug: false
+
+# 启动服务器时清理操作
+clear:
+  # true则启动服务器后清理残留的宠物实体
+  # 有时候在未正常关闭服务器时残留实体
+  entity: false

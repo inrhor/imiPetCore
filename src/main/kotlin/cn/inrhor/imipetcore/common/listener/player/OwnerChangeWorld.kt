@@ -1,5 +1,6 @@
 package cn.inrhor.imipetcore.common.listener.player
 
+import cn.inrhor.imipetcore.api.event.PetTeleportEvent
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.server.ReadManager
 import org.bukkit.entity.LivingEntity
@@ -29,6 +30,7 @@ object OwnerChangeWorld {
             }
             list.forEach {
                 it.spawn()
+                PetTeleportEvent(it).call()
             }
         }
     }
@@ -50,6 +52,7 @@ object OwnerChangeWorld {
         submit(delay = 15L) {
             list.forEach {
                 it.spawn()
+                PetTeleportEvent(it).call()
             }
         }
     }

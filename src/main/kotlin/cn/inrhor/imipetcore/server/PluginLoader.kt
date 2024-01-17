@@ -3,6 +3,8 @@ package cn.inrhor.imipetcore.server
 import cn.inrhor.imipetcore.ImiPetCore
 import cn.inrhor.imipetcore.api.data.DataContainer
 import cn.inrhor.imipetcore.api.data.DataContainer.getData
+import cn.inrhor.imipetcore.api.manager.MetaManager.getOwner
+import cn.inrhor.imipetcore.api.manager.MetaManager.isPet
 import cn.inrhor.imipetcore.api.manager.ModelManager
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.common.database.Database
@@ -29,8 +31,8 @@ object PluginLoader {
     @Awake(LifeCycle.ENABLE)
     fun load() {
         logo()
-        Database.initDatabase()
         loadTask()
+        Database.initDatabase()
     }
 
     @Awake(LifeCycle.DISABLE)
@@ -93,6 +95,16 @@ object PluginLoader {
                 "|_|_|_|_|_|_|    \\____)\\___)______)___/|_|   \\____)")
         for (s in logo) {
             console().sendMessage(s.colored())
+        }
+    }
+
+    private fun clearEntity() {
+        if (ImiPetCore.config.getBoolean("clear.enable")) {
+            Bukkit.getWorlds().forEach {
+                it.entities.forEach { en ->
+                    if (en.isPet()) en.remove()
+                }
+            }
         }
     }
 
