@@ -19,3 +19,9 @@ clear:
   # true则启动服务器后清理残留的宠物实体
   # 有时候在未正常关闭服务器时残留实体
   entity: false
+
+# 延迟任务
+delay:
+  # 加入服务器后，多少tick后召唤宠物
+  # 20 tick等于 1 秒
+  joinSpawnPet: 5

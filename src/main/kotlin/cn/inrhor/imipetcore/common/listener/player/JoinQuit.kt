@@ -5,6 +5,7 @@ import cn.inrhor.imipetcore.api.manager.DisguiseManager.lookDisguise
 import cn.inrhor.imipetcore.api.manager.PetManager.callPet
 import cn.inrhor.imipetcore.api.manager.PetManager.followingPet
 import cn.inrhor.imipetcore.common.database.Database
+import cn.inrhor.imipetcore.server.ConfigRead
 import cn.inrhor.imipetcore.server.ReadManager.authMeLoad
 import fr.xephi.authme.events.LoginEvent
 import fr.xephi.authme.events.RegisterEvent
@@ -29,7 +30,7 @@ object JoinQuit {
 
     private fun spawnPet(player: Player) {
         Database.database.pull(player.uniqueId)
-        submit(delay = 5L) {
+        submit(delay = ConfigRead.delayJoinSpawnPet.toLong()) {
             player.getData().petDataList.forEach {
                 if (it.isFollow()) player.callPet(it.name)
             }

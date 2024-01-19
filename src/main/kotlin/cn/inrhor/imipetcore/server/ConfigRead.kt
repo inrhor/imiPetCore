@@ -12,4 +12,8 @@ object ConfigRead {
     var debug = false
         private set
 
+    @ConfigNode("delay.joinSpawnPet")
+    var delayJoinSpawnPet = 5
+        private set
+
 }
