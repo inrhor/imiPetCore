@@ -1,1 +1,1 @@
-rootProject.name="imiPetCore"
+rootProject.name="imipetCore"

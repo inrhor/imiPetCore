@@ -36,7 +36,7 @@ object MetaManager {
      */
     fun Entity.getOwner(): Player? {
         if (this !is Wolf || owner == null) return null
-        return owner as Player
+        return owner?.uniqueId?.let { Bukkit.getPlayer(it) }
     }
 
     /**
