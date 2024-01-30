@@ -401,4 +401,16 @@ object PetManager {
         SET, REMOVE, GET
     }
 
+    /**
+     * 复活宠物
+     *
+     * @param petData 宠物数据
+     * @param following 是否跟随
+     */
+    fun Player.revivePet(petData: PetData, following: Boolean = true) {
+        petData.petEntity?.back(!following)
+        setCurrentHP(petData, petData.attribute.maxHP, true)
+        callPet(petData, following)
+    }
+
 }
